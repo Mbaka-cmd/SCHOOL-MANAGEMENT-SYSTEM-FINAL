@@ -7,4 +7,7 @@ urlpatterns = [
     path("<uuid:pk>/", views.exam_detail, name="exam_detail"),
     path("<uuid:pk>/marks/", views.enter_marks, name="enter_marks"),
     path("<uuid:pk>/results/", views.exam_results, name="exam_results"),
+    path("<uuid:pk>/report-cards/", views.report_card_list, name="report_card_list"),
+    path("<uuid:pk>/generate-reports/", views.generate_report_cards, name="generate_report_cards"),
+    path("report/<uuid:pk>/", views.report_card_view, name="report_card_view"),
 ]
