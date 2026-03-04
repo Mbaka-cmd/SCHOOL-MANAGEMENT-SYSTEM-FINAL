@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}Staff — {{ request.user.school.name }}{% endblock %}
+{% block content %}
+<section style="background:linear-gradient(135deg,#C0392B,#922B21);padding:2rem 0;color:white;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col">
+                <h4 style="font-weight:800;margin:0;"><i class="bi bi-people-fill me-2"></i>Staff Management</h4>
+                <p style="opacity:0.75;margin:0;font-size:0.9rem;">Manage teachers and staff accounts</p>
+            </div>
+            <div class="col-auto d-flex gap-2">
+                <a href="{% url 'staff_add' %}" class="btn" style="background:white;color:#C0392B;border-radius:20px;font-weight:600;">
+                    <i class="bi bi-plus-circle-fill me-1"></i>Add Teacher
+                </a>
+                <a href="{% url 'admin_dashboard' %}" class="btn" style="background:rgba(255,255,255,0.15);color:white;border-radius:20px;">
+                    <i class="bi bi-arrow-left me-1"></i>Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="padding:2rem 0 4rem;background:#f8f9fa;">
+    <div class="container">
+
+        <!-- STATS -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div style="background:white;border-radius:12px;padding:1.2rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);text-align:center;">
+                    <div style="font-size:2rem;font-weight:800;color:#C0392B;">{{ total }}</div>
+                    <div style="font-size:0.85rem;color:#666;">Total Teachers</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEARCH -->
+        <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);margin-bottom:1.5rem;">
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-6">
+                    <input type="text" name="search" class="form-control" placeholder="Search by name or email..." value="{{ search }}">
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn w-100" style="background:#C0392B;color:white;border-radius:8px;">
+                        <i class="bi bi-search me-1"></i>Search
+                    </button>
+                </div>
+                {% if search %}
+                <div class="col-md-3">
+                    <a href="{% url 'staff_list' %}" class="btn w-100" style="border:2px solid #ddd;border-radius:8px;color:#666;">Clear</a>
+                </div>
+                {% endif %}
+            </form>
+        </div>
+
+        <!-- STAFF TABLE -->
+        {% if messages %}{% for message in messages %}
+        <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %} alert-dismissible fade show mb-3">
+            {{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}{% endif %}
+
+        {% if staff %}
+        <div style="background:white;border-radius:15px;box-shadow:0 3px 15px rgba(0,0,0,0.07);overflow:hidden;">
+            <table class="table table-hover mb-0">
+                <thead style="background:linear-gradient(135deg,#C0392B,#922B21);color:white;">
+                    <tr>
+                        <th style="padding:1rem;border:none;">#</th>
+                        <th style="padding:1rem;border:none;">Name</th>
+                        <th style="padding:1rem;border:none;">Email</th>
+                        <th style="padding:1rem;border:none;">Phone</th>
+                        <th style="padding:1rem;border:none;">Status</th>
+                        <th style="padding:1rem;border:none;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for teacher in staff %}
+                    <tr style="border-bottom:1px solid #f0f0f0;">
+                        <td style="padding:0.9rem 1rem;color:#666;">{{ forloop.counter }}</td>
+                        <td style="padding:0.9rem 1rem;">
+                            <div style="display:flex;align-items:center;gap:0.8rem;">
+                                <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#C0392B,#922B21);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.9rem;">
+                                    {{ teacher.first_name|first }}{{ teacher.last_name|first }}
+                                </div>
+                                <div>
+                                    <div style="font-weight:600;">{{ teacher.get_full_name }}</div>
+                                    <div style="font-size:0.75rem;color:#999;">Teacher</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="padding:0.9rem 1rem;font-size:0.9rem;">{{ teacher.email }}</td>
+                        <td style="padding:0.9rem 1rem;font-size:0.9rem;">{{ teacher.phone_number|default:"—" }}</td>
+                        <td style="padding:0.9rem 1rem;">
+                            <span style="background:{% if teacher.is_active %}#f0fff5;color:#2ecc71;{% else %}#fff0f0;color:#C0392B;{% endif %};padding:3px 10px;border-radius:20px;font-size:0.8rem;font-weight:600;">
+                                {% if teacher.is_active %}Active{% else %}Inactive{% endif %}
+                            </span>
+                        </td>
+                        <td style="padding:0.9rem 1rem;">
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'staff_detail' teacher.id %}" class="btn btn-sm" style="background:#f0f8ff;color:#3498db;border-radius:8px;">
+                                    <i class="bi bi-eye-fill"></i>
+                                </a>
+                                <a href="{% url 'staff_edit' teacher.id %}" class="btn btn-sm" style="background:#fff8f0;color:#e67e22;border-radius:8px;">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div style="background:white;border-radius:15px;padding:4rem;text-align:center;box-shadow:0 3px 15px rgba(0,0,0,0.07);">
+            <i class="bi bi-people" style="font-size:4rem;color:#ddd;display:block;margin-bottom:1rem;"></i>
+            <h5 style="color:#aaa;">No teachers found</h5>
+            <a href="{% url 'staff_add' %}" class="btn mt-2" style="background:#C0392B;color:white;border-radius:20px;">
+                <i class="bi bi-plus-circle-fill me-2"></i>Add First Teacher
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
