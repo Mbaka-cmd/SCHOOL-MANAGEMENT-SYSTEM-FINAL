@@ -1,0 +1,76 @@
+﻿{% extends "base.html" %}
+{% block title %}Parent Registration{% endblock %}
+{% block content %}
+<section style="background:linear-gradient(135deg,#2ecc71,#27ae60);padding:3rem 0;color:white;">
+    <div class="container text-center">
+        <i class="bi bi-people-fill" style="font-size:2.5rem;"></i>
+        <h3 style="font-weight:800;margin:0.5rem 0 0;">Parent Portal Registration</h3>
+        <p style="opacity:0.8;margin:0;">Register using your child's admission number</p>
+    </div>
+</section>
+<section style="padding:3rem 0 5rem;background:#f8f9fa;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+                <div style="background:white;border-radius:20px;padding:2rem;box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+                    <h5 style="font-weight:700;margin-bottom:1.5rem;color:#1a1a1a;">Create Your Account</h5>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label style="font-weight:600;font-size:0.85rem;color:#666;">Student Admission Number *</label>
+                            <input type="text" name="admission_number" class="form-control" placeholder="e.g. CGS02/2026" required style="border-radius:10px;padding:0.7rem 1rem;">
+                            <small style="color:#999;">Enter your child's admission number to link your account</small>
+                        </div>
+                        <hr>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label style="font-weight:600;font-size:0.85rem;color:#666;">First Name *</label>
+                                <input type="text" name="first_name" class="form-control" required style="border-radius:10px;padding:0.7rem 1rem;">
+                            </div>
+                            <div class="col-6">
+                                <label style="font-weight:600;font-size:0.85rem;color:#666;">Last Name *</label>
+                                <input type="text" name="last_name" class="form-control" required style="border-radius:10px;padding:0.7rem 1rem;">
+                            </div>
+                        </div>
+                        <div class="mb-3 mt-3">
+                            <label style="font-weight:600;font-size:0.85rem;color:#666;">Relationship *</label>
+                            <select name="relationship" class="form-select" style="border-radius:10px;padding:0.7rem 1rem;">
+                                <option value="mother">Mother</option>
+                                <option value="father">Father</option>
+                                <option value="guardian">Guardian</option>
+                                <option value="sibling">Sibling</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label style="font-weight:600;font-size:0.85rem;color:#666;">Phone Number *</label>
+                            <input type="text" name="phone" class="form-control" placeholder="e.g. 0712345678" required style="border-radius:10px;padding:0.7rem 1rem;">
+                        </div>
+                        <div class="mb-3">
+                            <label style="font-weight:600;font-size:0.85rem;color:#666;">Email Address *</label>
+                            <input type="email" name="email" class="form-control" required style="border-radius:10px;padding:0.7rem 1rem;">
+                        </div>
+                        <div class="mb-4">
+                            <label style="font-weight:600;font-size:0.85rem;color:#666;">Password *</label>
+                            <input type="password" name="password" class="form-control" required style="border-radius:10px;padding:0.7rem 1rem;">
+                        </div>
+                        <button type="submit" class="btn w-100" style="background:linear-gradient(135deg,#2ecc71,#27ae60);color:white;border-radius:25px;padding:0.8rem;font-weight:700;font-size:1rem;">
+                            <i class="bi bi-person-plus-fill me-2"></i>Create Account
+                        </button>
+                    </form>
+                    <div style="text-align:center;margin-top:1.5rem;">
+                        <p style="color:#999;font-size:0.85rem;">Already have an account? <a href="{% url 'login' %}" style="color:#2ecc71;font-weight:600;">Login here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

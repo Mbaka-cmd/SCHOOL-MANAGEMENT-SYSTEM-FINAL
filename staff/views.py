@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from accounts.models import User
 from academics.models import Subject, Stream
+from schools.views import admin_required
 
 
-@login_required
+@admin_required
 def staff_list(request):
     school = request.user.school
     staff = User.objects.filter(school=school, is_teacher=True).order_by("last_name")
@@ -22,7 +22,7 @@ def staff_list(request):
     return render(request, "staff/staff_list.html", context)
 
 
-@login_required
+@admin_required
 def staff_add(request):
     school = request.user.school
     if request.method == "POST":
@@ -36,13 +36,9 @@ def staff_add(request):
                 messages.error(request, f"Email {email} already exists!")
                 return redirect("staff_add")
             teacher = User.objects.create_user(
-                email=email,
-                password=password,
-                first_name=first_name,
-                last_name=last_name,
-                school=school,
-                is_teacher=True,
-                phone=phone,
+                email=email, password=password,
+                first_name=first_name, last_name=last_name,
+                school=school, is_teacher=True, phone=phone,
             )
             messages.success(request, f"Teacher {teacher.get_full_name()} added successfully!")
             return redirect("staff_list")
@@ -53,7 +49,7 @@ def staff_add(request):
     return render(request, "staff/staff_add.html", context)
 
 
-@login_required
+@admin_required
 def staff_detail(request, pk):
     school = request.user.school
     teacher = get_object_or_404(User, id=pk, school=school, is_teacher=True)
@@ -64,7 +60,7 @@ def staff_detail(request, pk):
     return render(request, "staff/staff_detail.html", context)
 
 
-@login_required
+@admin_required
 def staff_edit(request, pk):
     school = request.user.school
     teacher = get_object_or_404(User, id=pk, school=school, is_teacher=True)

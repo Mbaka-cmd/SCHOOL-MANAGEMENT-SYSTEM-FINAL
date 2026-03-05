@@ -1,14 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Exam, ExamResult, ReportCard, score_to_grade, GRADE_POINTS
 from fees.models import FeeInvoice
 from students.models import Student
 from academics.models import Subject, Stream
 from schools.models import AcademicYear, Term
+from schools.views import admin_required
 
 
-@login_required
+@admin_required
 def exam_list(request):
     school = request.user.school
     exams = Exam.objects.filter(school=school).select_related(
@@ -18,7 +18,7 @@ def exam_list(request):
     return render(request, "exams/exam_list.html", context)
 
 
-@login_required
+@admin_required
 def exam_create(request):
     school = request.user.school
     if request.method == "POST":
@@ -33,13 +33,9 @@ def exam_create(request):
             academic_year = AcademicYear.objects.get(id=year_id, school=school)
             term = Term.objects.get(id=term_id) if term_id else None
             exam = Exam.objects.create(
-                school=school,
-                name=name,
-                exam_type=exam_type,
-                academic_year=academic_year,
-                term=term,
-                start_date=start_date,
-                end_date=end_date,
+                school=school, name=name, exam_type=exam_type,
+                academic_year=academic_year, term=term,
+                start_date=start_date, end_date=end_date,
             )
             if stream_ids:
                 exam.streams.set(Stream.objects.filter(id__in=stream_ids, school=school))
@@ -49,28 +45,22 @@ def exam_create(request):
             messages.error(request, f"Error creating exam: {e}")
     years = AcademicYear.objects.filter(school=school)
     terms = Term.objects.filter(academic_year__school=school)
-    streams = Stream.objects.filter(school=school).order_by(
-        "class_level__level_order", "name"
-    )
+    streams = Stream.objects.filter(school=school).order_by("class_level__level_order", "name")
     context = {"years": years, "terms": terms, "streams": streams}
     return render(request, "exams/exam_create.html", context)
 
 
-@login_required
+@admin_required
 def exam_detail(request, pk):
     school = request.user.school
     exam = get_object_or_404(Exam, id=pk, school=school)
     streams = exam.streams.all()
     results_count = ExamResult.objects.filter(exam=exam).count()
-    context = {
-        "exam": exam,
-        "streams": streams,
-        "results_count": results_count,
-    }
+    context = {"exam": exam, "streams": streams, "results_count": results_count}
     return render(request, "exams/exam_detail.html", context)
 
 
-@login_required
+@admin_required
 def enter_marks(request, pk):
     school = request.user.school
     exam = get_object_or_404(Exam, id=pk, school=school)
@@ -86,9 +76,7 @@ def enter_marks(request, pk):
         selected_stream = get_object_or_404(Stream, id=stream_id, school=school)
         selected_subject = get_object_or_404(Subject, id=subject_id, school=school)
         students = Student.objects.filter(
-            school=school,
-            current_stream=selected_stream,
-            is_active=True,
+            school=school, current_stream=selected_stream, is_active=True,
         ).order_by("last_name", "first_name")
 
         if request.method == "POST" and "save_marks" in request.POST:
@@ -139,20 +127,15 @@ def enter_marks(request, pk):
             existing_results[str(result.student_id)] = result
 
     context = {
-        "exam": exam,
-        "streams": streams,
-        "subjects": subjects,
-        "students": students,
-        "selected_stream": selected_stream,
-        "selected_subject": selected_subject,
-        "existing_results": existing_results,
-        "stream_id": stream_id,
-        "subject_id": subject_id,
+        "exam": exam, "streams": streams, "subjects": subjects,
+        "students": students, "selected_stream": selected_stream,
+        "selected_subject": selected_subject, "existing_results": existing_results,
+        "stream_id": stream_id, "subject_id": subject_id,
     }
     return render(request, "exams/enter_marks.html", context)
 
 
-@login_required
+@admin_required
 def exam_results(request, pk):
     school = request.user.school
     exam = get_object_or_404(Exam, id=pk, school=school)
@@ -163,27 +146,18 @@ def exam_results(request, pk):
 
     if stream_id:
         selected_stream = get_object_or_404(Stream, id=stream_id, school=school)
-        students = Student.objects.filter(
-            school=school,
-            current_stream=selected_stream,
-            is_active=True,
-        )
+        students = Student.objects.filter(school=school, current_stream=selected_stream, is_active=True)
         for student in students:
-            results = ExamResult.objects.filter(
-                exam=exam, student=student
-            ).select_related("subject")
+            results = ExamResult.objects.filter(exam=exam, student=student).select_related("subject")
             total_points = sum(r.points or 0 for r in results)
             total_score = sum(float(r.raw_score or 0) for r in results)
             subjects_sat = results.filter(is_absent=False).count()
             mean_score = total_score / subjects_sat if subjects_sat > 0 else 0
             mean_grade = score_to_grade(mean_score) if subjects_sat > 0 else "—"
             student_summaries.append({
-                "student": student,
-                "results": results,
-                "total_points": total_points,
-                "total_score": round(total_score, 1),
-                "mean_score": round(mean_score, 1),
-                "mean_grade": mean_grade,
+                "student": student, "results": results,
+                "total_points": total_points, "total_score": round(total_score, 1),
+                "mean_score": round(mean_score, 1), "mean_grade": mean_grade,
                 "subjects_sat": subjects_sat,
             })
         student_summaries.sort(key=lambda x: x["total_points"], reverse=True)
@@ -191,15 +165,13 @@ def exam_results(request, pk):
             s["position"] = i + 1
 
     context = {
-        "exam": exam,
-        "streams": streams,
-        "selected_stream": selected_stream,
-        "student_summaries": student_summaries,
+        "exam": exam, "streams": streams,
+        "selected_stream": selected_stream, "student_summaries": student_summaries,
     }
     return render(request, "exams/exam_results.html", context)
 
 
-@login_required
+@admin_required
 def report_card_list(request, pk):
     school = request.user.school
     exam = get_object_or_404(Exam, id=pk, school=school)
@@ -215,15 +187,13 @@ def report_card_list(request, pk):
         ).select_related("student").order_by("stream_position")
 
     context = {
-        "exam": exam,
-        "streams": streams,
-        "selected_stream": selected_stream,
-        "report_cards": report_cards,
+        "exam": exam, "streams": streams,
+        "selected_stream": selected_stream, "report_cards": report_cards,
     }
     return render(request, "exams/report_card_list.html", context)
 
 
-@login_required
+@admin_required
 def generate_report_cards(request, pk):
     school = request.user.school
     exam = get_object_or_404(Exam, id=pk, school=school)
@@ -231,9 +201,7 @@ def generate_report_cards(request, pk):
 
     if request.method == "POST" and stream_id:
         stream = get_object_or_404(Stream, id=stream_id, school=school)
-        students = Student.objects.filter(
-            school=school, current_stream=stream, is_active=True
-        )
+        students = Student.objects.filter(school=school, current_stream=stream, is_active=True)
         generated = 0
         for student in students:
             results = ExamResult.objects.filter(exam=exam, student=student)
@@ -244,29 +212,20 @@ def generate_report_cards(request, pk):
             mean_grade = score_to_grade(mean_score) if subjects_sat > 0 else "E"
 
             fee_invoices = FeeInvoice.objects.filter(student=student, school=school)
-            fee_balance = sum(
-                float(inv.total_expected - inv.total_paid) for inv in fee_invoices
-            )
+            fee_balance = sum(float(inv.total_expected - inv.total_paid) for inv in fee_invoices)
 
             ReportCard.objects.update_or_create(
-                student=student,
-                exam=exam,
+                student=student, exam=exam,
                 defaults={
-                    "stream": stream,
-                    "total_marks": total_score,
-                    "total_points": total_points,
-                    "mean_score": mean_score,
-                    "mean_grade": mean_grade,
-                    "subjects_sat": subjects_sat,
-                    "stream_size": students.count(),
-                    "fee_balance": fee_balance,
+                    "stream": stream, "total_marks": total_score,
+                    "total_points": total_points, "mean_score": mean_score,
+                    "mean_grade": mean_grade, "subjects_sat": subjects_sat,
+                    "stream_size": students.count(), "fee_balance": fee_balance,
                 },
             )
             generated += 1
 
-        all_reports = ReportCard.objects.filter(
-            exam=exam, stream=stream
-        ).order_by("-total_points")
+        all_reports = ReportCard.objects.filter(exam=exam, stream=stream).order_by("-total_points")
         for i, report in enumerate(all_reports):
             report.stream_position = i + 1
             report.save(update_fields=["stream_position"])
@@ -277,16 +236,12 @@ def generate_report_cards(request, pk):
     return redirect("exam_detail", pk=exam.id)
 
 
-@login_required
+@admin_required
 def report_card_view(request, pk):
     report = get_object_or_404(ReportCard, id=pk)
     school = request.user.school
     results = ExamResult.objects.filter(
         exam=report.exam, student=report.student
     ).select_related("subject").order_by("subject__name")
-    context = {
-        "report": report,
-        "school": school,
-        "results": results,
-    }
+    context = {"report": report, "school": school, "results": results}
     return render(request, "exams/report_card_view.html", context)

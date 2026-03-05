@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 from django.db.models import Sum, Q
 from students.models import Student
 from exams.models import Exam, ExamResult, ReportCard, score_to_grade
@@ -9,7 +10,43 @@ from accounts.models import User
 import json
 
 
-@login_required
+# ── CUSTOM DECORATOR ─────────────────────────────────────────
+def admin_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        if not (request.user.is_school_admin or request.user.is_teacher or request.user.is_platform_admin):
+            return HttpResponseForbidden("""
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Access Denied</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+                    <style>
+                        body { font-family: Poppins, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #f8f9fa; }
+                        .box { text-align: center; padding: 3rem; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 400px; }
+                        h2 { color: #C0392B; font-size: 2rem; margin-bottom: 0.5rem; }
+                        p { color: #666; margin-bottom: 1.5rem; }
+                        a { background: #C0392B; color: white; padding: 0.7rem 2rem; border-radius: 25px; text-decoration: none; font-weight: 600; }
+                    </style>
+                </head>
+                <body>
+                    <div class="box">
+                        <div style="font-size:3rem;">⛔</div>
+                        <h2>Access Denied</h2>
+                        <p>You don't have permission to view this page.</p>
+                        <a href="/">Go Home</a>
+                    </div>
+                </body>
+                </html>
+            """)
+        return view_func(request, *args, **kwargs)
+    wrapper.__name__ = view_func.__name__
+    return wrapper
+
+
+# ── ADMIN DASHBOARD ──────────────────────────────────────────
+@admin_required
 def admin_dashboard(request):
     school = request.user.school
 
@@ -62,7 +99,8 @@ def admin_dashboard(request):
     return render(request, "schools/admin_dashboard.html", context)
 
 
-@login_required
+# ── GLOBAL SEARCH ────────────────────────────────────────────
+@admin_required
 def global_search(request):
     query = request.GET.get('q', '').strip()
     school = request.user.school

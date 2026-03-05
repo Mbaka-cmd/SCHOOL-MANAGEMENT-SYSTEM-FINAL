@@ -3,7 +3,6 @@ import uuid as uuid_lib
 import base64
 from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -12,9 +11,10 @@ from .models import FeeInvoice, Payment, MPesaTransaction
 from students.models import Student
 from academics.models import Stream
 from schools.models import AcademicYear, Term
+from schools.views import admin_required
 
 
-@login_required
+@admin_required
 def fee_dashboard(request):
     school = request.user.school
     invoices = FeeInvoice.objects.filter(school=school)
@@ -28,14 +28,12 @@ def fee_dashboard(request):
         "total_partial": invoices.filter(status="partial").count(),
         "total_expected": total_expected,
         "total_collected": total_collected,
-        "recent_payments": Payment.objects.filter(
-            school=school
-        ).order_by("-payment_date")[:10],
+        "recent_payments": Payment.objects.filter(school=school).order_by("-payment_date")[:10],
     }
     return render(request, "fees/fee_dashboard.html", context)
 
 
-@login_required
+@admin_required
 def invoice_list(request):
     school = request.user.school
     invoices = FeeInvoice.objects.filter(school=school).select_related(
@@ -61,7 +59,7 @@ def invoice_list(request):
     return render(request, "fees/invoice_list.html", context)
 
 
-@login_required
+@admin_required
 def generate_invoices(request):
     school = request.user.school
     if request.method == "POST":
@@ -86,22 +84,14 @@ def generate_invoices(request):
         created = 0
         for student in students:
             existing = FeeInvoice.objects.filter(
-                school=school,
-                student=student,
-                term=term,
-                academic_year=academic_year,
+                school=school, student=student, term=term, academic_year=academic_year,
             ).exists()
             if not existing:
                 invoice_number = f"INV-{school.id.hex[:4].upper()}-{uuid_lib.uuid4().hex[:6].upper()}"
                 FeeInvoice.objects.create(
-                    school=school,
-                    student=student,
-                    term=term,
-                    academic_year=academic_year,
-                    invoice_number=invoice_number,
-                    total_expected=amount,
-                    due_date=due_date,
-                    notes=description,
+                    school=school, student=student, term=term,
+                    academic_year=academic_year, invoice_number=invoice_number,
+                    total_expected=amount, due_date=due_date, notes=description,
                 )
                 created += 1
         messages.success(request, f"Generated {created} invoices successfully!")
@@ -114,7 +104,7 @@ def generate_invoices(request):
     return render(request, "fees/generate_invoices.html", context)
 
 
-@login_required
+@admin_required
 def invoice_detail(request, pk):
     school = request.user.school
     invoice = get_object_or_404(FeeInvoice, id=pk, school=school)
@@ -123,7 +113,7 @@ def invoice_detail(request, pk):
     return render(request, "fees/invoice_detail.html", context)
 
 
-@login_required
+@admin_required
 def record_payment(request, pk):
     school = request.user.school
     invoice = get_object_or_404(FeeInvoice, id=pk, school=school)
@@ -134,15 +124,9 @@ def record_payment(request, pk):
         notes = request.POST.get("notes", "")
         receipt_number = f"RCP-{uuid_lib.uuid4().hex[:8].upper()}"
         Payment.objects.create(
-            school=school,
-            invoice=invoice,
-            receipt_number=receipt_number,
-            amount=amount,
-            method=method,
-            bank_reference=reference,
-            notes=notes,
-            payment_date=timezone.now(),
-            received_by=request.user,
+            school=school, invoice=invoice, receipt_number=receipt_number,
+            amount=amount, method=method, bank_reference=reference,
+            notes=notes, payment_date=timezone.now(), received_by=request.user,
         )
         invoice.total_paid = float(invoice.total_paid) + amount
         if invoice.total_paid >= float(invoice.total_expected):
@@ -156,7 +140,7 @@ def record_payment(request, pk):
     return render(request, "fees/record_payment.html", context)
 
 
-@login_required
+@admin_required
 def mpesa_stk_push(request, pk):
     school = request.user.school
     invoice = get_object_or_404(FeeInvoice, id=pk, school=school)
@@ -185,9 +169,7 @@ def mpesa_callback(request):
             result = data["Body"]["stkCallback"]
             checkout_id = result["CheckoutRequestID"]
             result_code = result["ResultCode"]
-            txn = MPesaTransaction.objects.filter(
-                checkout_request_id=checkout_id
-            ).first()
+            txn = MPesaTransaction.objects.filter(checkout_request_id=checkout_id).first()
             if txn and result_code == 0:
                 txn.status = "success"
                 txn.save()

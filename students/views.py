@@ -1,21 +1,20 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Student
 from academics.models import Stream, ClassLevel
 from schools.models import AcademicYear
+from schools.views import admin_required
 
 
-@login_required
+@admin_required
 def student_list(request):
     school = request.user.school
     students = Student.objects.filter(school=school, is_active=True)
-    
-    # Filter by stream
+
     stream_id = request.GET.get("stream")
     class_level_id = request.GET.get("class_level")
     search = request.GET.get("search", "")
-    
+
     if stream_id:
         students = students.filter(current_stream_id=stream_id)
     if class_level_id:
@@ -42,7 +41,7 @@ def student_list(request):
     return render(request, "students/student_list.html", context)
 
 
-@login_required
+@admin_required
 def student_add(request):
     school = request.user.school
     if request.method == "POST":
@@ -71,14 +70,12 @@ def student_add(request):
         except Exception as e:
             messages.error(request, f"Error adding student: {e}")
 
-    streams = Stream.objects.filter(school=school).order_by(
-        "class_level__level_order", "name"
-    )
+    streams = Stream.objects.filter(school=school).order_by("class_level__level_order", "name")
     context = {"streams": streams}
     return render(request, "students/student_add.html", context)
 
 
-@login_required
+@admin_required
 def student_detail(request, pk):
     school = request.user.school
     student = get_object_or_404(Student, id=pk, school=school)
@@ -86,7 +83,7 @@ def student_detail(request, pk):
     return render(request, "students/student_detail.html", context)
 
 
-@login_required
+@admin_required
 def student_edit(request, pk):
     school = request.user.school
     student = get_object_or_404(Student, id=pk, school=school)
@@ -105,8 +102,7 @@ def student_edit(request, pk):
         student.save()
         messages.success(request, "Student updated successfully!")
         return redirect("student_detail", pk=student.id)
-    streams = Stream.objects.filter(school=school).order_by(
-        "class_level__level_order", "name"
-    )
+
+    streams = Stream.objects.filter(school=school).order_by("class_level__level_order", "name")
     context = {"student": student, "streams": streams}
     return render(request, "students/student_edit.html", context)
