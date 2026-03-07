@@ -1,5 +1,5 @@
-{% extends "base.html" %}
-{% block title %}Invoices — {{ request.user.school.name }}{% endblock %}
+﻿{% extends "base.html" %}
+{% block title %}Invoices â€” {{ request.user.school.name }}{% endblock %}
 
 {% block content %}
 
@@ -75,16 +75,16 @@
                                 <div style="font-size:0.75rem; color:#999;">{{ invoice.student.admission_number }}</div>
                             </td>
                             <td style="padding:0.9rem 1rem; font-size:0.85rem;">
-                                {{ invoice.student.current_stream.full_name|default:"—" }}
+                                {{ invoice.student.current_stream.full_name|default:"â€”" }}
                             </td>
                             <td style="padding:0.9rem 1rem; font-size:0.85rem;">
                                 Term {{ invoice.term }} / {{ invoice.academic_year }}
                             </td>
                             <td style="padding:0.9rem 1rem; font-weight:600;">
-                                KES {{ invoice.amount_due|floatformat:0 }}
+                                KES {{ invoice.total_expected|floatformat:0 }}
                             </td>
                             <td style="padding:0.9rem 1rem; font-weight:600; color:#2ecc71;">
-                                KES {{ invoice.amount_paid|floatformat:0 }}
+                                KES {{ invoice.total_paid|floatformat:0 }}
                             </td>
                             <td style="padding:0.9rem 1rem; font-weight:700; color:#C0392B;">
                                 KES {{ invoice.balance|floatformat:0 }}
