@@ -1,0 +1,60 @@
+﻿{% extends "base.html" %}
+{% block title %}Post Notice — {{ school.name }}{% endblock %}
+{% block content %}
+
+<section style="background:linear-gradient(135deg,#8e44ad,#6c3483);padding:2rem 0;color:white;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col">
+                <h4 style="font-weight:800;margin:0;"><i class="bi bi-plus-circle-fill me-2"></i>Post New Notice</h4>
+                <p style="opacity:0.75;margin:0;font-size:0.9rem;">{{ school.name }}</p>
+            </div>
+            <div class="col-auto">
+                <a href="{% url 'notice_list' %}" class="btn" style="background:rgba(255,255,255,0.15);color:white;border-radius:20px;"><i class="bi bi-arrow-left me-1"></i>Back</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="padding:2rem 0;background:#f8f9fa;">
+    <div class="container">
+        <div style="background:white;border-radius:15px;padding:2rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);max-width:650px;margin:0 auto;">
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label style="font-size:0.85rem;font-weight:600;color:#555;">Notice Title</label>
+                    <input type="text" name="title" class="form-control" style="border-radius:10px;" placeholder="e.g. School Closing Date" required>
+                </div>
+                <div class="mb-3">
+                    <label style="font-size:0.85rem;font-weight:600;color:#555;">Message</label>
+                    <textarea name="content" class="form-control" style="border-radius:10px;" rows="5" placeholder="Write your notice here..." required></textarea>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <label style="font-size:0.85rem;font-weight:600;color:#555;">Audience</label>
+                        <select name="audience" class="form-select" style="border-radius:10px;">
+                            <option value="all">Everyone</option>
+                            <option value="students">Students Only</option>
+                            <option value="parents">Parents Only</option>
+                            <option value="staff">Staff Only</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label style="font-size:0.85rem;font-weight:600;color:#555;">Priority</label>
+                        <select name="priority" class="form-select" style="border-radius:10px;">
+                            <option value="normal">Normal</option>
+                            <option value="important">Important</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label style="font-size:0.85rem;font-weight:600;color:#555;">Expires On (optional)</label>
+                        <input type="date" name="expires_at" class="form-control" style="border-radius:10px;">
+                    </div>
+                </div>
+                <button type="submit" class="btn w-100 btn-lg" style="background:#8e44ad;color:white;border-radius:12px;font-weight:600;"><i class="bi bi-megaphone-fill me-2"></i>Post Notice</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

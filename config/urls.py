@@ -16,6 +16,7 @@ urlpatterns = [
     path("library/", include("library.urls")),
     path("communications/", include("communications.urls")),
     path("attendance/", include("attendance.urls")),
+    path("notices/", include("notices.urls")),
     path("timetable/", include("timetable.urls")),
 ]
 

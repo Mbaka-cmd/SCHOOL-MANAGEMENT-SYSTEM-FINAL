@@ -1,0 +1,67 @@
+﻿{% extends "base.html" %}
+{% block title %}Notice Board — {{ school.name }}{% endblock %}
+{% block content %}
+
+<section style="background:linear-gradient(135deg,#8e44ad,#6c3483);padding:2rem 0;color:white;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col">
+                <h4 style="font-weight:800;margin:0;"><i class="bi bi-megaphone-fill me-2"></i>Notice Board</h4>
+                <p style="opacity:0.75;margin:0;font-size:0.9rem;">{{ school.name }} — Announcements & Notices</p>
+            </div>
+            <div class="col-auto d-flex gap-2">
+                <a href="{% url 'notice_create' %}" class="btn" style="background:white;color:#8e44ad;border-radius:20px;font-weight:600;"><i class="bi bi-plus-circle-fill me-1"></i>Post Notice</a>
+                <a href="{% url 'admin_dashboard' %}" class="btn" style="background:rgba(255,255,255,0.15);color:white;border-radius:20px;"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="padding:2rem 0;background:#f8f9fa;">
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-success alert-dismissible fade show" style="border-radius:10px;">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+            {% endfor %}
+        {% endif %}
+
+        {% if notices %}
+        <div class="row g-3">
+            {% for notice in notices %}
+            <div class="col-12">
+                <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);border-left:5px solid {% if notice.priority == 'urgent' %}#e74c3c{% elif notice.priority == 'important' %}#e67e22{% else %}#8e44ad{% endif %};">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                                <h5 style="font-weight:700;margin:0;color:#1a1a1a;">{{ notice.title }}</h5>
+                                {% if notice.priority == 'urgent' %}
+                                <span style="background:#fff0f0;color:#e74c3c;padding:2px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;">🚨 URGENT</span>
+                                {% elif notice.priority == 'important' %}
+                                <span style="background:#fff8f0;color:#e67e22;padding:2px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;">⚠️ IMPORTANT</span>
+                                {% else %}
+                                <span style="background:#f5f0ff;color:#8e44ad;padding:2px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">📢 Notice</span>
+                                {% endif %}
+                                <span style="background:#f0f4ff;color:#3498db;padding:2px 10px;border-radius:20px;font-size:0.75rem;">{{ notice.get_audience_display }}</span>
+                            </div>
+                            <p style="color:#555;margin-bottom:0.5rem;">{{ notice.content }}</p>
+                            <small style="color:#aaa;"><i class="bi bi-person me-1"></i>{{ notice.posted_by|default:"Admin" }} &nbsp;·&nbsp; <i class="bi bi-calendar3 me-1"></i>{{ notice.created_at|date:"M d, Y" }}{% if notice.expires_at %} &nbsp;·&nbsp; <i class="bi bi-clock me-1"></i>Expires {{ notice.expires_at }}{% endif %}</small>
+                        </div>
+                        <form method="post" action="{% url 'notice_delete' notice.id %}" class="ms-3">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm" style="background:#fff0f0;color:#e74c3c;border-radius:8px;" onclick="return confirm('Remove this notice?')"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="background:white;border-radius:15px;padding:4rem;text-align:center;box-shadow:0 3px 15px rgba(0,0,0,0.07);">
+            <i class="bi bi-megaphone" style="font-size:4rem;color:#ddd;"></i>
+            <p style="color:#aaa;margin-top:1rem;">No notices posted yet.</p>
+            <a href="{% url 'notice_create' %}" class="btn" style="background:#8e44ad;color:white;border-radius:20px;">Post First Notice</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
