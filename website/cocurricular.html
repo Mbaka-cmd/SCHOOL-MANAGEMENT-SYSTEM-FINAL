@@ -3,7 +3,6 @@
 {% block title %}Co-curricular Activities — {{ school.name }}{% endblock %}
 {% block content %}
 
-<!-- HEADER -->
 <section style="background:linear-gradient(135deg,#C0392B,#922B21);padding:3rem 0;color:white;">
     <div class="container text-center">
         <h2 style="font-weight:800;margin:0;"><i class="bi bi-trophy-fill me-2"></i>Co-curricular Activities</h2>
@@ -11,7 +10,6 @@
     </div>
 </section>
 
-<!-- INTRO -->
 <section style="padding:3rem 0;background:#fff;">
     <div class="container text-center">
         <div style="max-width:700px;margin:0 auto;">
@@ -21,7 +19,49 @@
     </div>
 </section>
 
-<!-- SPORTS -->
+{% if activities %}
+{% regroup activities by get_category_display as category_list %}
+{% for category in category_list %}
+<section style="padding:3rem 0;background:{% if forloop.counter|divisibleby:2 %}#ffffff{% else %}#f8f9fa{% endif %};">
+    <div class="container">
+        <div class="text-center mb-4">
+            <span style="background:#C0392B;color:white;padding:4px 18px;border-radius:20px;font-size:0.85rem;font-weight:600;">{{ category.grouper|upper }}</span>
+        </div>
+        <div class="row g-4">
+            {% for activity in category.list %}
+            <div class="col-md-4">
+                <div style="background:white;border-radius:15px;overflow:hidden;box-shadow:0 3px 15px rgba(0,0,0,0.08);height:100%;">
+                    {% if activity.image %}
+                    <img src="{{ activity.image.url }}" alt="{{ activity.name }}" style="width:100%;height:220px;object-fit:cover;">
+                    {% else %}
+                    <div style="width:100%;height:220px;background:linear-gradient(135deg,#C0392B,#922B21);display:flex;align-items:center;justify-content:center;">
+                        <i class="bi bi-trophy-fill" style="font-size:4rem;color:rgba(255,255,255,0.3);"></i>
+                    </div>
+                    {% endif %}
+                    <div style="padding:1.5rem;">
+                        <h5 style="font-weight:700;color:#1a1a1a;">{{ activity.name }}</h5>
+                        {% if activity.description %}<p style="color:#666;font-size:0.9rem;line-height:1.7;">{{ activity.description }}</p>{% endif %}
+                        {% if activity.achievements %}
+                        <div style="background:#fff8f0;border-left:3px solid #e67e22;padding:0.6rem 1rem;border-radius:0 8px 8px 0;margin-top:0.8rem;">
+                            <small style="color:#e67e22;font-weight:600;"><i class="bi bi-star-fill me-1"></i>{{ activity.achievements }}</small>
+                        </div>
+                        {% endif %}
+                        {% if activity.meeting_schedule %}
+                        <div style="background:#f8f8f8;border-radius:8px;padding:0.6rem 1rem;margin-top:0.8rem;">
+                            <small style="color:#888;"><i class="bi bi-clock me-1"></i>{{ activity.meeting_schedule }}</small>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endfor %}
+
+{% else %}
+
 <section style="padding:2rem 0 3rem;background:#f8f9fa;">
     <div class="container">
         <div class="text-center mb-4">
@@ -31,77 +71,59 @@
         <div class="row g-4">
             <div class="col-md-4">
                 <div style="background:white;border-radius:15px;padding:2rem;text-align:center;box-shadow:0 3px 15px rgba(0,0,0,0.07);height:100%;">
-                    <div style="width:70px;height:70px;background:linear-gradient(135deg,#C0392B,#922B21);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-                        <i class="bi bi-person-running" style="font-size:1.8rem;color:white;"></i>
-                    </div>
+                    <div style="width:70px;height:70px;background:linear-gradient(135deg,#C0392B,#922B21);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;"><i class="bi bi-person-running" style="font-size:1.8rem;color:white;"></i></div>
                     <h5 style="font-weight:700;color:#1a1a1a;">Athletics</h5>
                     <p style="color:#666;font-size:0.9rem;">Track and field events including sprints, middle distance, long distance, and field events. Our athletes compete at sub-county, county and national levels.</p>
-                    <div style="background:#fff0f0;border-radius:10px;padding:0.8rem;margin-top:1rem;">
-                        <small style="color:#C0392B;font-weight:600;"><i class="bi bi-calendar3 me-1"></i>Training: Mon, Wed, Fri — 5:00 AM</small>
-                    </div>
+                    <div style="background:#fff0f0;border-radius:10px;padding:0.8rem;margin-top:1rem;"><small style="color:#C0392B;font-weight:600;"><i class="bi bi-calendar3 me-1"></i>Training: Mon, Wed, Fri — 5:00 AM</small></div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div style="background:white;border-radius:15px;padding:2rem;text-align:center;box-shadow:0 3px 15px rgba(0,0,0,0.07);height:100%;">
-                    <div style="width:70px;height:70px;background:linear-gradient(135deg,#3498db,#2980b9);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-                        <i class="bi bi-dribbble" style="font-size:1.8rem;color:white;"></i>
-                    </div>
+                    <div style="width:70px;height:70px;background:linear-gradient(135deg,#3498db,#2980b9);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;"><i class="bi bi-dribbble" style="font-size:1.8rem;color:white;"></i></div>
                     <h5 style="font-weight:700;color:#1a1a1a;">Volleyball</h5>
                     <p style="color:#666;font-size:0.9rem;">Competitive volleyball team participating in school games at all levels. Students develop teamwork, coordination and sportsmanship through the sport.</p>
-                    <div style="background:#f0f8ff;border-radius:10px;padding:0.8rem;margin-top:1rem;">
-                        <small style="color:#3498db;font-weight:600;"><i class="bi bi-calendar3 me-1"></i>Training: Tue, Thu — 4:30 PM</small>
-                    </div>
+                    <div style="background:#f0f8ff;border-radius:10px;padding:0.8rem;margin-top:1rem;"><small style="color:#3498db;font-weight:600;"><i class="bi bi-calendar3 me-1"></i>Training: Tue, Thu — 4:30 PM</small></div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div style="background:white;border-radius:15px;padding:2rem;text-align:center;box-shadow:0 3px 15px rgba(0,0,0,0.07);height:100%;">
-                    <div style="width:70px;height:70px;background:linear-gradient(135deg,#e67e22,#d35400);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-                        <i class="bi bi-circle" style="font-size:1.8rem;color:white;"></i>
-                    </div>
+                    <div style="width:70px;height:70px;background:linear-gradient(135deg,#e67e22,#d35400);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;"><i class="bi bi-circle" style="font-size:1.8rem;color:white;"></i></div>
                     <h5 style="font-weight:700;color:#1a1a1a;">Basketball</h5>
                     <p style="color:#666;font-size:0.9rem;">Our basketball team competes in inter-school tournaments, building agility, strategy and team spirit among students.</p>
-                    <div style="background:#fff8f0;border-radius:10px;padding:0.8rem;margin-top:1rem;">
-                        <small style="color:#e67e22;font-weight:600;"><i class="bi bi-calendar3 me-1"></i>Training: Mon, Wed — 4:30 PM</small>
-                    </div>
+                    <div style="background:#fff8f0;border-radius:10px;padding:0.8rem;margin-top:1rem;"><small style="color:#e67e22;font-weight:600;"><i class="bi bi-calendar3 me-1"></i>Training: Mon, Wed — 4:30 PM</small></div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- MUSIC & DRAMA -->
 <section style="padding:3rem 0;background:white;">
     <div class="container">
         <div class="text-center mb-4">
             <span style="background:#9b59b6;color:white;padding:4px 18px;border-radius:20px;font-size:0.85rem;font-weight:600;"><i class="bi bi-music-note-beamed me-1"></i>ARTS</span>
             <h3 style="font-weight:800;margin-top:1rem;color:#1a1a1a;">Music & Drama</h3>
         </div>
-        <div class="row g-4 align-items-center">
+        <div class="row g-4">
             <div class="col-md-6">
                 <div style="background:linear-gradient(135deg,#9b59b6,#8e44ad);border-radius:15px;padding:2.5rem;color:white;">
                     <i class="bi bi-music-note-list" style="font-size:3rem;opacity:0.5;"></i>
                     <h4 style="font-weight:800;margin-top:1rem;">Music Programme</h4>
-                    <p style="opacity:0.9;line-height:1.8;">Our music programme covers choral verse, traditional and contemporary music. Students participate in Kenya Music Festival competitions at zonal, regional and national levels.</p>
-                    <div style="background:rgba(255,255,255,0.15);border-radius:10px;padding:0.8rem;margin-top:1rem;">
-                        <small><i class="bi bi-calendar3 me-1"></i>Rehearsals: Daily — 6:30 PM</small>
-                    </div>
+                    <p style="opacity:0.9;line-height:1.8;">Our music programme covers choral verse, traditional and contemporary music. Students participate in Kenya Music Festival at zonal, regional and national levels.</p>
+                    <div style="background:rgba(255,255,255,0.15);border-radius:10px;padding:0.8rem;margin-top:1rem;"><small><i class="bi bi-calendar3 me-1"></i>Rehearsals: Daily — 6:30 PM</small></div>
                 </div>
             </div>
             <div class="col-md-6">
                 <div style="background:linear-gradient(135deg,#e74c3c,#c0392b);border-radius:15px;padding:2.5rem;color:white;">
                     <i class="bi bi-mask" style="font-size:3rem;opacity:0.5;"></i>
                     <h4 style="font-weight:800;margin-top:1rem;">Drama & Theatre</h4>
-                    <p style="opacity:0.9;line-height:1.8;">Drama club members participate in Kenya Schools and Colleges Drama Festival. Activities include playwriting, acting, set design and public speaking, nurturing confidence and creativity.</p>
-                    <div style="background:rgba(255,255,255,0.15);border-radius:10px;padding:0.8rem;margin-top:1rem;">
-                        <small><i class="bi bi-calendar3 me-1"></i>Practice: Tue, Thu — 5:00 PM</small>
-                    </div>
+                    <p style="opacity:0.9;line-height:1.8;">Drama club members participate in Kenya Schools and Colleges Drama Festival. Activities include playwriting, acting, set design and public speaking.</p>
+                    <div style="background:rgba(255,255,255,0.15);border-radius:10px;padding:0.8rem;margin-top:1rem;"><small><i class="bi bi-calendar3 me-1"></i>Practice: Tue, Thu — 5:00 PM</small></div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- CLUBS -->
 <section style="padding:3rem 0;background:#f8f9fa;">
     <div class="container">
         <div class="text-center mb-4">
@@ -112,50 +134,38 @@
             <div class="col-md-4">
                 <div style="background:white;border-radius:15px;padding:1.8rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);border-top:4px solid #C0392B;">
                     <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
-                        <div style="width:50px;height:50px;background:#fff0f0;border-radius:12px;display:flex;align-items:center;justify-content:center;">
-                            <i class="bi bi-chat-square-text-fill" style="color:#C0392B;font-size:1.3rem;"></i>
-                        </div>
+                        <div style="width:50px;height:50px;background:#fff0f0;border-radius:12px;display:flex;align-items:center;justify-content:center;"><i class="bi bi-chat-square-text-fill" style="color:#C0392B;font-size:1.3rem;"></i></div>
                         <h5 style="font-weight:700;margin:0;color:#1a1a1a;">Debate Club</h5>
                     </div>
                     <p style="color:#666;font-size:0.9rem;line-height:1.7;">Develops critical thinking, public speaking and argumentation skills. Students participate in inter-school debates and Kenya National Debate Championships.</p>
-                    <div style="background:#f8f8f8;border-radius:8px;padding:0.6rem 1rem;margin-top:1rem;">
-                        <small style="color:#888;"><i class="bi bi-clock me-1"></i>Every Friday — 4:00 PM</small>
-                    </div>
+                    <div style="background:#f8f8f8;border-radius:8px;padding:0.6rem 1rem;margin-top:1rem;"><small style="color:#888;"><i class="bi bi-clock me-1"></i>Every Friday — 4:00 PM</small></div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div style="background:white;border-radius:15px;padding:1.8rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);border-top:4px solid #3498db;">
                     <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
-                        <div style="width:50px;height:50px;background:#f0f8ff;border-radius:12px;display:flex;align-items:center;justify-content:center;">
-                            <i class="bi bi-flask-fill" style="color:#3498db;font-size:1.3rem;"></i>
-                        </div>
+                        <div style="width:50px;height:50px;background:#f0f8ff;border-radius:12px;display:flex;align-items:center;justify-content:center;"><i class="bi bi-flask-fill" style="color:#3498db;font-size:1.3rem;"></i></div>
                         <h5 style="font-weight:700;margin:0;color:#1a1a1a;">Science Club</h5>
                     </div>
                     <p style="color:#666;font-size:0.9rem;line-height:1.7;">Hands-on experiments, science fairs and innovation challenges. Members participate in the Kenya Science & Engineering Fair (KSEF) and national competitions.</p>
-                    <div style="background:#f8f8f8;border-radius:8px;padding:0.6rem 1rem;margin-top:1rem;">
-                        <small style="color:#888;"><i class="bi bi-clock me-1"></i>Every Wednesday — 4:00 PM</small>
-                    </div>
+                    <div style="background:#f8f8f8;border-radius:8px;padding:0.6rem 1rem;margin-top:1rem;"><small style="color:#888;"><i class="bi bi-clock me-1"></i>Every Wednesday — 4:00 PM</small></div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div style="background:white;border-radius:15px;padding:1.8rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);border-top:4px solid #2ecc71;">
                     <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;">
-                        <div style="width:50px;height:50px;background:#f0fff5;border-radius:12px;display:flex;align-items:center;justify-content:center;">
-                            <i class="bi bi-calculator-fill" style="color:#2ecc71;font-size:1.3rem;"></i>
-                        </div>
+                        <div style="width:50px;height:50px;background:#f0fff5;border-radius:12px;display:flex;align-items:center;justify-content:center;"><i class="bi bi-calculator-fill" style="color:#2ecc71;font-size:1.3rem;"></i></div>
                         <h5 style="font-weight:700;margin:0;color:#1a1a1a;">Math Club</h5>
                     </div>
                     <p style="color:#666;font-size:0.9rem;line-height:1.7;">Problem-solving competitions, mathematical olympiads and peer tutoring. Members develop analytical thinking and participate in national math competitions.</p>
-                    <div style="background:#f8f8f8;border-radius:8px;padding:0.6rem 1rem;margin-top:1rem;">
-                        <small style="color:#888;"><i class="bi bi-clock me-1"></i>Every Tuesday — 4:00 PM</small>
-                    </div>
+                    <div style="background:#f8f8f8;border-radius:8px;padding:0.6rem 1rem;margin-top:1rem;"><small style="color:#888;"><i class="bi bi-clock me-1"></i>Every Tuesday — 4:00 PM</small></div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+{% endif %}
 
-<!-- CTA -->
 <section style="padding:3rem 0;background:linear-gradient(135deg,#1a1a1a,#2c2c2c);color:white;text-align:center;">
     <div class="container">
         <h4 style="font-weight:800;">Join a Club or Team Today</h4>
