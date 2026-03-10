@@ -1,0 +1,135 @@
+﻿{% extends "base.html" %}
+{% block title %}KCSE Results Manager — {{ school.name }}{% endblock %}
+{% block content %}
+
+<section style="background:linear-gradient(135deg,#C0392B,#922B21);padding:2rem 0;color:white;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col">
+                <h4 style="font-weight:800;margin:0;"><i class="bi bi-award-fill me-2"></i>KCSE Results Manager</h4>
+                <p style="opacity:0.75;margin:0;font-size:0.9rem;">{{ school.name }} — Upload & Manage Results</p>
+            </div>
+            <div class="col-auto">
+                <a href="{% url 'admin_dashboard' %}" class="btn" style="background:rgba(255,255,255,0.15);color:white;border-radius:20px;"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="padding:2rem 0;background:#f8f9fa;">
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" style="border-radius:10px;">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="row g-4">
+
+            <!-- EXCEL UPLOAD -->
+            <div class="col-lg-4">
+                <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);">
+                    <h6 style="font-weight:700;color:#1a1a1a;margin-bottom:1rem;"><i class="bi bi-file-earmark-excel-fill me-2" style="color:#27ae60;"></i>Upload via Excel</h6>
+                    <p style="font-size:0.85rem;color:#888;margin-bottom:1rem;">Upload multiple years at once using Excel. Columns must be in this order:</p>
+                    <div style="background:#f8f9fa;border-radius:8px;padding:0.8rem;font-size:0.75rem;color:#555;margin-bottom:1rem;">
+                        Year, Candidates, Mean Grade, Mean Points, University Qualifiers, County Position, National Position, A, A-, B+, B, B-, C+, C, C-, D+, D, D-, E, Top Student Name, Top Points, Top Grade
+                    </div>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <input type="file" name="excel_file" class="form-control" style="border-radius:10px;" accept=".xlsx,.xls" required>
+                        </div>
+                        <button type="submit" name="excel_submit" class="btn w-100" style="background:#27ae60;color:white;border-radius:10px;font-weight:600;"><i class="bi bi-upload me-2"></i>Upload Excel</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- MANUAL ENTRY -->
+            <div class="col-lg-8">
+                <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);">
+                    <h6 style="font-weight:700;color:#1a1a1a;margin-bottom:1rem;"><i class="bi bi-pencil-square me-2" style="color:#C0392B;"></i>Manual Entry</h6>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row g-2">
+                            <div class="col-md-3"><label style="font-size:0.8rem;font-weight:600;color:#555;">Year*</label><input type="number" name="year" class="form-control form-control-sm" style="border-radius:8px;" value="{{ current_year }}" required></div>
+                            <div class="col-md-3"><label style="font-size:0.8rem;font-weight:600;color:#555;">Candidates*</label><input type="number" name="candidates_sat" class="form-control form-control-sm" style="border-radius:8px;" required></div>
+                            <div class="col-md-3"><label style="font-size:0.8rem;font-weight:600;color:#555;">Mean Grade*</label><input type="text" name="mean_grade" class="form-control form-control-sm" style="border-radius:8px;" placeholder="e.g. B+" required></div>
+                            <div class="col-md-3"><label style="font-size:0.8rem;font-weight:600;color:#555;">Mean Points</label><input type="number" name="mean_points" class="form-control form-control-sm" style="border-radius:8px;" step="0.01" placeholder="e.g. 8.45"></div>
+                            <div class="col-md-3"><label style="font-size:0.8rem;font-weight:600;color:#555;">University Qualifiers</label><input type="number" name="university_qualifiers" class="form-control form-control-sm" style="border-radius:8px;"></div>
+                            <div class="col-md-3"><label style="font-size:0.8rem;font-weight:600;color:#555;">County Position</label><input type="number" name="county_position" class="form-control form-control-sm" style="border-radius:8px;"></div>
+                            <div class="col-md-3"><label style="font-size:0.8rem;font-weight:600;color:#555;">National Position</label><input type="number" name="national_position" class="form-control form-control-sm" style="border-radius:8px;"></div>
+                        </div>
+                        <p style="font-size:0.8rem;font-weight:700;color:#555;margin:1rem 0 0.5rem;">Grade Distribution</p>
+                        <div class="row g-2">
+                            
+                            <div class="col-4 col-md-2"><label style="font-size:0.75rem;color:#888;">A</label><input type="number" name="count_a_plain" class="form-control form-control-sm" style="border-radius:8px;" value="0"></div>
+                            <div class="col-4 col-md-2"><label style="font-size:0.75rem;color:#888;">A-</label><input type="number" name="count_a_minus" class="form-control form-control-sm" style="border-radius:8px;" value="0"></div>
+                            <div class="col-4 col-md-2"><label style="font-size:0.75rem;color:#888;">B+</label><input type="number" name="count_b_plus" class="form-control form-control-sm" style="border-radius:8px;" value="0"></div>
+                            <div class="col-4 col-md-2"><label style="font-size:0.75rem;color:#888;">B</label><input type="number" name="count_b_plain" class="form-control form-control-sm" style="border-radius:8px;" value="0"></div>
+                            <div class="col-4 col-md-2"><label style="font-size:0.75rem;color:#888;">B-</label><input type="number" name="count_b_minus" class="form-control form-control-sm" style="border-radius:8px;" value="0"></div>
+                            <div class="col-4 col-md-2"><label style="font-size:0.75rem;color:#888;">C+</label><input type="number" name="count_c_plus" class="form-control form-control-sm" style="border-radius:8px;" value="0"></div>
+                            <div class="col-4 col-md-2"><label style="font-size:0.75rem;color:#888;">C</label><input type="number" name="count_c_plain" class="form-control form-control-sm" style="border-radius:8px;" value="0"></div>
+                            <div class="col-4 col-md-2"><label style="font-size:0.75rem;color:#888;">C-</label><input type="number" name="count_c_minus" class="form-control form-control-sm" style="border-radius:8px;" value="0"></div>
+                            <div class="col-4 col-md-2"><label style="font-size:0.75rem;color:#888;">D+</label><input type="number" name="count_d_plus" class="form-control form-control-sm" style="border-radius:8px;" value="0"></div>
+                            <div class="col-4 col-md-2"><label style="font-size:0.75rem;color:#888;">D</label><input type="number" name="count_d_plain" class="form-control form-control-sm" style="border-radius:8px;" value="0"></div>
+                            <div class="col-4 col-md-2"><label style="font-size:0.75rem;color:#888;">D-</label><input type="number" name="count_d_minus" class="form-control form-control-sm" style="border-radius:8px;" value="0"></div>
+                            <div class="col-4 col-md-2"><label style="font-size:0.75rem;color:#888;">E</label><input type="number" name="count_e" class="form-control form-control-sm" style="border-radius:8px;" value="0"></div>
+                        </div>
+                        <p style="font-size:0.8rem;font-weight:700;color:#555;margin:1rem 0 0.5rem;">Top Student (Optional)</p>
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-5"><label style="font-size:0.75rem;color:#888;">Name</label><input type="text" name="top_student_name" class="form-control form-control-sm" style="border-radius:8px;"></div>
+                            <div class="col-md-3"><label style="font-size:0.75rem;color:#888;">Points</label><input type="number" name="top_student_points" class="form-control form-control-sm" style="border-radius:8px;" step="0.01"></div>
+                            <div class="col-md-2"><label style="font-size:0.75rem;color:#888;">Grade</label><input type="text" name="top_student_grade" class="form-control form-control-sm" style="border-radius:8px;"></div>
+                            <div class="col-md-2 d-flex align-items-end"><div class="form-check"><input type="checkbox" name="is_published" class="form-check-input" id="pub" checked><label class="form-check-label" style="font-size:0.8rem;" for="pub">Publish</label></div></div>
+                        </div>
+                        <div class="mb-3"><label style="font-size:0.8rem;font-weight:600;color:#555;">Summary (Optional)</label><textarea name="summary" class="form-control form-control-sm" style="border-radius:8px;" rows="2"></textarea></div>
+                        <button type="submit" name="manual_submit" class="btn w-100" style="background:#C0392B;color:white;border-radius:10px;font-weight:600;"><i class="bi bi-save me-2"></i>Save Results</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESULTS TABLE -->
+        {% if results %}
+        <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);margin-top:1.5rem;">
+            <h6 style="font-weight:700;color:#1a1a1a;margin-bottom:1rem;"><i class="bi bi-table me-2" style="color:#C0392B;"></i>All KCSE Results</h6>
+            <div class="table-responsive">
+                <table class="table" style="font-size:0.9rem;">
+                    <thead style="background:#f8f9fa;">
+                        <tr><th>Year</th><th>Candidates</th><th>Mean Grade</th><th>Mean Points</th><th>University</th><th>Pass Rate</th><th>Top Student</th><th>Status</th><th>Action</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for r in results %}
+                        <tr>
+                            <td><strong>{{ r.year }}</strong></td>
+                            <td>{{ r.candidates_sat }}</td>
+                            <td><strong style="color:#C0392B;">{{ r.mean_grade }}</strong></td>
+                            <td>{{ r.mean_points|default:"—" }}</td>
+                            <td>{{ r.university_qualifiers }}</td>
+                            <td>{{ r.pass_rate }}%</td>
+                            <td style="font-size:0.8rem;">{{ r.top_student_name|default:"—" }}</td>
+                            <td>
+                                {% if r.is_published %}
+                                <span style="background:#f0fff5;color:#27ae60;padding:2px 10px;border-radius:20px;font-size:0.8rem;font-weight:600;">Published</span>
+                                {% else %}
+                                <span style="background:#fff8f0;color:#e67e22;padding:2px 10px;border-radius:20px;font-size:0.8rem;font-weight:600;">Draft</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'kcse_toggle_publish' r.year %}" class="btn btn-sm" style="background:#f0f4ff;color:#3498db;border-radius:8px;">
+                                    {% if r.is_published %}Unpublish{% else %}Publish{% endif %}
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+
+
