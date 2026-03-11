@@ -1,4 +1,4 @@
-from django.urls import path
+﻿from django.urls import path
 from . import views
 
 urlpatterns = [
@@ -10,4 +10,6 @@ urlpatterns = [
     path("kcse-results/", views.kcse_results, name="kcse_results"),
     path("co-curricular/", views.co_curricular, name="co_curricular"),
     path("parent-comments/", views.parent_comments, name="parent_comments"),
+    path("news/", views.news_list, name="news_list"),
+    path("news/<slug:slug>/", views.news_detail, name="news_detail"),
 ]

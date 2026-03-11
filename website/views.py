@@ -1,4 +1,4 @@
-from django.shortcuts import render
+﻿from django.shortcuts import render, get_object_or_404
 from .models import KCSEResult, GalleryAlbum, CoCurricularActivity, NewsEvent
 from communications.models import ParentComment
 from schools.models import School
@@ -59,3 +59,29 @@ def parent_comments(request):
     school = get_school()
     comments = ParentComment.objects.filter(status="approved")
     return render(request, "website/parent_comments.html", {"school": school, "comments": comments})
+
+
+def news_list(request):
+    school = get_school()
+    post_type = request.GET.get("type", "")
+    news = NewsEvent.objects.filter(is_published=True)
+    if post_type:
+        news = news.filter(post_type=post_type)
+    context = {
+        "school": school,
+        "news": news,
+        "post_type": post_type,
+    }
+    return render(request, "website/news_list.html", context)
+
+
+def news_detail(request, slug):
+    school = get_school()
+    post = get_object_or_404(NewsEvent, slug=slug, is_published=True)
+    recent = NewsEvent.objects.filter(is_published=True).exclude(id=post.id)[:3]
+    context = {
+        "school": school,
+        "post": post,
+        "recent": recent,
+    }
+    return render(request, "website/news_detail.html", context)

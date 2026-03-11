@@ -1,4 +1,4 @@
-{% load static %}
+﻿{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,7 +56,7 @@
             <div class="col-md-6 text-end">
                 <i class="bi bi-geo-alt-fill me-1"></i>Kiagondu Forest Road, Karingari, Chuka
                 <span class="mx-2">|</span>
-                <i class="bi bi-clock-fill me-1"></i>Mon–Fri: 8AM–5PM
+                <i class="bi bi-clock-fill me-1"></i>Monâ€“Fri: 8AMâ€“5PM
             </div>
         </div>
     </div>
@@ -79,6 +79,7 @@
                 <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'academics' %}active{% endif %}" href="{% url 'academics' %}"><i class="bi bi-book-fill me-1"></i>Academics</a></li>
                 <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'co_curricular' %}active{% endif %}" href="{% url 'co_curricular' %}"><i class="bi bi-trophy-fill me-1"></i>Co-curricular</a></li>
                 <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" href="{% url 'gallery' %}"><i class="bi bi-images me-1"></i>Gallery</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'news_list' %}active{% endif %}" href="{% url 'news_list' %}"><i class="bi bi-newspaper me-1"></i>News</a></li>
                 <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'kcse_results' %}active{% endif %}" href="{% url 'kcse_results' %}"><i class="bi bi-award-fill me-1"></i>KCSE Results</a></li>
                 <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'contact' %}"><i class="bi bi-chat-dots-fill me-1"></i>Contact</a></li>
 
@@ -192,7 +193,7 @@
             </div>
         </div>
         <div class="footer-bottom text-center">
-            <p class="mb-0">© 2026 Chuka Girls Secondary School. All rights reserved. | Powered by <span style="color:#C0392B;font-weight:600;">SchoolSaaS</span></p>
+            <p class="mb-0">Â© 2026 Chuka Girls Secondary School. All rights reserved. | Powered by <span style="color:#C0392B;font-weight:600;">SchoolSaaS</span></p>
         </div>
     </div>
 </footer>
