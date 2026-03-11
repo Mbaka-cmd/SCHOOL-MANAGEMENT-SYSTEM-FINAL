@@ -1,30 +1,234 @@
 {% extends "base.html" %}
 {% block title %}Academics — {{ school.name }}{% endblock %}
 {% block content %}
+
+<!-- PAGE HEADER -->
 <section style="background: linear-gradient(135deg, #C0392B, #922B21); padding: 4rem 0; color: white;">
     <div class="container">
         <h1 style="font-weight:800;">Academics</h1>
-        <p style="opacity:0.85;">Our curriculum and subjects</p>
+        <p style="opacity:0.85;">Curriculum, subjects, and learning at St. Bakhita Chuka Girls High School</p>
     </div>
 </section>
-<section style="padding: 5rem 0;">
+
+<!-- CURRICULUM OVERVIEW -->
+<section style="padding:5rem 0;background:white;">
     <div class="container">
-        <h2 class="section-title">Subjects Offered</h2>
-        <div class="row g-4 mt-3">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6">
+                <h2 class="section-title">Our Curriculum</h2>
+                <p class="mt-3">Chuka Girls Secondary School follows Kenya's national secondary school curriculum as set by the Kenya Institute of Curriculum Development (KICD) and examined by the Kenya National Examinations Council (KNEC) through the <strong>Kenya Certificate of Secondary Education (KCSE)</strong>.</p>
+                <p>Students in Forms 1 and 2 take a broad set of compulsory subjects to build a strong academic foundation. In Forms 3 and 4, students select elective subjects based on their chosen stream — Sciences or Humanities — to specialise and prepare for KCSE examinations held every November.</p>
+                <p>The school is also progressively adapting to the new <strong>Competency-Based Curriculum (CBC)</strong> framework as directed by the Ministry of Education.</p>
+                <div class="row g-3 mt-2">
+                    <div class="col-6">
+                        <div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;">
+                            <div style="font-size:2rem;font-weight:800;color:#C0392B;">4</div>
+                            <div style="font-size:0.85rem;color:#666;">Forms (Years)</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;">
+                            <div style="font-size:2rem;font-weight:800;color:#C0392B;">14</div>
+                            <div style="font-size:0.85rem;color:#666;">Subjects Offered</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;">
+                            <div style="font-size:2rem;font-weight:800;color:#C0392B;">2</div>
+                            <div style="font-size:0.85rem;color:#666;">Subject Streams</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;">
+                            <div style="font-size:2rem;font-weight:800;color:#C0392B;">3</div>
+                            <div style="font-size:0.85rem;color:#666;">Science Labs</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div style="background:#f8f9fa;border-radius:20px;padding:2rem;">
+                    <h5 style="font-weight:700;color:#C0392B;margin-bottom:1.5rem;"><i class="bi bi-clock-fill me-2"></i>A Typical School Day</h5>
+                    <div style="display:flex;flex-direction:column;gap:0.8rem;">
+                        <div style="display:flex;gap:1rem;align-items:flex-start;">
+                            <span style="background:#C0392B;color:white;border-radius:8px;padding:2px 10px;font-size:0.8rem;font-weight:600;white-space:nowrap;">5:30 AM</span>
+                            <span style="font-size:0.9rem;color:#444;">Wake up, morning preps & personal hygiene</span>
+                        </div>
+                        <div style="display:flex;gap:1rem;align-items:flex-start;">
+                            <span style="background:#C0392B;color:white;border-radius:8px;padding:2px 10px;font-size:0.8rem;font-weight:600;white-space:nowrap;">6:30 AM</span>
+                            <span style="font-size:0.9rem;color:#444;">Morning assembly & breakfast</span>
+                        </div>
+                        <div style="display:flex;gap:1rem;align-items:flex-start;">
+                            <span style="background:#C0392B;color:white;border-radius:8px;padding:2px 10px;font-size:0.8rem;font-weight:600;white-space:nowrap;">7:30 AM</span>
+                            <span style="font-size:0.9rem;color:#444;">Lessons begin (8 periods of 40 minutes each)</span>
+                        </div>
+                        <div style="display:flex;gap:1rem;align-items:flex-start;">
+                            <span style="background:#C0392B;color:white;border-radius:8px;padding:2px 10px;font-size:0.8rem;font-weight:600;white-space:nowrap;">1:00 PM</span>
+                            <span style="font-size:0.9rem;color:#444;">Lunch break</span>
+                        </div>
+                        <div style="display:flex;gap:1rem;align-items:flex-start;">
+                            <span style="background:#C0392B;color:white;border-radius:8px;padding:2px 10px;font-size:0.8rem;font-weight:600;white-space:nowrap;">2:00 PM</span>
+                            <span style="font-size:0.9rem;color:#444;">Afternoon lessons continue</span>
+                        </div>
+                        <div style="display:flex;gap:1rem;align-items:flex-start;">
+                            <span style="background:#C0392B;color:white;border-radius:8px;padding:2px 10px;font-size:0.8rem;font-weight:600;white-space:nowrap;">4:30 PM</span>
+                            <span style="font-size:0.9rem;color:#444;">Games, clubs & co-curricular activities</span>
+                        </div>
+                        <div style="display:flex;gap:1rem;align-items:flex-start;">
+                            <span style="background:#C0392B;color:white;border-radius:8px;padding:2px 10px;font-size:0.8rem;font-weight:600;white-space:nowrap;">6:30 PM</span>
+                            <span style="font-size:0.9rem;color:#444;">Supper</span>
+                        </div>
+                        <div style="display:flex;gap:1rem;align-items:flex-start;">
+                            <span style="background:#C0392B;color:white;border-radius:8px;padding:2px 10px;font-size:0.8rem;font-weight:600;white-space:nowrap;">7:30 PM</span>
+                            <span style="font-size:0.9rem;color:#444;">Evening preps (supervised study)</span>
+                        </div>
+                        <div style="display:flex;gap:1rem;align-items:flex-start;">
+                            <span style="background:#922B21;color:white;border-radius:8px;padding:2px 10px;font-size:0.8rem;font-weight:600;white-space:nowrap;">9:30 PM</span>
+                            <span style="font-size:0.9rem;color:#444;">Lights out</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SUBJECT STREAMS -->
+<section style="padding:5rem 0;background:#f8f9fa;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title text-center">Subject Streams</h2>
+            <p class="text-muted mt-3">Students choose their stream at the start of Form 3</p>
+        </div>
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-5">
+                <div style="background:white;border-radius:15px;padding:2rem;box-shadow:0 5px 20px rgba(0,0,0,0.08);height:100%;border-top:4px solid #C0392B;">
+                    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;">
+                        <div style="width:50px;height:50px;background:linear-gradient(135deg,#C0392B,#922B21);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                            <i class="bi bi-flask-fill" style="color:white;font-size:1.3rem;"></i>
+                        </div>
+                        <h4 style="font-weight:700;color:#1a1a1a;margin:0;">Sciences Stream</h4>
+                    </div>
+                    <p class="text-muted" style="font-size:0.9rem;">For students with a strong foundation in Mathematics and the natural sciences. Prepares students for Medicine, Engineering, Agriculture, and Applied Sciences at university.</p>
+                    <ul class="text-muted" style="font-size:0.9rem;padding-left:1.2rem;">
+                        <li>Mathematics (compulsory)</li>
+                        <li>Biology</li>
+                        <li>Chemistry</li>
+                        <li>Physics</li>
+                        <li>English & Kiswahili (compulsory)</li>
+                        <li>Agriculture or Computer Studies (elective)</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div style="background:white;border-radius:15px;padding:2rem;box-shadow:0 5px 20px rgba(0,0,0,0.08);height:100%;border-top:4px solid #922B21;">
+                    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;">
+                        <div style="width:50px;height:50px;background:linear-gradient(135deg,#922B21,#6B1F17);border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                            <i class="bi bi-globe" style="color:white;font-size:1.3rem;"></i>
+                        </div>
+                        <h4 style="font-weight:700;color:#1a1a1a;margin:0;">Humanities Stream</h4>
+                    </div>
+                    <p class="text-muted" style="font-size:0.9rem;">For students with a passion for languages, social sciences, and business. Prepares students for Law, Education, Business, Arts, and Social Sciences at university.</p>
+                    <ul class="text-muted" style="font-size:0.9rem;padding-left:1.2rem;">
+                        <li>English & Kiswahili (compulsory)</li>
+                        <li>History & Government</li>
+                        <li>Geography</li>
+                        <li>Christian Religious Education</li>
+                        <li>Business Studies</li>
+                        <li>Home Science or Fasihi ya Kiswahili (elective)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SUBJECTS OFFERED -->
+<section style="padding:5rem 0;background:white;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title text-center">All Subjects Offered</h2>
+            <p class="text-muted mt-3">14 subjects across sciences, humanities, languages, and technical fields</p>
+        </div>
+        <div class="row g-4">
             {% for subject in school.subjects.all %}
             <div class="col-lg-3 col-md-4 col-6">
-                <div style="background:#fff0f0; border-radius:10px; padding:1rem; text-align:center; border-left:4px solid #C0392B;">
-                    <i class="bi bi-book-fill" style="color:#C0392B; font-size:1.5rem;"></i>
-                    <div style="font-weight:600; margin-top:0.5rem; font-size:0.9rem;">{{ subject.name }}</div>
+                <div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;border-left:4px solid #C0392B;transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <i class="bi bi-book-fill" style="color:#C0392B;font-size:1.5rem;"></i>
+                    <div style="font-weight:600;margin-top:0.5rem;font-size:0.9rem;">{{ subject.name }}</div>
                     <small class="text-muted">{{ subject.code }}</small>
                 </div>
             </div>
             {% empty %}
-            <div class="col-12">
-                <p class="text-muted">Subjects will be listed here soon.</p>
-            </div>
+            <div class="col-lg-3 col-md-4 col-6"><div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;border-left:4px solid #C0392B;"><i class="bi bi-translate" style="color:#C0392B;font-size:1.5rem;"></i><div style="font-weight:600;margin-top:0.5rem;font-size:0.9rem;">English</div><small class="text-muted">ENG</small></div></div>
+            <div class="col-lg-3 col-md-4 col-6"><div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;border-left:4px solid #C0392B;"><i class="bi bi-translate" style="color:#C0392B;font-size:1.5rem;"></i><div style="font-weight:600;margin-top:0.5rem;font-size:0.9rem;">Kiswahili</div><small class="text-muted">KIS</small></div></div>
+            <div class="col-lg-3 col-md-4 col-6"><div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;border-left:4px solid #C0392B;"><i class="bi bi-calculator-fill" style="color:#C0392B;font-size:1.5rem;"></i><div style="font-weight:600;margin-top:0.5rem;font-size:0.9rem;">Mathematics</div><small class="text-muted">MAT</small></div></div>
+            <div class="col-lg-3 col-md-4 col-6"><div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;border-left:4px solid #C0392B;"><i class="bi bi-flask-fill" style="color:#C0392B;font-size:1.5rem;"></i><div style="font-weight:600;margin-top:0.5rem;font-size:0.9rem;">Biology</div><small class="text-muted">BIO</small></div></div>
+            <div class="col-lg-3 col-md-4 col-6"><div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;border-left:4px solid #C0392B;"><i class="bi bi-droplet-fill" style="color:#C0392B;font-size:1.5rem;"></i><div style="font-weight:600;margin-top:0.5rem;font-size:0.9rem;">Chemistry</div><small class="text-muted">CHEM</small></div></div>
+            <div class="col-lg-3 col-md-4 col-6"><div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;border-left:4px solid #C0392B;"><i class="bi bi-lightning-fill" style="color:#C0392B;font-size:1.5rem;"></i><div style="font-weight:600;margin-top:0.5rem;font-size:0.9rem;">Physics</div><small class="text-muted">PHY</small></div></div>
+            <div class="col-lg-3 col-md-4 col-6"><div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;border-left:4px solid #C0392B;"><i class="bi bi-globe2" style="color:#C0392B;font-size:1.5rem;"></i><div style="font-weight:600;margin-top:0.5rem;font-size:0.9rem;">Geography</div><small class="text-muted">GEO</small></div></div>
+            <div class="col-lg-3 col-md-4 col-6"><div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;border-left:4px solid #C0392B;"><i class="bi bi-bank2" style="color:#C0392B;font-size:1.5rem;"></i><div style="font-weight:600;margin-top:0.5rem;font-size:0.9rem;">History & Government</div><small class="text-muted">HIST</small></div></div>
+            <div class="col-lg-3 col-md-4 col-6"><div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;border-left:4px solid #C0392B;"><i class="bi bi-heart-fill" style="color:#C0392B;font-size:1.5rem;"></i><div style="font-weight:600;margin-top:0.5rem;font-size:0.9rem;">CRE</div><small class="text-muted">CRE</small></div></div>
+            <div class="col-lg-3 col-md-4 col-6"><div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;border-left:4px solid #C0392B;"><i class="bi bi-graph-up" style="color:#C0392B;font-size:1.5rem;"></i><div style="font-weight:600;margin-top:0.5rem;font-size:0.9rem;">Business Studies</div><small class="text-muted">BST</small></div></div>
+            <div class="col-lg-3 col-md-4 col-6"><div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;border-left:4px solid #C0392B;"><i class="bi bi-pc-display" style="color:#C0392B;font-size:1.5rem;"></i><div style="font-weight:600;margin-top:0.5rem;font-size:0.9rem;">Computer Studies</div><small class="text-muted">COMP</small></div></div>
+            <div class="col-lg-3 col-md-4 col-6"><div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;border-left:4px solid #C0392B;"><i class="bi bi-tree-fill" style="color:#C0392B;font-size:1.5rem;"></i><div style="font-weight:600;margin-top:0.5rem;font-size:0.9rem;">Agriculture</div><small class="text-muted">AGR</small></div></div>
+            <div class="col-lg-3 col-md-4 col-6"><div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;border-left:4px solid #C0392B;"><i class="bi bi-house-heart-fill" style="color:#C0392B;font-size:1.5rem;"></i><div style="font-weight:600;margin-top:0.5rem;font-size:0.9rem;">Home Science</div><small class="text-muted">HSC</small></div></div>
+            <div class="col-lg-3 col-md-4 col-6"><div style="background:#fff0f0;border-radius:10px;padding:1rem;text-align:center;border-left:4px solid #C0392B;"><i class="bi bi-book-half" style="color:#C0392B;font-size:1.5rem;"></i><div style="font-weight:600;margin-top:0.5rem;font-size:0.9rem;">Fasihi ya Kiswahili</div><small class="text-muted">FAS</small></div></div>
             {% endfor %}
         </div>
     </div>
 </section>
+
+<!-- ACADEMIC SUPPORT -->
+<section style="padding:5rem 0;background:#f8f9fa;">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="section-title text-center">Academic Support Programs</h2>
+            <p class="text-muted mt-3">We go beyond the classroom to ensure every student succeeds</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div style="background:white;border-radius:15px;padding:1.5rem;text-align:center;box-shadow:0 5px 20px rgba(0,0,0,0.07);height:100%;">
+                    <i class="bi bi-moon-stars-fill" style="font-size:2.5rem;color:#C0392B;"></i>
+                    <h6 style="font-weight:700;margin-top:1rem;">Evening Preps</h6>
+                    <p class="text-muted" style="font-size:0.85rem;">Supervised study sessions every evening to reinforce classroom learning and complete assignments.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div style="background:white;border-radius:15px;padding:1.5rem;text-align:center;box-shadow:0 5px 20px rgba(0,0,0,0.07);height:100%;">
+                    <i class="bi bi-clipboard2-check-fill" style="font-size:2.5rem;color:#C0392B;"></i>
+                    <h6 style="font-weight:700;margin-top:1rem;">Mock Examinations</h6>
+                    <p class="text-muted" style="font-size:0.85rem;">Form 4 students sit mock exams in October to prepare thoroughly for the KCSE national examinations in November.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div style="background:white;border-radius:15px;padding:1.5rem;text-align:center;box-shadow:0 5px 20px rgba(0,0,0,0.07);height:100%;">
+                    <i class="bi bi-compass-fill" style="font-size:2.5rem;color:#C0392B;"></i>
+                    <h6 style="font-weight:700;margin-top:1rem;">Career Guidance</h6>
+                    <p class="text-muted" style="font-size:0.85rem;">Regular career seminars, mentorship sessions, and counselling to help students make informed academic and career choices.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div style="background:white;border-radius:15px;padding:1.5rem;text-align:center;box-shadow:0 5px 20px rgba(0,0,0,0.07);height:100%;">
+                    <i class="bi bi-journal-richtext" style="font-size:2.5rem;color:#C0392B;"></i>
+                    <h6 style="font-weight:700;margin-top:1rem;">Science Exhibitions</h6>
+                    <p class="text-muted" style="font-size:0.85rem;">Annual internal science fairs and participation in regional competitions to foster innovation and research skills.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section style="padding:4rem 0;background:linear-gradient(135deg,#1a1a1a,#2d2d2d);">
+    <div class="container text-center">
+        <h3 style="color:white;font-weight:800;">Want to See Our Results?</h3>
+        <p style="color:rgba(255,255,255,0.7);margin:1rem 0 2rem;">Visit our KCSE Results page to see how our students perform nationally</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="{% url 'kcse_results' %}" class="btn btn-lg" style="background:#C0392B;color:white;border-radius:30px;padding:0.8rem 2.5rem;font-weight:600;"><i class="bi bi-award-fill me-2"></i>KCSE Results</a>
+            <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg" style="border-radius:30px;padding:0.8rem 2.5rem;font-weight:600;"><i class="bi bi-envelope me-2"></i>Contact Us</a>
+        </div>
+    </div>
+</section>
+
 {% endblock %}
