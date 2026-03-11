@@ -122,3 +122,6 @@ AT_API_KEY = 'atsk_2a150f67801936b8f18ac47d0848677b9084609aa562597290844d728d764
 
 
 
+
+# Temporary superuser creation - remove after first deploy
+from django.contrib.auth import get_user_model
