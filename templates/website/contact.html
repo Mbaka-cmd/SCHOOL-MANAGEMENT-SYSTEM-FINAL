@@ -1,75 +1,84 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 {% block title %}Contact Us — {{ school.name }}{% endblock %}
 {% block content %}
+
 <section style="background: linear-gradient(135deg, #C0392B, #922B21); padding: 4rem 0; color: white;">
     <div class="container">
         <h1 style="font-weight:800;">Contact Us</h1>
-        <p style="opacity:0.85;">Get in touch with Chuka Girls Secondary School</p>
+        <p style="opacity:0.85;">Get in touch with St. Bakhita Chuka Girls High School</p>
     </div>
 </section>
-<section style="padding: 5rem 0;">
+
+<section style="padding: 5rem 0; background:white;">
     <div class="container">
         <div class="row g-5">
             <div class="col-lg-5">
                 <h2 class="section-title">Get In Touch</h2>
-                <div class="mt-4">
-                    <div class="d-flex mb-3">
-                        <div style="width:45px; height:45px; background:#C0392B; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                            <i class="bi bi-geo-alt-fill" style="color:white;"></i>
-                        </div>
-                        <div class="ms-3">
-                            <strong>Address</strong>
-                            <p class="text-muted mb-0">Kiagondu Forest Road, Karingari, Chuka<br>P.O. Box 3, Chuka 60400</p>
-                        </div>
+                <p class="text-muted mt-3">We welcome enquiries from parents, prospective students, and the public. Our administration office is open during school term and holiday periods.</p>
+                <div class="mt-4" style="display:flex;flex-direction:column;gap:1.2rem;">
+                    <div class="d-flex">
+                        <div style="width:45px;height:45px;background:#C0392B;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="bi bi-geo-alt-fill" style="color:white;"></i></div>
+                        <div class="ms-3"><strong>Physical Address</strong><p class="text-muted mb-0">Kiagondu Forest Road, Karingari<br>Chuka, Tharaka-Nithi County</p></div>
                     </div>
-                    <div class="d-flex mb-3">
-                        <div style="width:45px; height:45px; background:#C0392B; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                            <i class="bi bi-telephone-fill" style="color:white;"></i>
-                        </div>
-                        <div class="ms-3">
-                            <strong>Phone</strong>
-                            <p class="text-muted mb-0">064-630001 / 020-3570982</p>
-                        </div>
+                    <div class="d-flex">
+                        <div style="width:45px;height:45px;background:#C0392B;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="bi bi-mailbox2" style="color:white;"></i></div>
+                        <div class="ms-3"><strong>Postal Address</strong><p class="text-muted mb-0">P.O. Box 3, Chuka — 60400</p></div>
                     </div>
-                    <div class="d-flex mb-3">
-                        <div style="width:45px; height:45px; background:#C0392B; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                            <i class="bi bi-envelope-fill" style="color:white;"></i>
-                        </div>
-                        <div class="ms-3">
-                            <strong>Email</strong>
-                            <p class="text-muted mb-0">chukaagirls3@gmail.com</p>
-                        </div>
+                    <div class="d-flex">
+                        <div style="width:45px;height:45px;background:#C0392B;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="bi bi-telephone-fill" style="color:white;"></i></div>
+                        <div class="ms-3"><strong>Phone</strong><p class="text-muted mb-0"><a href="tel:064630001" style="color:#C0392B;text-decoration:none;">064-630001</a><br><a href="tel:+254115388019" style="color:#C0392B;text-decoration:none;">0115 388 019</a></p></div>
                     </div>
+                    <div class="d-flex">
+                        <div style="width:45px;height:45px;background:#C0392B;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="bi bi-envelope-fill" style="color:white;"></i></div>
+                        <div class="ms-3"><strong>Email</strong><p class="text-muted mb-0"><a href="mailto:chukaagirls3@gmail.com" style="color:#C0392B;text-decoration:none;">chukaagirls3@gmail.com</a></p></div>
+                    </div>
+                    <div class="d-flex">
+                        <div style="width:45px;height:45px;background:#C0392B;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="bi bi-clock-fill" style="color:white;"></i></div>
+                        <div class="ms-3"><strong>Office Hours</strong><p class="text-muted mb-0">Monday – Friday: 8:00 AM – 5:00 PM<br>Saturday: 9:00 AM – 1:00 PM (term time only)</p></div>
+                    </div>
+                    <div class="d-flex">
+                        <div style="width:45px;height:45px;background:#C0392B;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="bi bi-award-fill" style="color:white;"></i></div>
+                        <div class="ms-3"><strong>KNEC Code</strong><p class="text-muted mb-0">19308304</p></div>
+                    </div>
+                </div>
+                <div style="background:#fff0f0;border-radius:15px;padding:1.5rem;margin-top:2rem;border-left:4px solid #C0392B;">
+                    <h6 style="font-weight:700;color:#C0392B;margin-bottom:0.8rem;"><i class="bi bi-info-circle-fill me-2"></i>Admissions Enquiries</h6>
+                    <p class="text-muted mb-0" style="font-size:0.9rem;">Form 1 admissions are processed through the KNEC national placement system. Contact the school or your County Education Office for guidance.</p>
                 </div>
             </div>
             <div class="col-lg-7">
-                <div style="background:#f8f9fa; border-radius:15px; padding:2rem;">
-                    <h4 style="font-weight:700; color:#C0392B;">Send Us a Message</h4>
+                <div style="background:#f8f9fa;border-radius:15px;padding:2rem;margin-bottom:2rem;">
+                    <h4 style="font-weight:700;color:#C0392B;">Send Us a Message</h4>
+                    <p class="text-muted" style="font-size:0.9rem;">Fill in the form below and we will get back to you as soon as possible.</p>
                     <form method="post" class="mt-3">
                         {% csrf_token %}
-                        <div class="mb-3">
-                            <label class="form-label fw-600">Full Name</label>
-                            <input type="text" class="form-control" placeholder="Your full name" required>
+                        <div class="mb-3"><label class="form-label fw-bold">Full Name *</label><input type="text" class="form-control" placeholder="Your full name" required></div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6"><label class="form-label fw-bold">Email Address *</label><input type="email" class="form-control" placeholder="your@email.com" required></div>
+                            <div class="col-md-6"><label class="form-label fw-bold">Phone Number</label><input type="text" class="form-control" placeholder="+254 7XX XXX XXX"></div>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Email Address</label>
-                            <input type="email" class="form-control" placeholder="your@email.com" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Phone Number</label>
-                            <input type="text" class="form-control" placeholder="+254...">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Message</label>
-                            <textarea class="form-control" rows="4" placeholder="Your message..." required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-lg w-100" style="background:#C0392B; color:white; border-radius:10px;">
-                            <i class="bi bi-send-fill me-2"></i>Send Message
-                        </button>
+                        <div class="mb-3"><label class="form-label fw-bold">Subject</label><select class="form-control"><option value="">Select a topic...</option><option>Admissions Enquiry</option><option>Fee Structure</option><option>Academic Performance</option><option>Parent / Guardian Enquiry</option><option>General Enquiry</option></select></div>
+                        <div class="mb-3"><label class="form-label fw-bold">Message *</label><textarea class="form-control" rows="4" placeholder="Write your message here..." required></textarea></div>
+                        <button type="submit" class="btn btn-lg w-100" style="background:#C0392B;color:white;border-radius:10px;font-weight:600;"><i class="bi bi-send-fill me-2"></i>Send Message</button>
                     </form>
+                </div>
+                <div style="border-radius:15px;overflow:hidden;box-shadow:0 5px 20px rgba(0,0,0,0.1);">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.5!2d37.642!3d-0.3318!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMC4zMzE4wrBTIDM3LjY0MsKwRQ!5e0!3m2!1sen!2ske!4v1" width="100%" height="280" style="border:0;display:block;" allowfullscreen="" loading="lazy"></iframe>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<section style="padding:3rem 0;background:#f8f9fa;">
+    <div class="container">
+        <div class="text-center mb-4"><h4 style="font-weight:700;color:#1a1a1a;">How to Find Us</h4></div>
+        <div class="row g-4 text-center">
+            <div class="col-md-4"><div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);"><i class="bi bi-bus-front-fill" style="font-size:2rem;color:#C0392B;"></i><h6 style="font-weight:700;margin-top:0.8rem;">By Matatu</h6><p class="text-muted" style="font-size:0.85rem;">Board any Chuka-bound matatu from Nairobi via the Meru Highway. Alight at Chuka town and take a boda boda to Karingari.</p></div></div>
+            <div class="col-md-4"><div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);"><i class="bi bi-car-front-fill" style="font-size:2rem;color:#C0392B;"></i><h6 style="font-weight:700;margin-top:0.8rem;">By Car</h6><p class="text-muted" style="font-size:0.85rem;">From Nairobi via the A2 highway through Embu. Turn into Chuka town and follow directions towards Karingari / Kiagondu Forest Road.</p></div></div>
+            <div class="col-md-4"><div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);"><i class="bi bi-pin-map-fill" style="font-size:2rem;color:#C0392B;"></i><h6 style="font-weight:700;margin-top:0.8rem;">GPS Coordinates</h6><p class="text-muted" style="font-size:0.85rem;">Latitude: -0.3318 | Longitude: 37.642<br>Search <strong>"Chuka Girls High School"</strong> on Google Maps.</p></div></div>
+        </div>
+    </div>
+</section>
+
 {% endblock %}
