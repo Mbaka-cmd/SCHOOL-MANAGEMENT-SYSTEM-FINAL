@@ -6,7 +6,7 @@ SECRET_KEY = 'django-insecure-chuka-girls-school-management-system-2026-secret-k
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'school-management-system-final.onrender.com', '.onrender.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -114,6 +114,7 @@ import os as _os
 # AT_API_KEY env
 AT_USERNAME = 'chukagirls2026'
 AT_API_KEY = 'atsk_2a150f67801936b8f18ac47d0848677b9084609aa562597290844d728d764342fb649ee8'
+
 
 
 
