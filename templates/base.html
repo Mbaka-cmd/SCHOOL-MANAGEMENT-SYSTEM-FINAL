@@ -11,8 +11,8 @@
     <style>
         :root { --school-red: #C0392B; --school-dark-red: #922B21; }
         * { font-family: 'Poppins', sans-serif; }
-        body { overflow-x: hidden; } .navbar { margin-bottom: 0 !important; }
-        .navbar { background: linear-gradient(135deg, var(--school-red), var(--school-dark-red)); box-shadow: 0 2px 15px rgba(0,0,0,0.2); padding: 0.8rem 0; }
+        body { overflow-x: hidden; margin-top: 0; padding-top: 0; }
+        .navbar { background: linear-gradient(135deg, var(--school-red), var(--school-dark-red)); box-shadow: 0 2px 15px rgba(0,0,0,0.2); padding: 0.8rem 0; margin-bottom: 0 !important; }
         .navbar-brand { font-weight: 700; font-size: 1.1rem; color: white !important; }
         .navbar-brand img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid white; margin-right: 10px; object-fit: cover; }
         .nav-link { color: rgba(255,255,255,0.9) !important; font-weight: 500; font-size: 0.9rem; padding: 0.5rem 1rem !important; transition: all 0.3s; }
@@ -84,8 +84,8 @@
                     </form>
                 </li>
                 {% endif %}
+                {% if request.user.is_authenticated %}
                 <li class="nav-item ms-lg-2">
-                    {% if request.user.is_authenticated %}
                     <div class="dropdown">
                         <a class="nav-link btn-login dropdown-toggle" href="#" data-bs-toggle="dropdown">
                             <i class="bi bi-person-circle me-1"></i>{{ request.user.first_name }}
@@ -110,10 +110,8 @@
                             <li><a class="dropdown-item" href="{% url 'logout' %}" style="padding:0.7rem 1rem;font-size:0.9rem;color:#e74c3c;"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
                         </ul>
                     </div>
-                    {% else %}
-                    <a class="nav-link btn-login" href="{% url 'login' %}"><i class="bi bi-person-fill me-1"></i>Portal Login</a>
-                    {% endif %}
                 </li>
+                {% endif %}
             </ul>
         </div>
     </div>
@@ -175,4 +173,3 @@
 {% block extra_js %}{% endblock %}
 </body>
 </html>
-
