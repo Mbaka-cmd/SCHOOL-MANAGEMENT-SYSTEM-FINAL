@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+﻿from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.db.models import Sum, Q
@@ -10,7 +10,7 @@ from accounts.models import User
 import json
 
 
-# ── DECORATORS ─────────────────────────────────────────────
+# â”€â”€ DECORATORS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 def admin_required(view_func):
     def wrapper(request, *args, **kwargs):
@@ -44,12 +44,12 @@ def _access_denied_html():
     <style>body{font-family:Poppins,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#f8f9fa;}
     .box{text-align:center;padding:3rem;background:white;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,0.1);max-width:400px;}
     h2{color:#C0392B;}a{background:#C0392B;color:white;padding:0.7rem 2rem;border-radius:25px;text-decoration:none;font-weight:600;}</style>
-    </head><body><div class="box"><div style="font-size:3rem;">⛔</div><h2>Access Denied</h2>
+    </head><body><div class="box"><div style="font-size:3rem;">â›”</div><h2>Access Denied</h2>
     <p style="color:#666;margin-bottom:1.5rem;">You don't have permission to view this page.</p>
     <a href="/">Go Home</a></div></body></html>"""
 
 
-# ── SMART DASHBOARD ROUTER ──────────────────────────────────
+# â”€â”€ SMART DASHBOARD ROUTER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 @login_required
 def smart_dashboard(request):
@@ -69,17 +69,17 @@ def smart_dashboard(request):
         elif role == 'super_admin':
             return redirect('super_admin_dashboard')
         else:
-            # ✅ FIX: redirect to main_dashboard not admin_dashboard
+            # âœ… FIX: redirect to main_dashboard not admin_dashboard
             return redirect('main_dashboard')
 
     if user.is_teacher:
-        # ✅ FIX: redirect to main_dashboard not admin_dashboard
+        # âœ… FIX: redirect to main_dashboard not admin_dashboard
         return redirect('main_dashboard')
 
     return redirect('home')
 
 
-# ── ADMIN DASHBOARD (General) ───────────────────────────────
+# â”€â”€ ADMIN DASHBOARD (General) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 @admin_required
 def admin_dashboard(request):
@@ -137,7 +137,7 @@ def admin_dashboard(request):
     return render(request, "schools/admin_dashboard.html", context)
 
 
-# ── BURSAR DASHBOARD ────────────────────────────────────────
+# â”€â”€ BURSAR DASHBOARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 @admin_required
 def bursar_dashboard(request):
@@ -188,7 +188,7 @@ def bursar_dashboard(request):
     return render(request, "schools/bursar_dashboard.html", context)
 
 
-# ── PRINCIPAL DASHBOARD ─────────────────────────────────────
+# â”€â”€ PRINCIPAL DASHBOARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 @admin_required
 def principal_dashboard(request):
@@ -231,7 +231,7 @@ def principal_dashboard(request):
     return render(request, "schools/principal_dashboard.html", context)
 
 
-# ── DEAN DASHBOARD ──────────────────────────────────────────
+# â”€â”€ DEAN DASHBOARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 @admin_required
 def dean_dashboard(request):
@@ -276,7 +276,7 @@ def dean_dashboard(request):
     return render(request, "schools/dean_dashboard.html", context)
 
 
-# ── SUPER ADMIN DASHBOARD (Mercy only) ─────────────────────
+# â”€â”€ SUPER ADMIN DASHBOARD (Mercy only) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 @login_required
 def super_admin_dashboard(request):
@@ -314,7 +314,7 @@ def super_admin_dashboard(request):
     return render(request, "schools/super_admin_dashboard.html", context)
 
 
-# ── GLOBAL SEARCH ────────────────────────────────────────────
+# â”€â”€ GLOBAL SEARCH â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 @admin_required
 def global_search(request):
@@ -333,11 +333,11 @@ def global_search(request):
     return render(request, "schools/search_results.html", context)
 
 
-# ── KCSE UPLOAD ──────────────────────────────────────────────
+# â”€â”€ KCSE UPLOAD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 @admin_required
 def kcse_upload(request):
-    from schools.models import KCSEResult
+    from website.models import KCSEResult
     school = request.user.school
     if request.method == "POST":
         year = request.POST.get("year")
@@ -361,6 +361,6 @@ def kcse_upload(request):
         from django.contrib import messages
         messages.success(request, f"KCSE {year} results saved!")
         return redirect("kcse_upload")
-    from schools.models import KCSEResult
+    from website.models import KCSEResult
     results = KCSEResult.objects.filter(school=school).order_by("-year")
     return render(request, "schools/kcse_upload.html", {"results": results, "school": school})

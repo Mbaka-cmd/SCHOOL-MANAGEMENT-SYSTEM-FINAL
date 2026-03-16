@@ -8,16 +8,52 @@ from django.utils import timezone
 def login_view(request):
     if request.user.is_authenticated:
         return redirect(request.user.get_dashboard_url())
+
     if request.method == "POST":
-        email = request.POST.get("email")
-        password = request.POST.get("password")
-        user = authenticate(request, email=email, password=password)
+        identifier = request.POST.get("email", "").strip()
+        password = request.POST.get("password", "").strip()
+
+        user = None
+
+        # ── Try email login first ──
+        user = authenticate(request, email=identifier, password=password)
+
+        # ── Try admission number login (students) ──
+        if not user:
+            from students.models import Student
+            student = Student.objects.filter(
+                admission_number__iexact=identifier, is_active=True
+            ).select_related('user').first()
+
+            if student and student.user:
+                # Password = admission number by default
+                user = authenticate(request, email=student.user.email, password=password)
+
+        # ── Try firstname_admissionnumber format ──
+        # e.g. "Adalyn_CGS02/2026"
+        if not user and "_" in identifier:
+            parts = identifier.split("_", 1)
+            if len(parts) == 2:
+                first_name, adm_number = parts
+                from students.models import Student
+                student = Student.objects.filter(
+                    admission_number__iexact=adm_number.strip(),
+                    first_name__iexact=first_name.strip(),
+                    is_active=True
+                ).select_related('user').first()
+                if student and student.user:
+                    user = authenticate(request, email=student.user.email, password=password)
+
         if user:
             login(request, user)
+
+            # ── Notify parent when student logs in ──
             if user.is_student:
                 try:
                     student = user.student_profile
-                    parents = student.parents.filter(email__isnull=False).exclude(email="")
+                    parents = student.parents.filter(
+                        email__isnull=False
+                    ).exclude(email="")
                     for parent in parents:
                         send_mail(
                             subject=f"Portal Login Alert - {student.get_full_name()}",
@@ -32,13 +68,16 @@ def login_view(request):
                             ),
                             from_email='mercykathomi428@gmail.com',
                             recipient_list=[parent.email],
-                            fail_silently=False,
+                            fail_silently=True,
                         )
                 except Exception as e:
                     print(f"Email error: {e}")
+
             return redirect(user.get_dashboard_url())
+
         else:
-            messages.error(request, "Invalid email or password")
+            messages.error(request, "Invalid credentials. Try your email, admission number, or Firstname_AdmNumber.")
+
     return render(request, "accounts/login.html")
 
 
@@ -69,7 +108,9 @@ def parent_register(request):
         password = request.POST.get("password", "").strip()
         relationship = request.POST.get("relationship", "guardian")
 
-        student = Student.objects.filter(admission_number=admission_number, is_active=True).first()
+        student = Student.objects.filter(
+            admission_number=admission_number, is_active=True
+        ).first()
 
         if not student:
             messages.error(request, "No student found with that admission number.")
@@ -82,7 +123,8 @@ def parent_register(request):
         try:
             user = User.objects.create_user(
                 email=email, password=password, first_name=first_name,
-                last_name=last_name, school=student.school, is_parent=True, phone=phone,
+                last_name=last_name, school=student.school,
+                is_parent=True, phone=phone,
             )
             parent, created = ParentGuardian.objects.get_or_create(
                 email=email,
@@ -102,17 +144,22 @@ def parent_register(request):
                     message=(
                         f"Dear {first_name},\n\nYour parent portal account has been created!\n\n"
                         f"Linked to: {student.get_full_name()} (Adm: {student.admission_number})\n\n"
-                        f"Login at: http://127.0.0.1:8000/accounts/login/\n\n"
+                        f"Login at: https://school-management-system-final.onrender.com/accounts/login/\n\n"
                         f"Regards,\nChuka Girls Secondary School"
                     ),
                     from_email='mercykathomi428@gmail.com',
                     recipient_list=[email],
-                    fail_silently=False,
+                    fail_silently=True,
                 )
             except Exception as e:
                 print(f"Welcome email error: {e}")
-            messages.success(request, f"Account created! Linked to {student.get_full_name()}. Please login.")
+
+            messages.success(
+                request,
+                f"Account created! Linked to {student.get_full_name()}. Please login."
+            )
             return redirect("login")
+
         except Exception as e:
             messages.error(request, f"Error creating account: {e}")
 

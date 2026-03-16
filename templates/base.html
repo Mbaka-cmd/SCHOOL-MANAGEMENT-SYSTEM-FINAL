@@ -127,17 +127,10 @@
 </div>
 {% endif %}
 {% block content %}{% endblock %}
-<footer style="background:linear-gradient(135deg,#1a1a1a,#2d2d2d);color:rgba(255,255,255,0.8);padding:1.5rem 0 0;">
+<footer style="background:linear-gradient(135deg,#1a1a1a,#2d2d2d);color:rgba(255,255,255,0.8);padding:1rem 0 0;">
     <div class="container">
         <div class="row g-3 align-items-start">
             <div class="col-lg-4 col-6">
-                <div class="d-flex align-items-center gap-2 mb-2">
-                    <img src="{% static 'logo.png' %}" alt="Logo" style="width:35px;height:35px;border-radius:50%;border:2px solid #C0392B;object-fit:cover;">
-                    <span style="font-weight:700;font-size:0.85rem;color:white;">Chuka Girls</span>
-                </div>
-                <p style="font-size:0.78rem;opacity:0.7;margin:0;">"Today's Effort is Tomorrow's Success"</p>
-            </div>
-            <div class="col-lg-2 col-6">
                 <h6 style="color:#C0392B;font-size:0.8rem;font-weight:700;margin-bottom:0.5rem;">Quick Links</h6>
                 <ul class="list-unstyled mb-0" style="font-size:0.78rem;">
                     <li><a href="{% url 'home' %}" style="color:rgba(255,255,255,0.7);">Home</a></li>
@@ -151,7 +144,6 @@
                 <h6 style="color:#C0392B;font-size:0.8rem;font-weight:700;margin-bottom:0.5rem;">Contact</h6>
                 <ul class="list-unstyled mb-0" style="font-size:0.78rem;color:rgba(255,255,255,0.7);">
                     <li><i class="bi bi-geo-alt-fill me-1" style="color:#C0392B;"></i>Karingari, Chuka</li>
-                    <li><i class="bi bi-telephone-fill me-1" style="color:#C0392B;"></i>064-630001</li>
                     <li><i class="bi bi-envelope-fill me-1" style="color:#C0392B;"></i>chukaagirls3@gmail.com</li>
                 </ul>
             </div>
@@ -173,4 +165,6 @@
 {% block extra_js %}{% endblock %}
 </body>
 </html>
+
+
 
