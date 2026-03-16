@@ -24,7 +24,6 @@ def admin_required(view_func):
 
 
 def bursar_required(view_func):
-    """Only bursar and super_admin can access."""
     def wrapper(request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect('login')
@@ -54,10 +53,6 @@ def _access_denied_html():
 
 @login_required
 def smart_dashboard(request):
-    """
-    Routes each user to their role-specific dashboard.
-    URL: /school-admin/dashboard/
-    """
     user = request.user
 
     if user.is_platform_admin:
@@ -74,10 +69,12 @@ def smart_dashboard(request):
         elif role == 'super_admin':
             return redirect('super_admin_dashboard')
         else:
-            return redirect('admin_dashboard')
+            # ✅ FIX: redirect to main_dashboard not admin_dashboard
+            return redirect('main_dashboard')
 
     if user.is_teacher:
-        return redirect('admin_dashboard')
+        # ✅ FIX: redirect to main_dashboard not admin_dashboard
+        return redirect('main_dashboard')
 
     return redirect('home')
 
@@ -153,26 +150,20 @@ def bursar_dashboard(request):
     total_balance = total_expected - total_collected
     collection_rate = round((total_collected / total_expected * 100), 1) if total_expected > 0 else 0
 
-    # Payment method breakdown
     mpesa_total = all_payments.filter(method='mpesa', is_reversed=False).aggregate(t=Sum('amount'))['t'] or 0
     bank_total = all_payments.filter(method='bank', is_reversed=False).aggregate(t=Sum('amount'))['t'] or 0
     cash_total = all_payments.filter(method='cash', is_reversed=False).aggregate(t=Sum('amount'))['t'] or 0
     bursary_total = all_payments.filter(method='bursary', is_reversed=False).aggregate(t=Sum('amount'))['t'] or 0
 
-    # Invoice status counts
     paid_count = all_invoices.filter(status='paid').count()
     partial_count = all_invoices.filter(status='partial').count()
     pending_count = all_invoices.filter(status='pending').count()
     total_invoices = all_invoices.count()
 
-    # Top defaulters — invoices with highest balance
     defaulters = all_invoices.filter(
         status__in=['pending', 'partial']
-    ).select_related(
-        'student', 'student__current_stream'
-    ).order_by('-total_expected')[:10]
+    ).select_related('student', 'student__current_stream').order_by('-total_expected')[:10]
 
-    # Recent payments
     recent_payments = all_payments.select_related(
         'invoice__student', 'received_by'
     ).order_by('-payment_date')[:15]
@@ -263,9 +254,7 @@ def dean_dashboard(request):
         school=school, is_active=True
     ).order_by('-created_at')[:10]
 
-    recent_exams = Exam.objects.filter(
-        school=school
-    ).order_by('-created_at')[:5]
+    recent_exams = Exam.objects.filter(school=school).order_by('-created_at')[:5]
 
     grade_labels = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E']
     grade_counts = [
@@ -291,10 +280,6 @@ def dean_dashboard(request):
 
 @login_required
 def super_admin_dashboard(request):
-    """
-    Secret dashboard — only platform_admin sees this.
-    Shows ALL schools, system health, revenue.
-    """
     if not request.user.is_platform_admin:
         return HttpResponseForbidden(_access_denied_html())
 
@@ -379,4 +364,3 @@ def kcse_upload(request):
     from schools.models import KCSEResult
     results = KCSEResult.objects.filter(school=school).order_by("-year")
     return render(request, "schools/kcse_upload.html", {"results": results, "school": school})
-    
