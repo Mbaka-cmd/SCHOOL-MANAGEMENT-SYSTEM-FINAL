@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Principal Dashboard — {{ school.name }}{% endblock %}
+{% block content %}
+
+<section style="background:linear-gradient(135deg,#2c3e50,#1a252f);padding:2rem 0;color:white;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col">
+                <h4 style="font-weight:800;margin:0;"><i class="bi bi-building me-2"></i>Principal's Dashboard</h4>
+                <p style="opacity:0.75;margin:0;font-size:0.9rem;">{{ school.name }} — School Overview</p>
+            </div>
+            <div class="col-auto">
+                <span style="background:rgba(255,255,255,0.1);padding:6px 16px;border-radius:20px;font-size:0.82rem;border:1px solid rgba(255,255,255,0.2);">
+                    <i class="bi bi-person-badge-fill me-1"></i>Principal View — Read Only
+                </span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="padding:2rem 0 4rem;background:#f8f9fa;">
+    <div class="container">
+
+        <!-- OVERVIEW CARDS -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div style="background:linear-gradient(135deg,#3498db,#2980b9);border-radius:15px;padding:1.5rem;color:white;">
+                    <div style="font-size:2.2rem;font-weight:800;">{{ total_students }}</div>
+                    <div style="opacity:0.85;font-size:0.85rem;">Total Students</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div style="background:linear-gradient(135deg,#2ecc71,#27ae60);border-radius:15px;padding:1.5rem;color:white;">
+                    <div style="font-size:2.2rem;font-weight:800;">{{ total_teachers }}</div>
+                    <div style="opacity:0.85;font-size:0.85rem;">Teaching Staff</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div style="background:linear-gradient(135deg,#1a6b3a,#145c30);border-radius:15px;padding:1.5rem;color:white;">
+                    <div style="font-size:2.2rem;font-weight:800;">{{ collection_rate }}%</div>
+                    <div style="opacity:0.85;font-size:0.85rem;">Fee Collection Rate</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div style="background:linear-gradient(135deg,#e67e22,#d35400);border-radius:15px;padding:1.5rem;color:white;">
+                    <div style="font-size:2.2rem;font-weight:800;">{{ total_streams }}</div>
+                    <div style="opacity:0.85;font-size:0.85rem;">Active Streams</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <!-- FEE SUMMARY -->
+            <div class="col-md-6">
+                <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);">
+                    <h6 style="font-weight:700;color:#1a1a1a;margin-bottom:1rem;"><i class="bi bi-cash-stack me-2" style="color:#1a6b3a;"></i>Fee Collection Summary</h6>
+                    <div class="d-flex flex-column gap-2">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Total Expected</span>
+                            <strong>KES {{ total_expected|floatformat:0 }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Collected</span>
+                            <strong style="color:#1a6b3a;">KES {{ total_collected|floatformat:0 }}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Outstanding</span>
+                            <strong style="color:#e74c3c;">KES {{ total_balance|floatformat:0 }}</strong>
+                        </div>
+                        <div class="progress mt-2" style="height:10px;border-radius:10px;">
+                            <div class="progress-bar" style="width:{{ collection_rate }}%;background:#1a6b3a;border-radius:10px;"></div>
+                        </div>
+                        <small class="text-muted text-center">{{ collection_rate }}% collected</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INVOICE STATUS -->
+            <div class="col-md-6">
+                <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);">
+                    <h6 style="font-weight:700;color:#1a1a1a;margin-bottom:1rem;"><i class="bi bi-receipt me-2" style="color:#2c3e50;"></i>Invoice Breakdown</h6>
+                    <div class="d-flex flex-column gap-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span style="font-size:0.85rem;">Fully Paid</span>
+                            <span style="background:#d4edda;color:#155724;padding:3px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;">{{ paid_count }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span style="font-size:0.85rem;">Partially Paid</span>
+                            <span style="background:#fff3cd;color:#856404;padding:3px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;">{{ partial_count }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span style="font-size:0.85rem;">Pending</span>
+                            <span style="background:#f8d7da;color:#721c24;padding:3px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;">{{ pending_count }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span style="font-size:0.85rem;">Recent Exams</span>
+                            <span style="background:#e2e3e5;color:#383d41;padding:3px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;">{{ total_exams }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RECENT STUDENTS -->
+        <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);">
+            <h6 style="font-weight:700;color:#1a1a1a;margin-bottom:1rem;"><i class="bi bi-people-fill me-2" style="color:#2c3e50;"></i>Recent Enrolments</h6>
+            <div class="row g-2">
+                {% for s in recent_students %}
+                <div class="col-md-4">
+                    <div style="background:#f8f9fa;border-radius:10px;padding:0.8rem;display:flex;align-items:center;gap:0.8rem;">
+                        <div style="width:40px;height:40px;background:linear-gradient(135deg,#2c3e50,#1a252f);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.85rem;flex-shrink:0;">
+                            {{ s.first_name|first }}{{ s.last_name|first }}
+                        </div>
+                        <div>
+                            <div style="font-weight:600;font-size:0.88rem;">{{ s.get_full_name }}</div>
+                            <div style="font-size:0.78rem;color:#666;">{{ s.current_stream.full_name|default:"No stream" }}</div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

@@ -50,6 +50,21 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_parent = models.BooleanField(default=False)
     is_student = models.BooleanField(default=False)
 
+    # ── SCHOOL ROLE (for school_admin users) ──────────────────
+    ROLE_CHOICES = [
+        ("super_admin", "Super Admin"),   # Mercy — sees everything secretly
+        ("principal", "Principal"),        # Read-only school overview
+        ("bursar", "Bursar"),              # Fees, payments, M-Pesa only
+        ("dean", "Dean of Studies"),       # Students, exams, streams only
+        ("admin", "General Admin"),        # Default — full school access
+    ]
+    school_role = models.CharField(
+        max_length=20,
+        choices=ROLE_CHOICES,
+        default="admin",
+        blank=True,
+    )
+
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
@@ -79,7 +94,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.is_platform_admin:
             return "Platform Admin"
         if self.is_school_admin:
-            return "School Admin"
+            role_map = {
+                "bursar": "Bursar",
+                "principal": "Principal",
+                "dean": "Dean of Studies",
+                "super_admin": "Super Admin",
+            }
+            return role_map.get(self.school_role, "School Admin")
         if self.is_teacher:
             return "Teacher"
         if self.is_parent:
@@ -90,8 +111,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_dashboard_url(self):
         if self.is_platform_admin:
-            return "/admin/"
+            return "/school-admin/dashboard/super/"
         if self.is_school_admin:
+            role = self.school_role or "admin"
+            if role == "bursar":
+                return "/school-admin/dashboard/bursar/"
+            elif role == "principal":
+                return "/school-admin/dashboard/principal/"
+            elif role == "dean":
+                return "/school-admin/dashboard/dean/"
+            elif role == "super_admin":
+                return "/school-admin/dashboard/super/"
             return "/school-admin/dashboard/"
         if self.is_teacher:
             return "/school-admin/dashboard/"

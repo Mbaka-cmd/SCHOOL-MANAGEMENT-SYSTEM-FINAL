@@ -1,25 +1,25 @@
-{% extends "base.html" %}
-{% block title %}Portal Login — {{ school.name|default:"Chuka Girls Secondary School" }}{% endblock %}
+﻿{% extends "base.html" %}
+{% block title %}Portal Login â€” {{ school.name|default:"Chuka Girls Secondary School" }}{% endblock %}
 
 {% block content %}
-<section style="min-height:80vh;display:flex;align-items:center;background:linear-gradient(135deg,#f8f9fa,#fff0f0);padding:3rem 0;">
+<section style="min-height:85vh;display:flex;align-items:center;background:linear-gradient(135deg,#f5f5f5,#fafafa);padding:3rem 0;">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-5 col-md-7">
 
                 <!-- LOGO & TITLE -->
                 <div class="text-center mb-4">
-                    <div style="width:80px;height:80px;background:linear-gradient(135deg,#C0392B,#922B21);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                    <div style="width:75px;height:75px;background:linear-gradient(135deg,#C0392B,#922B21);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;box-shadow:0 4px 15px rgba(192,57,43,0.3);">
                         <i class="bi bi-mortarboard-fill" style="font-size:2rem;color:white;"></i>
                     </div>
                     <h3 style="font-weight:800;color:#1a1a1a;">School Portal Login</h3>
-                    <p class="text-muted" style="font-size:0.9rem;">Chuka Girls Secondary School</p>
+                    <p style="color:#888;font-size:0.9rem;">{{ school.name|default:"Chuka Girls Secondary School" }}</p>
                 </div>
 
                 <!-- MESSAGES -->
                 {% if messages %}
                 {% for message in messages %}
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="border-radius:12px;font-size:0.88rem;">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
@@ -27,59 +27,92 @@
                 {% endif %}
 
                 <!-- LOGIN CARD -->
-                <div style="background:white;border-radius:20px;padding:2.5rem;box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+                <div style="background:white;border-radius:20px;padding:2.5rem;box-shadow:0 8px 30px rgba(0,0,0,0.08);">
                     <form method="post">
                         {% csrf_token %}
+
+                        <!-- EMAIL -->
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Email Address</label>
+                            <label class="form-label fw-semibold" style="font-size:0.9rem;color:#333;">Email Address</label>
                             <div class="input-group">
-                                <span class="input-group-text" style="background:#fff0f0;border-color:#dee2e6;">
+                                <span class="input-group-text" style="background:#fdf2f2;border-color:#e8d5d5;border-right:none;">
                                     <i class="bi bi-envelope-fill" style="color:#C0392B;"></i>
                                 </span>
-                                <input type="email" name="email" class="form-control" placeholder="your@email.com" required autofocus style="border-left:none;">
+                                <input
+                                    type="email"
+                                    name="email"
+                                    class="form-control"
+                                    placeholder="e.g. adalyn@gmail.com"
+                                    required
+                                    autofocus
+                                    style="border-left:none;border-color:#e8d5d5;background:#fdf2f2;color:#333;"
+                                    onfocus="this.style.background='white';this.style.borderColor='#C0392B';"
+                                    onblur="this.style.background='#fdf2f2';this.style.borderColor='#e8d5d5';"
+                                >
                             </div>
                         </div>
+
+                        <!-- PASSWORD -->
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Password</label>
+                            <label class="form-label fw-semibold" style="font-size:0.9rem;color:#333;">Password</label>
                             <div class="input-group">
-                                <span class="input-group-text" style="background:#fff0f0;border-color:#dee2e6;">
+                                <span class="input-group-text" style="background:#fdf2f2;border-color:#e8d5d5;border-right:none;">
                                     <i class="bi bi-lock-fill" style="color:#C0392B;"></i>
                                 </span>
-                                <input type="password" name="password" class="form-control" placeholder="••••••••" required style="border-left:none;">
+                                <input
+                                    type="password"
+                                    name="password"
+                                    id="passwordInput"
+                                    class="form-control"
+                                    placeholder="Enter your password"
+                                    required
+                                    style="border-left:none;border-right:none;border-color:#e8d5d5;background:#fdf2f2;"
+                                    onfocus="this.style.background='white';this.style.borderColor='#C0392B';"
+                                    onblur="this.style.background='#fdf2f2';this.style.borderColor='#e8d5d5';"
+                                >
+                                <span class="input-group-text" style="background:#fdf2f2;border-color:#e8d5d5;border-left:none;cursor:pointer;"
+                                    onclick="togglePassword()">
+                                    <i class="bi bi-eye-fill" id="eyeIcon" style="color:#999;"></i>
+                                </span>
                             </div>
+                            <small style="color:#aaa;font-size:0.78rem;margin-top:4px;display:block;">
+                                <i class="bi bi-info-circle me-1"></i>Students: use your admission number as password
+                            </small>
                         </div>
-                        <div class="mb-4">
-                            <small style="color:#999;font-size:0.8rem;"><i class="bi bi-info-circle me-1"></i>Students: use your admission number as password</small>
-                        </div>
-                        <button type="submit" class="btn btn-lg w-100" style="background:linear-gradient(135deg,#C0392B,#922B21);color:white;border-radius:10px;font-weight:600;padding:0.8rem;">
+
+                        <!-- SUBMIT -->
+                        <button type="submit" class="btn btn-lg w-100 mt-2" style="background:linear-gradient(135deg,#C0392B,#922B21);color:white;border-radius:12px;font-weight:700;padding:0.85rem;font-size:1rem;border:none;box-shadow:0 4px 15px rgba(192,57,43,0.35);">
                             <i class="bi bi-box-arrow-in-right me-2"></i>Login to Portal
                         </button>
                     </form>
 
-                    <hr class="my-4">
+                    <hr style="border-color:#f0f0f0;margin:1.5rem 0;">
 
                     <!-- PARENT REGISTER -->
-                    <div style="background:#f0fff5;border-radius:12px;padding:1rem;text-align:center;margin-bottom:1rem;">
-                        <p style="font-size:0.85rem;color:#666;margin-bottom:0.5rem;"><i class="bi bi-people-fill me-1" style="color:#2ecc71;"></i>New parent? Register to monitor your child</p>
-                        <a href="{% url 'parent_register' %}" class="btn btn-sm" style="background:#2ecc71;color:white;border-radius:20px;font-weight:600;padding:0.4rem 1.5rem;">
+                    <div style="background:#f0fff5;border-radius:12px;padding:1rem;text-align:center;margin-bottom:1rem;border:1px solid #d4edda;">
+                        <p style="font-size:0.83rem;color:#555;margin-bottom:0.5rem;">
+                            <i class="bi bi-people-fill me-1" style="color:#2ecc71;"></i>New parent? Register to monitor your child
+                        </p>
+                        <a href="{% url 'parent_register' %}" class="btn btn-sm" style="background:#27ae60;color:white;border-radius:20px;font-weight:600;padding:0.4rem 1.5rem;font-size:0.83rem;">
                             <i class="bi bi-person-plus-fill me-1"></i>Parent Registration
                         </a>
                     </div>
 
-                    <!-- ROLE HINTS -->
+                    <!-- ROLE BADGES -->
                     <div class="text-center">
-                        <p class="text-muted" style="font-size:0.85rem;margin-bottom:0.5rem;">Login as:</p>
+                        <p style="color:#aaa;font-size:0.8rem;margin-bottom:0.6rem;">Login as:</p>
                         <div class="d-flex justify-content-center gap-2 flex-wrap">
-                            <span style="background:#fff0f0;color:#C0392B;padding:4px 12px;border-radius:20px;font-size:0.8rem;"><i class="bi bi-person-fill me-1"></i>Parent</span>
-                            <span style="background:#fff0f0;color:#C0392B;padding:4px 12px;border-radius:20px;font-size:0.8rem;"><i class="bi bi-person-badge-fill me-1"></i>Teacher</span>
-                            <span style="background:#fff0f0;color:#C0392B;padding:4px 12px;border-radius:20px;font-size:0.8rem;"><i class="bi bi-mortarboard-fill me-1"></i>Student</span>
-                            <span style="background:#fff0f0;color:#C0392B;padding:4px 12px;border-radius:20px;font-size:0.8rem;"><i class="bi bi-shield-fill me-1"></i>Admin</span>
+                            <span style="background:#f0f0f0;color:#555;padding:4px 12px;border-radius:20px;font-size:0.78rem;"><i class="bi bi-person-fill me-1" style="color:#C0392B;"></i>Parent</span>
+                            <span style="background:#f0f0f0;color:#555;padding:4px 12px;border-radius:20px;font-size:0.78rem;"><i class="bi bi-person-badge-fill me-1" style="color:#C0392B;"></i>Teacher</span>
+                            <span style="background:#f0f0f0;color:#555;padding:4px 12px;border-radius:20px;font-size:0.78rem;"><i class="bi bi-mortarboard-fill me-1" style="color:#C0392B;"></i>Student</span>
+                            <span style="background:#f0f0f0;color:#555;padding:4px 12px;border-radius:20px;font-size:0.78rem;"><i class="bi bi-shield-fill me-1" style="color:#C0392B;"></i>Admin</span>
                         </div>
                     </div>
                 </div>
 
+                <!-- BACK LINK -->
                 <div class="text-center mt-3">
-                    <a href="{% url 'home' %}" class="text-muted" style="font-size:0.85rem;text-decoration:none;">
+                    <a href="{% url 'home' %}" style="color:#aaa;font-size:0.83rem;text-decoration:none;">
                         <i class="bi bi-arrow-left me-1"></i>Back to School Website
                     </a>
                 </div>
@@ -88,4 +121,20 @@
         </div>
     </div>
 </section>
+
+<script>
+function togglePassword() {
+    const input = document.getElementById('passwordInput');
+    const icon = document.getElementById('eyeIcon');
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'bi bi-eye-slash-fill';
+        icon.style.color = '#C0392B';
+    } else {
+        input.type = 'password';
+        icon.className = 'bi bi-eye-fill';
+        icon.style.color = '#999';
+    }
+}
+</script>
 {% endblock %}

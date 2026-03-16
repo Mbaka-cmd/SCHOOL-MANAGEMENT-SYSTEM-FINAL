@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Bursar Dashboard — {{ school.name }}{% endblock %}
+{% block content %}
+
+<!-- HEADER -->
+<section style="background:linear-gradient(135deg,#1a6b3a,#145c30);padding:2rem 0;color:white;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col">
+                <h4 style="font-weight:800;margin:0;"><i class="bi bi-cash-stack me-2"></i>Bursar Dashboard</h4>
+                <p style="opacity:0.75;margin:0;font-size:0.9rem;">{{ school.name }} — Fee Management & Collections</p>
+            </div>
+            <div class="col-auto d-flex gap-2 flex-wrap">
+                <a href="{% url 'invoice_list' %}" class="btn" style="background:rgba(255,255,255,0.15);color:white;border-radius:20px;"><i class="bi bi-receipt me-1"></i>Invoices</a>
+                <a href="{% url 'generate_invoices' %}" class="btn" style="background:rgba(255,255,255,0.15);color:white;border-radius:20px;"><i class="bi bi-plus-circle me-1"></i>Generate</a>
+                <a href="{% url 'fee_dashboard' %}" class="btn" style="background:white;color:#1a6b3a;border-radius:20px;font-weight:600;"><i class="bi bi-speedometer2 me-1"></i>Fee Overview</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="padding:2rem 0 4rem;background:#f8f9fa;">
+    <div class="container">
+
+        <!-- KPI CARDS -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div style="background:linear-gradient(135deg,#1a6b3a,#145c30);border-radius:15px;padding:1.5rem;color:white;box-shadow:0 5px 20px rgba(26,107,58,0.3);">
+                    <div style="font-size:2rem;font-weight:800;">KES {{ total_expected|floatformat:0 }}</div>
+                    <div style="opacity:0.85;font-size:0.82rem;">Total Expected</div>
+                    <i class="bi bi-cash" style="font-size:2rem;opacity:0.2;float:right;margin-top:-3rem;"></i>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div style="background:linear-gradient(135deg,#2ecc71,#27ae60);border-radius:15px;padding:1.5rem;color:white;box-shadow:0 5px 20px rgba(46,204,113,0.3);">
+                    <div style="font-size:2rem;font-weight:800;">KES {{ total_collected|floatformat:0 }}</div>
+                    <div style="opacity:0.85;font-size:0.82rem;">Collected</div>
+                    <i class="bi bi-check-circle-fill" style="font-size:2rem;opacity:0.2;float:right;margin-top:-3rem;"></i>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div style="background:linear-gradient(135deg,#e74c3c,#c0392b);border-radius:15px;padding:1.5rem;color:white;box-shadow:0 5px 20px rgba(231,76,60,0.3);">
+                    <div style="font-size:2rem;font-weight:800;">KES {{ total_balance|floatformat:0 }}</div>
+                    <div style="opacity:0.85;font-size:0.82rem;">Outstanding</div>
+                    <i class="bi bi-exclamation-triangle-fill" style="font-size:2rem;opacity:0.2;float:right;margin-top:-3rem;"></i>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div style="background:linear-gradient(135deg,#3498db,#2980b9);border-radius:15px;padding:1.5rem;color:white;box-shadow:0 5px 20px rgba(52,152,219,0.3);">
+                    <div style="font-size:2rem;font-weight:800;">{{ collection_rate }}%</div>
+                    <div style="opacity:0.85;font-size:0.82rem;">Collection Rate</div>
+                    <i class="bi bi-pie-chart-fill" style="font-size:2rem;opacity:0.2;float:right;margin-top:-3rem;"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- INVOICE STATUS + PAYMENT METHODS -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);height:100%;">
+                    <h6 style="font-weight:700;color:#1a1a1a;margin-bottom:1rem;"><i class="bi bi-pie-chart-fill me-2" style="color:#1a6b3a;"></i>Invoice Status</h6>
+                    <div class="d-flex flex-column gap-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span style="font-size:0.85rem;">Fully Paid</span>
+                            <span style="background:#d4edda;color:#155724;padding:3px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;">{{ paid_count }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span style="font-size:0.85rem;">Partially Paid</span>
+                            <span style="background:#fff3cd;color:#856404;padding:3px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;">{{ partial_count }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span style="font-size:0.85rem;">Pending</span>
+                            <span style="background:#f8d7da;color:#721c24;padding:3px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;">{{ pending_count }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span style="font-size:0.85rem;">Total Invoices</span>
+                            <span style="background:#e2e3e5;color:#383d41;padding:3px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;">{{ total_invoices }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);height:100%;">
+                    <h6 style="font-weight:700;color:#1a1a1a;margin-bottom:1rem;"><i class="bi bi-phone-fill me-2" style="color:#1a6b3a;"></i>Payment Methods</h6>
+                    <div class="d-flex flex-column gap-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span style="font-size:0.85rem;"><i class="bi bi-phone me-1" style="color:#00a651;"></i>M-Pesa</span>
+                            <span style="font-weight:700;font-size:0.85rem;">KES {{ mpesa_total|floatformat:0 }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span style="font-size:0.85rem;"><i class="bi bi-bank me-1" style="color:#2980b9;"></i>Bank Transfer</span>
+                            <span style="font-weight:700;font-size:0.85rem;">KES {{ bank_total|floatformat:0 }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span style="font-size:0.85rem;"><i class="bi bi-cash me-1" style="color:#e67e22;"></i>Cash</span>
+                            <span style="font-weight:700;font-size:0.85rem;">KES {{ cash_total|floatformat:0 }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span style="font-size:0.85rem;"><i class="bi bi-award me-1" style="color:#8e44ad;"></i>Bursary</span>
+                            <span style="font-weight:700;font-size:0.85rem;">KES {{ bursary_total|floatformat:0 }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);height:100%;">
+                    <h6 style="font-weight:700;color:#1a1a1a;margin-bottom:1rem;"><i class="bi bi-lightning-fill me-2" style="color:#1a6b3a;"></i>Quick Actions</h6>
+                    <div class="d-flex flex-column gap-2">
+                        <a href="{% url 'generate_invoices' %}" class="btn btn-sm w-100" style="background:#1a6b3a;color:white;border-radius:10px;text-align:left;"><i class="bi bi-plus-circle me-2"></i>Generate Invoices</a>
+                        <a href="{% url 'invoice_list' %}?status=pending" class="btn btn-sm w-100" style="background:#e74c3c;color:white;border-radius:10px;text-align:left;"><i class="bi bi-exclamation-circle me-2"></i>View Defaulters</a>
+                        <a href="{% url 'invoice_list' %}?status=partial" class="btn btn-sm w-100" style="background:#e67e22;color:white;border-radius:10px;text-align:left;"><i class="bi bi-hourglass-split me-2"></i>Partial Payments</a>
+                        <a href="{% url 'bulk_sms' %}" class="btn btn-sm w-100" style="background:#3498db;color:white;border-radius:10px;text-align:left;"><i class="bi bi-chat-dots me-2"></i>SMS Defaulters</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOP DEFAULTERS -->
+        {% if defaulters %}
+        <div class="row g-3 mb-4">
+            <div class="col-12">
+                <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);">
+                    <div class="row align-items-center mb-3">
+                        <div class="col"><h6 style="font-weight:700;color:#1a1a1a;margin:0;"><i class="bi bi-exclamation-triangle-fill me-2" style="color:#e74c3c;"></i>Top Outstanding Balances</h6></div>
+                        <div class="col-auto"><a href="{% url 'invoice_list' %}?status=pending" class="btn btn-sm btn-outline-danger" style="border-radius:20px;">View All</a></div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover" style="font-size:0.88rem;">
+                            <thead style="background:#f8f9fa;">
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Admission No.</th>
+                                    <th>Stream</th>
+                                    <th>Expected</th>
+                                    <th>Paid</th>
+                                    <th>Balance</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for inv in defaulters %}
+                                <tr>
+                                    <td><strong>{{ inv.student.get_full_name }}</strong></td>
+                                    <td><span style="background:#f0f0f0;padding:2px 8px;border-radius:10px;font-size:0.8rem;">{{ inv.student.admission_number }}</span></td>
+                                    <td>{{ inv.student.current_stream.full_name|default:"—" }}</td>
+                                    <td>KES {{ inv.total_expected|floatformat:0 }}</td>
+                                    <td>KES {{ inv.total_paid|floatformat:0 }}</td>
+                                    <td><strong style="color:#e74c3c;">KES {{ inv.balance|floatformat:0 }}</strong></td>
+                                    <td>
+                                        <a href="{% url 'invoice_detail' inv.id %}" class="btn btn-sm" style="background:#1a6b3a;color:white;border-radius:10px;padding:2px 10px;">Pay</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- RECENT PAYMENTS -->
+        <div class="row g-3">
+            <div class="col-12">
+                <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);">
+                    <div class="row align-items-center mb-3">
+                        <div class="col"><h6 style="font-weight:700;color:#1a1a1a;margin:0;"><i class="bi bi-clock-history me-2" style="color:#1a6b3a;"></i>Recent Payments</h6></div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover" style="font-size:0.88rem;">
+                            <thead style="background:#f8f9fa;">
+                                <tr>
+                                    <th>Receipt</th>
+                                    <th>Student</th>
+                                    <th>Method</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Received By</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for p in recent_payments %}
+                                <tr>
+                                    <td><span style="background:#e8f5e9;color:#1a6b3a;padding:2px 8px;border-radius:10px;font-size:0.8rem;font-weight:600;">{{ p.receipt_number }}</span></td>
+                                    <td><strong>{{ p.invoice.student.get_full_name }}</strong></td>
+                                    <td>
+                                        {% if p.method == "mpesa" %}<span style="background:#e8f5e9;color:#1a6b3a;padding:2px 8px;border-radius:10px;font-size:0.78rem;">M-Pesa</span>
+                                        {% elif p.method == "bank" %}<span style="background:#e3f2fd;color:#1565c0;padding:2px 8px;border-radius:10px;font-size:0.78rem;">Bank</span>
+                                        {% else %}<span style="background:#fff3e0;color:#e65100;padding:2px 8px;border-radius:10px;font-size:0.78rem;">{{ p.get_method_display }}</span>{% endif %}
+                                    </td>
+                                    <td><strong style="color:#1a6b3a;">KES {{ p.amount|floatformat:0 }}</strong></td>
+                                    <td style="color:#666;">{{ p.payment_date|date:"M d, Y H:i" }}</td>
+                                    <td style="color:#666;">{{ p.received_by.get_full_name|default:"M-Pesa Auto" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="6" class="text-center text-muted py-3">No payments recorded yet.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}
