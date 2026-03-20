@@ -68,7 +68,7 @@ class Command(BaseCommand):
         year, created = AcademicYear.objects.get_or_create(
             school=school,
             year=2026,
-            defaults={"is_current": True}
+            defaults={"is_current": True, "start_date": "2026-01-01", "end_date": "2026-11-30"}
         )
         if created:
             self.stdout.write("Academic year 2026 created.")
@@ -137,3 +137,4 @@ class Command(BaseCommand):
             summary="In 2024 KCSE, 133 candidates sat the exam with 85 qualifying for university admission. The school posted a mean grade of B-.",
         )
         self.stdout.write("KCSE 2024 results seeded.")
+
