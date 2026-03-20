@@ -1,2 +1,136 @@
-﻿{% extends 'base.html' %}{% block content %}<div class='container py-5'><h1>KCSE Results</h1><p>Coming soon.</p></div>{% endblock %}
+﻿{% extends 'base.html' %}
+{% load static %}
+{% block title %}KCSE Results — {{ school.name|default:"Chuka Girls Secondary School" }}{% endblock %}
 
+{% block content %}
+
+<!-- HEADER -->
+<section style="background:linear-gradient(135deg,#C0392B,#922B21);padding:2.5rem 0;color:white;">
+    <div class="container text-center">
+        <h1 style="font-weight:800;font-size:1.8rem;margin-bottom:0.3rem;">KCSE Examination Results</h1>
+        <p style="opacity:0.8;font-size:0.95rem;margin:0;">St. Bakhita Chuka Girls High School · KNEC Code: 19308304</p>
+    </div>
+</section>
+
+<section style="padding:2.5rem 0;background:#f4f4f4;">
+    <div class="container" style="max-width:860px;">
+
+        {% if results %}
+        {% for result in results %}
+        {% if result.is_published %}
+
+        <!-- YEAR REPORT CARD -->
+        <div style="background:white;border-radius:4px;margin-bottom:2.5rem;border:1px solid #ddd;overflow:hidden;">
+
+            <!-- YEAR HEADER -->
+            <div style="background:#1a1a1a;padding:0.8rem 1.5rem;display:flex;justify-content:space-between;align-items:center;">
+                <h2 style="color:white;font-size:1.1rem;font-weight:700;margin:0;">KCSE {{ result.year }} — Performance Report</h2>
+                <span style="background:#C0392B;color:white;padding:4px 14px;border-radius:3px;font-size:0.88rem;font-weight:700;">Mean Grade: {{ result.mean_grade }}</span>
+            </div>
+
+            <div style="padding:1.5rem;">
+
+                <!-- SUMMARY -->
+                {% if result.summary %}
+                <p style="color:#444;font-size:0.88rem;border-left:3px solid #C0392B;padding-left:0.8rem;margin-bottom:1.2rem;font-style:italic;">{{ result.summary }}</p>
+                {% endif %}
+
+                <!-- KEY FIGURES TABLE -->
+                <table style="width:100%;border-collapse:collapse;font-size:0.88rem;margin-bottom:1.5rem;">
+                    <thead>
+                        <tr style="background:#f8f8f8;border-bottom:2px solid #C0392B;">
+                            <th style="padding:8px 12px;text-align:left;font-weight:600;color:#333;">Candidates Sat</th>
+                            <th style="padding:8px 12px;text-align:left;font-weight:600;color:#333;">Mean Grade</th>
+                            {% if result.mean_points %}<th style="padding:8px 12px;text-align:left;font-weight:600;color:#333;">Mean Points</th>{% endif %}
+                            <th style="padding:8px 12px;text-align:left;font-weight:600;color:#333;">University Qualifiers</th>
+                            <th style="padding:8px 12px;text-align:left;font-weight:600;color:#333;">Pass Rate</th>
+                            {% if result.county_position %}<th style="padding:8px 12px;text-align:left;font-weight:600;color:#333;">County Position</th>{% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom:1px solid #eee;">
+                            <td style="padding:10px 12px;font-weight:700;font-size:1rem;color:#1a1a1a;">{{ result.candidates_sat }}</td>
+                            <td style="padding:10px 12px;font-weight:700;font-size:1rem;color:#C0392B;">{{ result.mean_grade }}</td>
+                            {% if result.mean_points %}<td style="padding:10px 12px;font-weight:700;font-size:1rem;color:#1a1a1a;">{{ result.mean_points }}</td>{% endif %}
+                            <td style="padding:10px 12px;font-weight:700;font-size:1rem;color:#1a1a1a;">{{ result.university_qualifiers }}</td>
+                            <td style="padding:10px 12px;font-weight:700;font-size:1rem;color:#1a1a1a;">{{ result.pass_rate }}%</td>
+                            {% if result.county_position %}<td style="padding:10px 12px;font-weight:700;font-size:1rem;color:#1a1a1a;">{{ result.county_position }}</td>{% endif %}
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- GRADE DISTRIBUTION TABLE -->
+                <h6 style="font-size:0.82rem;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.6rem;border-bottom:1px solid #eee;padding-bottom:0.4rem;">Grade Distribution</h6>
+                <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+                    <thead>
+                        <tr style="background:#f8f8f8;">
+                            <th style="padding:7px 10px;text-align:center;font-weight:600;color:#555;border:1px solid #e0e0e0;">A</th>
+                            <th style="padding:7px 10px;text-align:center;font-weight:600;color:#555;border:1px solid #e0e0e0;">A-</th>
+                            <th style="padding:7px 10px;text-align:center;font-weight:600;color:#555;border:1px solid #e0e0e0;">B+</th>
+                            <th style="padding:7px 10px;text-align:center;font-weight:600;color:#555;border:1px solid #e0e0e0;">B</th>
+                            <th style="padding:7px 10px;text-align:center;font-weight:600;color:#555;border:1px solid #e0e0e0;">B-</th>
+                            <th style="padding:7px 10px;text-align:center;font-weight:600;color:#555;border:1px solid #e0e0e0;">C+</th>
+                            <th style="padding:7px 10px;text-align:center;font-weight:600;color:#555;border:1px solid #e0e0e0;">C</th>
+                            <th style="padding:7px 10px;text-align:center;font-weight:600;color:#555;border:1px solid #e0e0e0;">C-</th>
+                            <th style="padding:7px 10px;text-align:center;font-weight:600;color:#555;border:1px solid #e0e0e0;">D+</th>
+                            <th style="padding:7px 10px;text-align:center;font-weight:600;color:#555;border:1px solid #e0e0e0;">D</th>
+                            <th style="padding:7px 10px;text-align:center;font-weight:600;color:#555;border:1px solid #e0e0e0;">D-</th>
+                            <th style="padding:7px 10px;text-align:center;font-weight:600;color:#555;border:1px solid #e0e0e0;">E</th>
+                            <th style="padding:7px 10px;text-align:center;font-weight:700;color:#1a1a1a;border:1px solid #e0e0e0;background:#f0f0f0;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_a_plain %}700{% else %}400{% endif %};color:{% if result.count_a_plain %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_a_plain|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_a_minus %}700{% else %}400{% endif %};color:{% if result.count_a_minus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_a_minus|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_b_plus %}700{% else %}400{% endif %};color:{% if result.count_b_plus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_b_plus|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_b_plain %}700{% else %}400{% endif %};color:{% if result.count_b_plain %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_b_plain|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_b_minus %}700{% else %}400{% endif %};color:{% if result.count_b_minus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_b_minus|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_c_plus %}700{% else %}400{% endif %};color:{% if result.count_c_plus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_c_plus|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_c_plain %}700{% else %}400{% endif %};color:{% if result.count_c_plain %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_c_plain|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_c_minus %}700{% else %}400{% endif %};color:{% if result.count_c_minus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_c_minus|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_d_plus %}700{% else %}400{% endif %};color:{% if result.count_d_plus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_d_plus|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_d_plain %}700{% else %}400{% endif %};color:{% if result.count_d_plain %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_d_plain|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_d_minus %}700{% else %}400{% endif %};color:{% if result.count_d_minus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_d_minus|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_e %}700{% else %}400{% endif %};color:{% if result.count_e %}#C0392B{% else %}#bbb{% endif %};">{{ result.count_e|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:700;color:#1a1a1a;background:#f0f0f0;">{{ result.candidates_sat }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- TOP STUDENT -->
+                {% if result.top_student_name %}
+                <div style="margin-top:1rem;padding:0.7rem 1rem;background:#fffbf0;border:1px solid #f0e0a0;border-radius:3px;font-size:0.85rem;display:flex;justify-content:space-between;align-items:center;">
+                    <span style="color:#666;">🏆 Top Student</span>
+                    <strong style="color:#1a1a1a;">{{ result.top_student_name }}{% if result.top_student_grade %} — Grade {{ result.top_student_grade }}{% endif %}{% if result.top_student_points %} ({{ result.top_student_points }} pts){% endif %}</strong>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+        {% endif %}
+        {% endfor %}
+
+        {% else %}
+        <div style="background:white;border-radius:4px;padding:3rem;text-align:center;border:1px solid #ddd;">
+            <p style="color:#666;font-size:0.95rem;">KCSE results will be published here once available.</p>
+        </div>
+        {% endif %}
+
+        <!-- KNEC INFO -->
+        <div style="background:white;border:1px solid #ddd;border-radius:4px;padding:1.2rem 1.5rem;">
+            <h6 style="font-size:0.82rem;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.8rem;">Check Individual Results</h6>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <p style="font-size:0.85rem;margin:0;color:#444;"><strong>Via SMS:</strong> Send <code style="background:#f4f4f4;padding:2px 6px;border-radius:3px;">INDEX_NUMBERKCSE</code> to <strong>20076</strong></p>
+                </div>
+                <div class="col-md-6">
+                    <p style="font-size:0.85rem;margin:0;color:#444;"><strong>Via Portal:</strong> Visit <a href="https://www.knec.ac.ke" target="_blank" style="color:#C0392B;">www.knec.ac.ke</a> for full individual results</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

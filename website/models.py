@@ -1,8 +1,5 @@
-from django.db import models
-
-# Create your models here.
+﻿from django.db import models
 import uuid
-from django.db import models
 
 
 class GalleryAlbum(models.Model):
@@ -27,7 +24,7 @@ class GalleryAlbum(models.Model):
         ordering = ["-event_date", "-created_at"]
 
     def __str__(self):
-        return f"{self.school.name} — {self.title}"
+        return f"{self.school.name} â€” {self.title}"
 
 
 class GalleryPhoto(models.Model):
@@ -77,7 +74,7 @@ class KCSEResult(models.Model):
         ordering = ["-year"]
 
     def __str__(self):
-        return f"KCSE {self.year} — {self.school.name} — Mean: {self.mean_grade}"
+        return f"KCSE {self.year} â€” {self.school.name} â€” Mean: {self.mean_grade}"
 
     @property
     def pass_rate(self):
@@ -86,6 +83,23 @@ class KCSEResult(models.Model):
         passers = (self.count_a_plain + self.count_a_minus + self.count_b_plus +
                    self.count_b_plain + self.count_b_minus + self.count_c_plus + self.count_c_plain)
         return round((passers / self.candidates_sat) * 100, 1)
+
+    @property
+    def grade_breakdown(self):
+        return [
+            ('A', self.count_a_plain),
+            ('A-', self.count_a_minus),
+            ('B+', self.count_b_plus),
+            ('B', self.count_b_plain),
+            ('B-', self.count_b_minus),
+            ('C+', self.count_c_plus),
+            ('C', self.count_c_plain),
+            ('C-', self.count_c_minus),
+            ('D+', self.count_d_plus),
+            ('D', self.count_d_plain),
+            ('D-', self.count_d_minus),
+            ('E', self.count_e),
+        ]
 
 
 class CoCurricularActivity(models.Model):
@@ -113,7 +127,7 @@ class CoCurricularActivity(models.Model):
         ordering = ["category", "order", "name"]
 
     def __str__(self):
-        return f"{self.name} — {self.school.name}"
+        return f"{self.name} â€” {self.school.name}"
 
 
 class NewsEvent(models.Model):
@@ -140,4 +154,5 @@ class NewsEvent(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"{self.title} — {self.school.name}"
+        return f"{self.title} â€” {self.school.name}"
+
