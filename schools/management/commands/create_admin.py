@@ -68,16 +68,21 @@ class Command(BaseCommand):
         year, created = AcademicYear.objects.get_or_create(
             school=school,
             year=2026,
-            defaults={"is_current": True, "start_date": "2026-01-01", "end_date": "2026-11-30"}
+            defaults={"is_current": True, "start_date": "2026-01-06", "end_date": "2026-11-30"}
         )
         if created:
             self.stdout.write("Academic year 2026 created.")
-        for i, name in enumerate(["Term 1", "Term 2", "Term 3"], 1):
-            Term.objects.get_or_create(
-                academic_year=year,
-                number=i,
-                defaults={"name": name, "is_current": i == 1}
-            )
+        term_dates = [
+    (1, "2026-01-06", "2026-04-04"),
+    (2, "2026-05-05", "2026-08-07"),
+    (3, "2026-09-01", "2026-11-06"),
+]
+for number, start, end in term_dates:
+    Term.objects.get_or_create(
+        academic_year=year,
+        number=number,
+        defaults={"start_date": start, "end_date": end, "is_current": number == 1}
+    )
         self.stdout.write("Terms ready.")
 
     def _create_streams(self):
@@ -137,4 +142,5 @@ class Command(BaseCommand):
             summary="In 2024 KCSE, 133 candidates sat the exam with 85 qualifying for university admission. The school posted a mean grade of B-.",
         )
         self.stdout.write("KCSE 2024 results seeded.")
+
 
