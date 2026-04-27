@@ -1,7 +1,10 @@
 import requests
 import urllib3
+import logging
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from django.conf import settings
+
+logger = logging.getLogger(__name__)
 
 
 def send_bulk_sms(recipients, message):
@@ -21,8 +24,8 @@ def send_bulk_sms(recipients, message):
                 'message': message,
             }
             response = requests.post(url, headers=headers, data=data, verify=False, timeout=30)
-            print(f"AT Status: {response.status_code}")
-            print(f"AT Response: {response.text}")
+            logger.info(f"AT Status: {response.status_code}")
+            logger.debug(f"AT Response: {response.text}")
             if response.status_code == 201:
                 resp_json = response.json()
                 for recipient in resp_json.get('SMSMessageData', {}).get('Recipients', []):
