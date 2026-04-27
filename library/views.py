@@ -116,6 +116,49 @@ def return_book(request, record_id):
 
 
 @login_required
+def manage_returns(request):
+    school = request.user.school
+    if request.method == 'POST':
+        record_ids = request.POST.getlist('record_ids')
+        return_time = timezone.now()
+        returned_count = 0
+        total_fine = 0
+        for record_id in record_ids:
+            try:
+                record = BorrowRecord.objects.get(id=record_id, school=school, status__in=['borrowed', 'overdue'])
+                record.returned_at = return_time
+                record.status = 'returned'
+                if return_time > record.due_at:
+                    overdue_days = (return_time - record.due_at).days
+                    record.fine_amount = overdue_days * 50
+                    total_fine += record.fine_amount
+                record.save()
+                record.book.available_copies += 1
+                record.book.save()
+                returned_count += 1
+            except BorrowRecord.DoesNotExist:
+                continue
+        if returned_count > 0:
+            if total_fine > 0:
+                messages.warning(request, f'{returned_count} book(s) returned! Total fine: KES {total_fine}')
+            else:
+                messages.success(request, f'{returned_count} book(s) returned successfully!')
+        else:
+            messages.info(request, 'No books were selected for return.')
+        return redirect('manage_returns')
+    
+    # Update overdue status
+    for record in BorrowRecord.objects.filter(school=school, status='borrowed'):
+        if timezone.now() > record.due_at:
+            record.status = 'overdue'
+            record.fine_amount = (timezone.now() - record.due_at).days * 50
+            record.save()
+    
+    records = BorrowRecord.objects.filter(school=school, status__in=['borrowed', 'overdue']).select_related('book', 'student').order_by('due_at')
+    return render(request, 'library/manage_returns.html', {'records': records})
+
+
+@login_required
 def student_borrow_history(request, student_id):
     school = request.user.school
     student = get_object_or_404(Student, id=student_id, school=school)

@@ -1,5 +1,5 @@
 ﻿{% extends "base.html" %}
-{% block title %}Invoices â€” {{ request.user.school.name }}{% endblock %}
+{% block title %}Invoices - {{ request.user.school.name }}{% endblock %}
 
 {% block content %}
 
@@ -75,7 +75,7 @@
                                 <div style="font-size:0.75rem; color:#999;">{{ invoice.student.admission_number }}</div>
                             </td>
                             <td style="padding:0.9rem 1rem; font-size:0.85rem;">
-                                {{ invoice.student.current_stream.full_name|default:"â€”" }}
+                                {{ invoice.student.current_stream.full_name|default:"-" }}
                             </td>
                             <td style="padding:0.9rem 1rem; font-size:0.85rem;">
                                 Term {{ invoice.term }} / {{ invoice.academic_year }}

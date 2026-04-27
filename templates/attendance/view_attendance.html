@@ -1,12 +1,12 @@
 ﻿{% extends "base.html" %}
-{% block title %}View Attendance — {{ school.name }}{% endblock %}
+{% block title %}View Attendance - {{ school.name }}{% endblock %}
 {% block content %}
 
 <section style="background:linear-gradient(135deg,#2ecc71,#27ae60);padding:2rem 0;color:white;">
     <div class="container">
         <div class="row align-items-center">
             <div class="col">
-                <h4 style="font-weight:800;margin:0;"><i class="bi bi-eye-fill me-2"></i>{{ session.stream }} — {{ session.date }}</h4>
+                <h4 style="font-weight:800;margin:0;"><i class="bi bi-eye-fill me-2"></i>{{ session.stream }} - {{ session.date }}</h4>
                 <p style="opacity:0.75;margin:0;font-size:0.9rem;">{{ session.get_session_display }} Session · Taken by {{ session.taken_by|default:"Admin" }}</p>
             </div>
             <div class="col-auto">
@@ -68,7 +68,7 @@
                                 <span style="background:#f0f4ff;color:#3498db;padding:3px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;">Excused</span>
                                 {% endif %}
                             </td>
-                            <td style="color:#888;">{{ record.remarks|default:"—" }}</td>
+                            <td style="color:#888;">{{ record.remarks|default:"-" }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

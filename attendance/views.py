@@ -105,3 +105,13 @@ def student_attendance_report(request, student_id):
         'rate': rate,
     })
 
+
+@login_required
+def attendance_history(request):
+    school = get_school()
+    sessions = AttendanceSession.objects.filter(school=school).select_related('stream', 'taken_by').order_by('-date')
+    return render(request, 'attendance/history.html', {
+        'school': school,
+        'sessions': sessions,
+    })
+

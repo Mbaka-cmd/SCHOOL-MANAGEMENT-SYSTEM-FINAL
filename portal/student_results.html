@@ -27,7 +27,7 @@
                             <option value="">-- Select Exam --</option>
                             {% for exam in exams %}
                             <option value="{{ exam.id }}" {% if selected_exam.id == exam.id %}selected{% endif %}>
-                                {{ exam.name }} — {{ exam.get_exam_type_display }} {{ exam.academic_year.year }}
+                                {{ exam.name }} - {{ exam.get_exam_type_display }} {{ exam.academic_year.year }}
                             </option>
                             {% endfor %}
                         </select>
@@ -59,7 +59,7 @@
                         {% for result in results %}
                         <tr>
                             <td style="font-weight:600;">{{ result.subject.name }}</td>
-                            <td class="text-center">{% if result.is_absent %}—{% else %}{{ result.raw_score|floatformat:1 }}{% endif %}</td>
+                            <td class="text-center">{% if result.is_absent %}-{% else %}{{ result.raw_score|floatformat:1 }}{% endif %}</td>
                             <td class="text-center">
                                 <span style="background:{% if result.grade == 'A' %}#f0fff5;color:#2ecc71;{% elif result.grade == 'E' or result.grade == 'X' %}#fff0f0;color:#e74c3c;{% else %}#f0f8ff;color:#3498db;{% endif %};padding:2px 10px;border-radius:20px;font-weight:700;font-size:0.85rem;">
                                     {{ result.grade }}

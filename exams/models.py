@@ -53,15 +53,26 @@ class Exam(models.Model):
     streams = models.ManyToManyField("academics.Stream", related_name="exams", blank=True)
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
+    exam_paper = models.FileField(upload_to="exam_papers/", null=True, blank=True, help_text="Upload the exam paper (PDF, DOC, etc.)")
     is_published = models.BooleanField(default=False)
     is_kcse = models.BooleanField(default=False)
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ("draft", "Draft"),
+            ("active", "Active"),
+            ("completed", "Completed"),
+            ("cancelled", "Cancelled"),
+        ],
+        default="active",
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ["-academic_year__year", "-start_date"]
 
     def __str__(self):
-        return f"{self.name} — {self.school.name}"
+        return f"{self.name} - {self.school.name}"
 
 
 class ExamResult(models.Model):

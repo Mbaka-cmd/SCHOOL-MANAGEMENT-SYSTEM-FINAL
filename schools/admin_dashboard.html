@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Admin Dashboard — {{ school.name }}{% endblock %}
+{% block title %}Admin Dashboard - {{ school.name }}{% endblock %}
 
 {% block content %}
 
@@ -128,7 +128,7 @@
                         <div style="padding:0.8rem; border-radius:10px; background:#f8f9fa; margin-bottom:0.5rem; display:flex; align-items:center; justify-content:between; gap:1rem;">
                             <div style="flex:1;">
                                 <div style="font-weight:600; font-size:0.9rem;">{{ exam.name }}</div>
-                                <div style="font-size:0.78rem; color:#666;">{{ exam.get_exam_type_display }} — {{ exam.academic_year.year }}</div>
+                                <div style="font-size:0.78rem; color:#666;">{{ exam.get_exam_type_display }} - {{ exam.academic_year.year }}</div>
                             </div>
                             <span style="background:{% if exam.is_published %}#f0fff5; color:#2ecc71;{% else %}#fff8f0; color:#e67e22;{% endif %} padding:3px 10px; border-radius:20px; font-size:0.75rem; font-weight:600; white-space:nowrap;">
                                 {% if exam.is_published %}Published{% else %}Draft{% endif %}

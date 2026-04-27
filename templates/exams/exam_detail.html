@@ -7,11 +7,23 @@
             <div class="col">
                 <h4 style="font-weight:800;margin:0;">{{ exam.name }}</h4>
                 <p style="opacity:0.75;margin:0;font-size:0.9rem;">
-                    {{ exam.get_exam_type_display }} &nbsp;Â·&nbsp; {{ exam.academic_year.year }}
-                    {% if exam.term %} &nbsp;Â·&nbsp; {{ exam.term.name }}{% endif %}
+                    {{ exam.get_exam_type_display }} &nbsp;·&nbsp; {{ exam.academic_year.year }}
+                    {% if exam.term %} &nbsp;·&nbsp; {{ exam.term.name }}{% endif %}
                 </p>
             </div>
             <div class="col-auto d-flex gap-2">
+                <form method="post" action="{% url 'exam_publish' exam.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    {% if exam.is_published %}
+                    <button type="submit" name="action" value="unpublish" class="btn" style="background:#fff8f0;color:#e67e22;border-radius:20px;font-weight:600;">
+                        <i class="bi bi-eye-slash-fill me-1"></i>Unpublish
+                    </button>
+                    {% else %}
+                    <button type="submit" name="action" value="publish" class="btn" style="background:#f0fff5;color:#2ecc71;border-radius:20px;font-weight:600;">
+                        <i class="bi bi-eye-fill me-1"></i>Publish
+                    </button>
+                    {% endif %}
+                </form>
                 <a href="{% url 'enter_marks' exam.id %}" class="btn" style="background:white;color:#C0392B;border-radius:20px;font-weight:600;">
                     <i class="bi bi-pencil-fill me-1"></i>Enter Marks
                 </a>
@@ -38,10 +50,13 @@
                     <table class="table table-borderless" style="font-size:0.9rem;">
                         <tr><td style="color:#666;">Type</td><td style="font-weight:600;">{{ exam.get_exam_type_display }}</td></tr>
                         <tr><td style="color:#666;">Year</td><td style="font-weight:600;">{{ exam.academic_year.year }}</td></tr>
-                        <tr><td style="color:#666;">Term</td><td style="font-weight:600;">{{ exam.term.name|default:"â€”" }}</td></tr>
-                        <tr><td style="color:#666;">Start</td><td style="font-weight:600;">{{ exam.start_date|default:"â€”" }}</td></tr>
-                        <tr><td style="color:#666;">End</td><td style="font-weight:600;">{{ exam.end_date|default:"â€”" }}</td></tr>
+                        <tr><td style="color:#666;">Term</td><td style="font-weight:600;">{{ exam.term.name|default:"-" }}</td></tr>
+                        <tr><td style="color:#666;">Start</td><td style="font-weight:600;">{{ exam.start_date|default:"-" }}</td></tr>
+                        <tr><td style="color:#666;">End</td><td style="font-weight:600;">{{ exam.end_date|default:"-" }}</td></tr>
                         <tr><td style="color:#666;">Results</td><td style="font-weight:600;">{{ results_count }} entries</td></tr>
+                        {% if exam.exam_paper %}
+                        <tr><td style="color:#666;">Exam Paper</td><td><a href="{{ exam.exam_paper.url }}" target="_blank" style="color:#C0392B;font-weight:600;"><i class="bi bi-file-earmark-arrow-down-fill me-1"></i>Download</a></td></tr>
+                        {% endif %}
                         <tr><td style="color:#666;">Status</td>
                             <td>
                                 <span style="background:{% if exam.is_published %}#f0fff5;color:#2ecc71;{% else %}#fff8f0;color:#e67e22;{% endif %};padding:3px 10px;border-radius:20px;font-size:0.8rem;font-weight:600;">

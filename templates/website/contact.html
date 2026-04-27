@@ -1,5 +1,5 @@
 ﻿{% extends "base.html" %}
-{% block title %}Contact Us — {{ school.name }}{% endblock %}
+{% block title %}Contact Us - {{ school.name }}{% endblock %}
 {% block content %}
 
 <section style="background: linear-gradient(135deg, #C0392B, #922B21); padding: 4rem 0; color: white;">
@@ -22,11 +22,11 @@
                     </div>
                     <div class="d-flex">
                         <div style="width:45px;height:45px;background:#C0392B;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="bi bi-mailbox2" style="color:white;"></i></div>
-                        <div class="ms-3"><strong>Postal Address</strong><p class="text-muted mb-0">P.O. Box 3, Chuka — 60400</p></div>
+                        <div class="ms-3"><strong>Postal Address</strong><p class="text-muted mb-0">P.O. Box 3, Chuka - 60400</p></div>
                     </div>
                     <div class="d-flex">
                         <div style="width:45px;height:45px;background:#C0392B;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="bi bi-telephone-fill" style="color:white;"></i></div>
-                        <div class="ms-3"><strong>Phone</strong><p class="text-muted mb-0"><a href="tel:064630001" style="color:#C0392B;text-decoration:none;">064-630001</a><br><a href="tel:+254115388019" style="color:#C0392B;text-decoration:none;">0115 388 019</a></p></div>
+                        <div class="ms-3"><strong>Phone</strong><p class="text-muted mb-0"><a href="tel:0115388019" style="color:#C0392B;text-decoration:none;">0115388019 (Principal)</a><br><a href="tel:0112581460" style="color:#C0392B;text-decoration:none;">0112581460 (School)</a></p></div>
                     </div>
                     <div class="d-flex">
                         <div style="width:45px;height:45px;background:#C0392B;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="bi bi-envelope-fill" style="color:white;"></i></div>
@@ -54,8 +54,8 @@
                         {% csrf_token %}
                         <div class="mb-3"><label class="form-label fw-bold">Full Name *</label><input type="text" class="form-control" placeholder="e.g. Adalyn Mwende" required></div>
                         <div class="row g-3 mb-3">
-                            <div class="col-md-6"><label class="form-label fw-bold">Email Address *</label><input type="email" class="form-control" placeholder="e.g. mwende@gmail.com" required></div>
-                            <div class="col-md-6"><label class="form-label fw-bold">Phone Number</label><input type="text" class="form-control" placeholder="e.g. 0712 345 678"></div>
+                            <div class="col-md-6"><label class="form-label fw-bold">Email Address *</label><input type="email" class="form-control" placeholder="e.g. adalynmwende@gmail.com" required></div>
+                            <div class="col-md-6"><label class="form-label fw-bold">Phone Number</label><input type="text" class="form-control" placeholder="e.g. 0112581460"></div>
                         </div>
                         <div class="mb-3"><label class="form-label fw-bold">Subject</label><select class="form-control"><option value="">Select a topic...</option><option>Admissions Enquiry</option><option>Fee Structure</option><option>Academic Performance</option><option>Parent / Guardian Enquiry</option><option>General Enquiry</option></select></div>
                         <div class="mb-3"><label class="form-label fw-bold">Message *</label><textarea class="form-control" rows="4" placeholder="e.g. I would like to enquire about Form 1 admission for my daughter..." required></textarea></div>

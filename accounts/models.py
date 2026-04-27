@@ -56,6 +56,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ("principal", "Principal"),        # Read-only school overview
         ("bursar", "Bursar"),              # Fees, payments, M-Pesa only
         ("dean", "Dean of Studies"),       # Students, exams, streams only
+        ("secretary", "Secretary"),        # Can view school overview and help with communications
         ("admin", "General Admin"),        # Default — full school access
     ]
     school_role = models.CharField(
@@ -98,6 +99,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 "bursar": "Bursar",
                 "principal": "Principal",
                 "dean": "Dean of Studies",
+                "secretary": "Secretary",
                 "super_admin": "Super Admin",
             }
             return role_map.get(self.school_role, "School Admin")
@@ -120,6 +122,8 @@ class User(AbstractBaseUser, PermissionsMixin):
                 return "/school-admin/dashboard/principal/"
             elif role == "dean":
                 return "/school-admin/dashboard/dean/"
+            elif role == "secretary":
+                return "/school-admin/dashboard/principal/"
             elif role == "super_admin":
                 return "/school-admin/dashboard/super/"
             return "/school-admin/dashboard/"

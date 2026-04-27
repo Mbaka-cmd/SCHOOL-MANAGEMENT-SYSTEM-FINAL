@@ -1,0 +1,333 @@
+{% extends "base.html" %}
+{% block title %}Students by Stream - {{ request.user.school.name }}{% endblock %}
+
+{% block content %}
+
+<!-- HEADER -->
+<section style="background: linear-gradient(135deg, #C0392B, #922B21); padding: 2rem 0; color:white;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col">
+                <h4 style="font-weight:800; margin:0;">
+                    <i class="bi bi-diagram-3 me-2"></i>Students by Stream
+                </h4>
+                <p style="opacity:0.75; margin:0; font-size:0.9rem;">
+                    Select a stream to view and manage students
+                </p>
+            </div>
+            <div class="col-auto">
+                <a href="{% url 'student_list' %}" class="btn" style="background:rgba(255,255,255,0.15); color:white; border-radius:20px;">
+                    <i class="bi bi-list-ul me-1"></i>All Students
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- STREAMS SECTION -->
+<section style="padding: 2rem 0; background:#f8f9fa;">
+    <div class="container">
+        <h5 style="font-weight:700; margin-bottom:1.5rem; color:#1a1a1a;">
+            <i class="bi bi-diagram-2 me-2" style="color:#C0392B;"></i>Select a Stream
+        </h5>
+        
+        {% if streams %}
+        <div class="row g-3 mb-4">
+            {% for stream in streams %}
+            <div class="col-lg-4 col-md-6">
+                <a href="?stream={{ stream.id }}" style="text-decoration:none;">
+                    <div style="
+                        background:white;
+                        border-radius:12px;
+                        padding:1.5rem;
+                        box-shadow:0 3px 15px rgba(0,0,0,0.07);
+                        transition:all 0.3s ease;
+                        border:2px solid {% if selected_stream.id == stream.id %}#C0392B{% else %}transparent{% endif %};
+                        cursor:pointer;
+                    " 
+                    onmouseover="this.style.boxShadow='0 8px 25px rgba(0,0,0,0.15)'; this.style.transform='translateY(-5px)';"
+                    onmouseout="this.style.boxShadow='0 3px 15px rgba(0,0,0,0.07)'; this.style.transform='translateY(0)';">
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+                            <h6 style="margin:0; font-weight:700; color:#1a1a1a;">{{ stream.full_name }}</h6>
+                            <span style="
+                                background:{% if selected_stream.id == stream.id %}#C0392B{% else %}#f0f0f0{% endif %};
+                                color:{% if selected_stream.id == stream.id %}white{% else %}#666{% endif %};
+                                padding:3px 10px;
+                                border-radius:20px;
+                                font-size:0.75rem;
+                                font-weight:600;
+                            ">
+                                {{ stream.students.count }} students
+                            </span>
+                        </div>
+                        <p style="font-size:0.85rem; color:#666; margin:0;">
+                            <i class="bi bi-people-fill me-1"></i>
+                            {% with count=stream.students.count %}
+                                {{ count }} active student{{ count|pluralize }}
+                            {% endwith %}
+                        </p>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="background:white; border-radius:12px; padding:2rem; text-align:center; box-shadow:0 3px 15px rgba(0,0,0,0.07);">
+            <p style="color:#999; margin:0;">No streams available</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- STUDENTS IN SELECTED STREAM -->
+{% if selected_stream %}
+<section style="padding: 2rem 0; background:white;">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 style="font-weight:700; margin:0; color:#1a1a1a;">
+                <i class="bi bi-person-lines-fill me-2" style="color:#C0392B;"></i>
+                Students in {{ selected_stream.full_name }}
+                <span style="background:#C0392B; color:white; padding:3px 10px; border-radius:20px; font-size:0.8rem; font-weight:600; margin-left:0.5rem;">
+                    {{ students_in_stream.count }}
+                </span>
+            </h5>
+            <div class="d-flex gap-2">
+                <button class="btn" style="background:#f0fff5; color:#2ecc71; border-radius:10px; font-weight:600;" onclick="selectAllParents()">
+                    <i class="bi bi-check-all me-1"></i>Select All Parents
+                </button>
+                <a href="{% url 'bulk_sms' %}" class="btn" style="background:#C0392B; color:white; border-radius:10px; font-weight:600;">
+                    <i class="bi bi-chat-dots-fill me-1"></i>Bulk SMS
+                </a>
+            </div>
+        </div>
+
+        {% if students_in_stream %}
+        <div class="row g-3">
+            {% for student in students_in_stream %}
+            <div class="col-lg-6">
+                <div style="
+                    background:linear-gradient(135deg, #f8f9fa, #f0f0f0);
+                    border-radius:12px;
+                    padding:1.5rem;
+                    box-shadow:0 3px 15px rgba(0,0,0,0.07);
+                    transition:all 0.3s ease;
+                    border-left:4px solid #C0392B;
+                "
+                onmouseover="this.style.boxShadow='0 8px 25px rgba(0,0,0,0.15)'; this.style.transform='translateX(5px)';"
+                onmouseout="this.style.boxShadow='0 3px 15px rgba(0,0,0,0.07)'; this.style.transform='translateX(0)';">
+                    
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+                        <div style="display:flex; align-items:center; gap:0.7rem; flex-grow:1;">
+                            <!-- Checkbox for bulk SMS -->
+                            <input type="checkbox" class="parent-checkbox" 
+                                   data-phones="{% for parent in student.parents.all %}{{ parent.phone_primary }}{% if not forloop.last %},{% endif %}{% endfor %}"
+                                   style="margin-right:0.5rem;">
+                            
+                            <!-- Avatar -->
+                            <div style="
+                                width:45px;
+                                height:45px;
+                                background:linear-gradient(135deg, #C0392B, #922B21);
+                                border-radius:50%;
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                                flex-shrink:0;
+                            ">
+                                <span style="color:white; font-weight:700; font-size:0.85rem;">
+                                    {{ student.first_name|first }}{{ student.last_name|first }}
+                                </span>
+                            </div>
+                            
+                            <!-- Student Info -->
+                            <div style="flex-grow:1;">
+                                <div style="font-weight:700; font-size:0.95rem; color:#1a1a1a;">
+                                    {{ student.first_name }} {{ student.middle_name }} {{ student.last_name }}
+                                </div>
+                                <div style="font-size:0.8rem; color:#666;">
+                                    <i class="bi bi-hash me-1"></i>{{ student.admission_number }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Status Badge -->
+                        <span style="
+                            background:{% if student.status == 'active' %}#f0fff5; color:#2ecc71;{% else %}#fff8f0; color:#e67e22;{% endif %}
+                            padding:4px 12px;
+                            border-radius:20px;
+                            font-size:0.75rem;
+                            font-weight:600;
+                            white-space:nowrap;
+                        ">
+                            {{ student.get_status_display }}
+                        </span>
+                    </div>
+
+                    <!-- Student Details -->
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-bottom:1rem; font-size:0.85rem;">
+                        <div style="color:#666;">
+                            <i class="bi bi-gender-female" style="color:#C0392B;"></i>
+                            {{ student.get_gender_display }}
+                        </div>
+                        <div style="color:#666;">
+                            <i class="bi bi-calendar me-1" style="color:#C0392B;"></i>
+                            {{ student.date_of_birth }}
+                        </div>
+                        <div style="color:#666;">
+                            {% if student.is_boarder %}
+                            <i class="bi bi-building me-1" style="color:#2ecc71;"></i>Boarder
+                            {% else %}
+                            <i class="bi bi-house me-1" style="color:#3498db;"></i>Day Student
+                            {% endif %}
+                        </div>
+                        <div style="color:#666;">
+                            <i class="bi bi-mortarboard me-1" style="color:#C0392B;"></i>
+                            KCPE: {{ student.kcpe_marks|default:"—" }}
+                        </div>
+                    </div>
+
+                    <!-- Parent Details -->
+                    {% if student.parents.all %}
+                    <div style="background:#f8f9fa;border-radius:8px;padding:0.8rem;margin-bottom:1rem;">
+                        <div style="font-size:0.8rem;color:#666;font-weight:600;margin-bottom:0.5rem;"><i class="bi bi-people-fill me-1"></i>Parents/Guardians</div>
+                        {% for parent in student.parents.all %}
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.3rem;">
+                            <span style="font-size:0.8rem;font-weight:600;">{{ parent.get_full_name }} ({{ parent.get_relationship_display }})</span>
+                            <span style="font-size:0.75rem;color:#C0392B;font-weight:600;">{{ parent.phone_primary }}{% if parent.phone_secondary %} / {{ parent.phone_secondary }}{% endif %}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- Action Buttons -->
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                        <a href="{% url 'student_detail' student.id %}" 
+                           class="btn btn-sm" style="background:#f0f8ff; color:#3498db; border-radius:8px; flex:1; min-width:100px;">
+                            <i class="bi bi-eye-fill me-1"></i>View Details
+                        </a>
+                        <a href="{% url 'student_edit' student.id %}" 
+                           class="btn btn-sm" style="background:#fff0f0; color:#C0392B; border-radius:8px; flex:1; min-width:100px;">
+                            <i class="bi bi-pencil-fill me-1"></i>Edit
+                        </a>
+                        <button class="btn btn-sm" style="background:#f0fff5; color:#2ecc71; border-radius:8px; flex:1; min-width:100px;" 
+                                data-bs-toggle="modal" data-bs-target="#reportModal" 
+                                onclick="document.getElementById('selectedStudentId').innerText='{{ student.id }}'; document.getElementById('selectedStudentName').innerText='{{ student.first_name }} {{ student.last_name }}'">
+                            <i class="bi bi-file-pdf me-1"></i>Report Card
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="background:#fff8f0; border-radius:12px; padding:2rem; text-align:center; border-left:4px solid #e67e22;">
+            <i class="bi bi-info-circle me-2" style="color:#e67e22; font-size:1.5rem;"></i>
+            <p style="color:#e67e22; margin:0; font-weight:600;">No students enrolled in this stream</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Hidden element to store selected student ID -->
+<input type="hidden" id="selectedStudentId" value="">
+
+<!-- REPORT CARD MODAL -->
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius:12px; border:none; box-shadow:0 8px 25px rgba(0,0,0,0.15);">
+            <div class="modal-header" style="background:linear-gradient(135deg, #C0392B, #922B21); color:white; border:none; border-radius:12px 12px 0 0;">
+                <h5 class="modal-title" id="reportModalLabel">
+                    <i class="bi bi-file-pdf me-2"></i>Generate Report Card
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="padding:2rem;">
+                <div style="margin-bottom:1rem;">
+                    <p style="color:#666; font-size:0.9rem; margin:0 0 0.5rem;">
+                        <strong>Student:</strong> <span id="selectedStudentName" style="color:#1a1a1a; font-weight:700;"></span>
+                    </p>
+                </div>
+
+                {% if exams %}
+                <div>
+                    <label class="form-label fw-semibold" style="font-size:0.9rem; color:#1a1a1a;">Select Exam:</label>
+                    <div style="max-height:300px; overflow-y:auto;">
+                        {% for exam in exams %}
+                        <div style="display:flex; align-items:center; padding:0.8rem; border-bottom:1px solid #f0f0f0; cursor:pointer;"
+                             onclick="window.location.href='{% url 'report_card_list' exam.id %}?student_id=' + document.getElementById('selectedStudentId').innerText">
+                            <div style="flex-grow:1;">
+                                <div style="font-weight:600; color:#1a1a1a;">{{ exam.name }}</div>
+                                <div style="font-size:0.8rem; color:#666;">
+                                    <i class="bi bi-calendar me-1"></i>{{ exam.created_at|date:"M d, Y" }}
+                                </div>
+                            </div>
+                            <i class="bi bi-arrow-right" style="color:#C0392B;"></i>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <div style="background:#fff8f0; border-radius:8px; padding:1rem; text-align:center; border-left:4px solid #e67e22;">
+                    <p style="color:#e67e22; margin:0;">No exams published yet. Please create and publish exams first.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+</style>
+
+<script>
+function selectAllParents() {
+    const checkboxes = document.querySelectorAll('.parent-checkbox');
+    checkboxes.forEach(cb => cb.checked = true);
+}
+
+function getSelectedParentPhones() {
+    const selectedPhones = [];
+    const checkboxes = document.querySelectorAll('.parent-checkbox:checked');
+    checkboxes.forEach(cb => {
+        const phones = cb.getAttribute('data-phones').split(',');
+        phones.forEach(phone => {
+            if (phone.trim() && !selectedPhones.includes(phone.trim())) {
+                selectedPhones.push(phone.trim());
+            }
+        });
+    });
+    return selectedPhones;
+}
+
+// Update bulk SMS button when checkboxes change
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.parent-checkbox');
+    const bulkSmsBtn = document.querySelector('a[href="{% url 'bulk_sms' %}"]');
+    
+    function updateBulkSmsLink() {
+        const selectedPhones = getSelectedParentPhones();
+        if (selectedPhones.length > 0) {
+            const phoneParam = selectedPhones.join(',');
+            bulkSmsBtn.href = '{% url 'bulk_sms' %}?phones=' + encodeURIComponent(phoneParam);
+            bulkSmsBtn.style.background = '#C0392B';
+        } else {
+            bulkSmsBtn.href = '{% url 'bulk_sms' %}';
+            bulkSmsBtn.style.background = '#6c757d';
+        }
+    }
+    
+    checkboxes.forEach(cb => {
+        cb.addEventListener('change', updateBulkSmsLink);
+    });
+    
+    // Initial update
+    updateBulkSmsLink();
+});
+</script>
+
+{% endblock %}

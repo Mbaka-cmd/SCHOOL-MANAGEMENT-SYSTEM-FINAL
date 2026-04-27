@@ -3,8 +3,9 @@ from . import views
 
 urlpatterns = [
     path("", views.exam_list, name="exam_list"),
-    path("create/", views.exam_create, name="exam_create"),
     path("<uuid:pk>/", views.exam_detail, name="exam_detail"),
+    path("create/", views.exam_create, name="exam_create"),
+    path("<uuid:pk>/publish/", views.exam_publish, name="exam_publish"),
     path("<uuid:pk>/marks/", views.enter_marks, name="enter_marks"),
     path("<uuid:pk>/results/", views.exam_results, name="exam_results"),
     path("<uuid:pk>/report-cards/", views.report_card_list, name="report_card_list"),

@@ -1,5 +1,5 @@
 ﻿{% extends "base.html" %}
-{% block title %}Record Payment â€” {{ invoice.student.get_full_name }}{% endblock %}
+{% block title %}Record Payment - {{ invoice.student.get_full_name }}{% endblock %}
 {% block content %}
 
 <section style="background:linear-gradient(135deg,#C0392B,#922B21);padding:2rem 0;color:white;">
@@ -7,7 +7,7 @@
         <div class="row align-items-center">
             <div class="col">
                 <h4 style="font-weight:800;margin:0;"><i class="bi bi-cash me-2"></i>Record Payment</h4>
-                <p style="opacity:0.75;margin:0;font-size:0.9rem;">{{ invoice.student.get_full_name }} â€” Balance: KES {{ invoice.balance|floatformat:0 }}</p>
+                <p style="opacity:0.75;margin:0;font-size:0.9rem;">{{ invoice.student.get_full_name }} - Balance: KES {{ invoice.balance|floatformat:0 }}</p>
             </div>
             <div class="col-auto">
                 <a href="{% url 'invoice_detail' invoice.id %}" class="btn" style="background:rgba(255,255,255,0.15);color:white;border-radius:20px;">

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block title %}Manage Book Returns{% endblock %}
+{% block content %}
+<div style="background:linear-gradient(135deg,#8B1A1A,#c0392b);padding:2rem;color:white;margin-bottom:2rem;">
+  <div style="max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+    <div>
+      <h1 style="margin:0;font-size:1.8rem;">📚 Manage Book Returns</h1>
+      <p style="margin:0.3rem 0 0;opacity:0.85;">Check off books that have been returned</p>
+    </div>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+      <a href="{% url 'library_dashboard' %}" style="background:rgba(255,255,255,0.2);color:white;padding:0.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:600;">← Dashboard</a>
+      <a href="{% url 'borrow_book' %}" style="background:white;color:#8B1A1A;padding:0.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:600;">📖 Borrow Book</a>
+    </div>
+  </div>
+</div>
+<div style="max-width:1200px;margin:0 auto;padding:0 1rem;">
+  {% if messages %}{% for message in messages %}<div style="padding:1rem;border-radius:8px;margin-bottom:1rem;background:{% if message.tags == 'error' %}#fff0f0;border:1px solid #e74c3c;color:#c0392b{% elif message.tags == 'warning' %}#fff8e1;border:1px solid #f39c12;color:#e67e22{% else %}#f0fff5;border:1px solid #2ecc71;color:#27ae60{% endif %};">{{ message }}</div>{% endfor %}{% endif %}
+  
+  {% if records %}
+  <form method="post">{% csrf_token %}
+    <div style="background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);overflow:hidden;margin-bottom:1rem;">
+      <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #f0f0f0;font-weight:600;display:flex;justify-content:space-between;align-items:center;">
+        <span>Books Currently Borrowed ({{ records|length }})</span>
+        <button type="submit" style="background:#27ae60;color:white;padding:0.5rem 1rem;border:none;border-radius:6px;font-weight:600;cursor:pointer;">✓ Mark Selected as Returned</button>
+      </div>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr style="background:#f8f9fa;">
+              <th style="padding:0.875rem 1rem;text-align:left;font-size:0.8rem;color:#666;border:none;width:50px;"><input type="checkbox" id="select_all" style="transform:scale(1.2);"></th>
+              <th style="padding:0.875rem 1rem;text-align:left;font-size:0.8rem;color:#666;border:none;">Student</th>
+              <th style="padding:0.875rem 1rem;text-align:left;font-size:0.8rem;color:#666;border:none;">Book</th>
+              <th style="padding:0.875rem 1rem;text-align:left;font-size:0.8rem;color:#666;border:none;">Borrowed</th>
+              <th style="padding:0.875rem 1rem;text-align:left;font-size:0.8rem;color:#666;border:none;">Due</th>
+              <th style="padding:0.875rem 1rem;text-align:left;font-size:0.8rem;color:#666;border:none;">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for record in records %}
+            <tr style="border-top:1px solid #f0f0f0;">
+              <td style="padding:0.875rem 1rem;"><input type="checkbox" name="record_ids" value="{{ record.id }}" style="transform:scale(1.2);"></td>
+              <td style="padding:0.875rem 1rem;">
+                <div style="font-weight:600;font-size:0.9rem;">{{ record.student.first_name }} {{ record.student.last_name }}</div>
+                <div style="font-size:0.75rem;color:#999;">{{ record.student.admission_number }}</div>
+              </td>
+              <td style="padding:0.875rem 1rem;">
+                <div style="font-weight:500;">{{ record.book.title }}</div>
+                <div style="font-size:0.75rem;color:#999;">{{ record.book.author }}</div>
+              </td>
+              <td style="padding:0.875rem 1rem;font-size:0.85rem;">{{ record.borrowed_at|date:"d M Y H:i" }}</td>
+              <td style="padding:0.875rem 1rem;font-size:0.85rem;">{{ record.due_at|date:"d M Y H:i" }}</td>
+              <td style="padding:0.875rem 1rem;">
+                {% if record.status == 'overdue' %}
+                  <span style="background:#fff0f0;color:#e74c3c;padding:0.3rem 0.7rem;border-radius:20px;font-size:0.75rem;font-weight:600;">Overdue · {{ record.overdue_days }} days</span>
+                {% else %}
+                  <span style="background:#f0f8ff;color:#3498db;padding:0.3rem 0.7rem;border-radius:20px;font-size:0.75rem;font-weight:600;">Borrowed</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </form>
+  {% else %}
+  <div style="background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);padding:3rem;text-align:center;">
+    <div style="font-size:3rem;margin-bottom:1rem;">📚</div>
+    <h3 style="margin:0 0 0.5rem;color:#666;">No Books Currently Borrowed</h3>
+    <p style="margin:0;color:#999;">All books have been returned or there are no active borrows.</p>
+    <a href="{% url 'borrow_book' %}" style="display:inline-block;margin-top:1rem;background:#8B1A1A;color:white;padding:0.75rem 1.5rem;border-radius:8px;text-decoration:none;font-weight:600;">Borrow a Book</a>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+document.getElementById('select_all').addEventListener('change', function() {
+    const checkboxes = document.querySelectorAll('input[name="record_ids"]');
+    checkboxes.forEach(cb => cb.checked = this.checked);
+});
+</script>
+{% endblock %}

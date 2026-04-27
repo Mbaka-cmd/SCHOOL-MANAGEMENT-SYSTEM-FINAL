@@ -1,6 +1,6 @@
 ﻿{% extends "base.html" %}
 {% load exam_tags %}
-{% block title %}Enter Marks â€” {{ exam.name }}{% endblock %}
+{% block title %}Enter Marks - {{ exam.name }}{% endblock %}
 {% block content %}
 <section style="background:linear-gradient(135deg,#C0392B,#922B21);padding:2rem 0;color:white;">
     <div class="container">
@@ -59,7 +59,7 @@
         <div style="background:white;border-radius:15px;padding:2rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 style="font-weight:700;color:#1a1a1a;margin:0;">
-                    {{ selected_stream.full_name }} â€” {{ selected_subject.name }}
+                    {{ selected_stream.full_name }} - {{ selected_subject.name }}
                     <span style="font-size:0.85rem;color:#666;font-weight:400;">({{ students.count }} students)</span>
                 </h5>
                 {% if messages %}{% for message in messages %}
@@ -112,10 +112,10 @@
                                     <span style="background:#fff0f0;color:#C0392B;padding:3px 10px;border-radius:20px;font-size:0.85rem;font-weight:700;">
                                         {{ result.grade }}
                                     </span>
-                                    {% else %}â€”{% endif %}
+                                    {% else %}-{% endif %}
                                 </td>
                                 <td style="padding:0.8rem 1rem;font-weight:600;">
-                                    {% if result %}{{ result.points|default:"â€”" }}{% else %}â€”{% endif %}
+                                    {% if result %}{{ result.points|default:"-" }}{% else %}-{% endif %}
                                 </td>
                             </tr>
                             {% endwith %}

@@ -92,7 +92,10 @@
         <div class="row g-4 mb-4">
             <div class="col-lg-8">
                 <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);">
-                    <h6 style="font-weight:700;color:#1a1a1a;margin-bottom:1rem;"><i class="bi bi-bar-chart-fill me-2" style="color:#C0392B;"></i>Students per Stream</h6>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 style="font-weight:700;color:#1a1a1a;margin:0;"><i class="bi bi-bar-chart-fill me-2" style="color:#C0392B;"></i>Students per Stream</h6>
+                        <a href="{% url 'students_by_stream' %}" style="font-size:0.85rem;color:#C0392B;text-decoration:none;"><i class="bi bi-eye me-1"></i>View Details</a>
+                    </div>
                     <canvas id="streamChart" height="120"></canvas>
                 </div>
             </div>
@@ -171,15 +174,143 @@
     </div>
 </section>
 
+<section style="padding:2rem 0;background:#fff5f5;border-top:1px solid #ffeaea;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div style="background:white;border-radius:15px;padding:2rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);border-left:4px solid #e74c3c;">
+                    <h6 style="font-weight:700;color:#1a1a1a;margin-bottom:1rem;"><i class="bi bi-exclamation-triangle-fill me-2" style="color:#e74c3c;"></i>Data Management</h6>
+                    <p style="color:#666;margin-bottom:1.5rem;">Clear temporary data like draft exams and old attendance records. This helps keep the system clean without losing important student and academic records.</p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <button onclick="clearDrafts()" class="btn" style="background:#e74c3c;color:white;border-radius:10px;font-weight:600;padding:0.75rem 1.5rem;">
+                            <i class="bi bi-trash-fill me-1"></i>Clear Draft Exams
+                        </button>
+                        <button onclick="clearOldAttendance()" class="btn" style="background:#f39c12;color:white;border-radius:10px;font-weight:600;padding:0.75rem 1.5rem;">
+                            <i class="bi bi-calendar-x me-1"></i>Clear Old Attendance (30+ days)
+                        </button>
+                        <button onclick="viewAttendanceHistory()" class="btn" style="background:#3498db;color:white;border-radius:10px;font-weight:600;padding:0.75rem 1.5rem;">
+                            <i class="bi bi-clock-history me-1"></i>View Attendance History
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 const streamCtx = document.getElementById('streamChart').getContext('2d');
-new Chart(streamCtx, {type:'bar',data:{labels:{{ stream_labels|safe }},datasets:[{label:'Students',data:{{ stream_counts|safe }},backgroundColor:'rgba(192,57,43,0.7)',borderColor:'#922B21',borderWidth:1,borderRadius:5}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}},x:{ticks:{font:{size:10}}}}}});
+
+function clearDrafts() {
+    if (confirm('Are you sure you want to clear all draft exams? This will remove all unpublished exams from the system. This action cannot be undone.')) {
+        fetch('/schools/clear-drafts/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Error: ' + error.message);
+        });
+    }
+}
+
+function clearOldAttendance() {
+    if (confirm('Are you sure you want to clear attendance records older than 30 days? This will remove old attendance data to keep the system clean. This action cannot be undone.')) {
+        fetch('/schools/clear-old-attendance/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Error: ' + error.message);
+        });
+    }
+}
+
+function viewAttendanceHistory() {
+    window.location.href = '/attendance/history/';
+}
+
+function clearData() {
+    if (confirm('Are you sure you want to clear all data? This will create a backup first and then clear all students, exams, and related data. This action cannot be undone.')) {
+        fetch('/schools/clear-data/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Data cleared successfully! A backup was created automatically.');
+                location.reload();
+            } else {
+                alert('Error clearing data: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('Error: ' + error.message);
+        });
+    }
+}
+
+function backupData() {
+    fetch('/schools/backup-data/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Create download link
+            const link = document.createElement('a');
+            link.href = data.backup_url;
+            link.download = data.filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            alert('Backup downloaded successfully!');
+        } else {
+            alert('Error creating backup: ' + data.error);
+        }
+    })
+    .catch(error => {
+        alert('Error: ' + error.message);
+    });
+}
+new Chart(streamCtx, {type:'bar',data:{labels:{{ stream_labels_json|safe }},datasets:[{label:'Students',data:{{ stream_counts_json|safe }},backgroundColor:'rgba(192,57,43,0.7)',borderColor:'#922B21',borderWidth:1,borderRadius:5}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}},x:{ticks:{font:{size:10}}}}}});
 const feeCtx = document.getElementById('feeChart').getContext('2d');
-new Chart(feeCtx, {type:'doughnut',data:{labels:['Paid','Pending','Partial','Overdue'],datasets:[{data:{{ fee_data|safe }},backgroundColor:['#2ecc71','#e67e22','#3498db','#e74c3c'],borderWidth:0}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}}}});
+new Chart(feeCtx, {type:'doughnut',data:{labels:{{ fee_labels_json|safe }},datasets:[{data:{{ fee_data_json|safe }},backgroundColor:{{ fee_colors_json|safe }},borderWidth:0}]},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}}}});
 const gradeCtx = document.getElementById('gradeChart').getContext('2d');
-new Chart(gradeCtx, {type:'bar',data:{labels:{{ grade_labels|safe }},datasets:[{label:'Students',data:{{ grade_counts|safe }},backgroundColor:['#2ecc71','#27ae60','#3498db','#2980b9','#1abc9c','#16a085','#e67e22','#d35400','#e74c3c','#c0392b','#922b21','#7f8c8d'],borderWidth:0,borderRadius:5}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}});
+new Chart(gradeCtx, {type:'bar',data:{labels:{{ grade_labels_json|safe }},datasets:[{label:'Students',data:{{ grade_counts_json|safe }},backgroundColor:['#2ecc71','#27ae60','#3498db','#2980b9','#1abc9c','#16a085','#e67e22','#d35400','#e74c3c','#c0392b','#922b21','#7f8c8d'],borderWidth:0,borderRadius:5}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1}}}}});
 </script>
 {% endblock %}
 {% endblock %}

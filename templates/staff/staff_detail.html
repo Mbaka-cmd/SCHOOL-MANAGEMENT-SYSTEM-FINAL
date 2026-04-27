@@ -35,7 +35,7 @@
                     <hr>
                     <table class="table table-borderless text-start" style="font-size:0.9rem;">
                         <tr><td style="color:#666;">Email</td><td style="font-weight:600;">{{ teacher.email }}</td></tr>
-                        <tr><td style="color:#666;">Phone</td><td style="font-weight:600;">{{ teacher.phone_number|default:"â€”" }}</td></tr>
+                        <tr><td style="color:#666;">Phone</td><td style="font-weight:600;">{{ teacher.phone_number|default:"—" }}</td></tr>
                         <tr><td style="color:#666;">Role</td><td style="font-weight:600;">{{ teacher.primary_role }}</td></tr>
                         <tr><td style="color:#666;">Joined</td><td style="font-weight:600;">{{ teacher.date_joined|date:"M d, Y" }}</td></tr>
                     </table>

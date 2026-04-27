@@ -37,7 +37,13 @@
                         {% if item.post_type == 'event' %}
                         <i class="bi bi-calendar-event" style="font-size:3rem;color:rgba(255,255,255,0.5);"></i>
                         {% elif item.post_type == 'notice' %}
+                        {% if item.priority == 'urgent' %}
+                        <i class="bi bi-exclamation-triangle" style="font-size:3rem;color:rgba(255,255,255,0.5);"></i>
+                        {% elif item.priority == 'important' %}
+                        <i class="bi bi-exclamation-circle" style="font-size:3rem;color:rgba(255,255,255,0.5);"></i>
+                        {% else %}
                         <i class="bi bi-megaphone" style="font-size:3rem;color:rgba(255,255,255,0.5);"></i>
+                        {% endif %}
                         {% else %}
                         <i class="bi bi-newspaper" style="font-size:3rem;color:rgba(255,255,255,0.5);"></i>
                         {% endif %}
@@ -59,7 +65,7 @@
                         {% if item.event_date %}
                         <div style="font-size:0.8rem;color:#C0392B;margin-bottom:0.8rem;"><i class="bi bi-calendar3 me-1"></i>{{ item.event_date|date:"M d, Y" }}{% if item.event_location %} · {{ item.event_location }}{% endif %}</div>
                         {% endif %}
-                        <a href="{% url 'news_detail' item.slug %}" class="btn btn-sm" style="background:#fff0f0;color:#C0392B;border-radius:20px;font-weight:600;">Read More <i class="bi bi-arrow-right ms-1"></i></a>
+                        <a href="{% if item.type == 'news_event' %}{% url 'news_detail' item.slug %}{% else %}{% url 'notice_detail' item.id %}{% endif %}" class="btn btn-sm" style="background:#fff0f0;color:#C0392B;border-radius:20px;font-weight:600;">Read More <i class="bi bi-arrow-right ms-1"></i></a>
                     </div>
                 </div>
             </div>

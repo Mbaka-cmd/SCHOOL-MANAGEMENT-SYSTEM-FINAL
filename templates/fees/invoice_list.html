@@ -1,5 +1,5 @@
 ﻿{% extends "base.html" %}
-{% block title %}Invoices â€” {{ request.user.school.name }}{% endblock %}
+{% block title %}Invoices - {{ request.user.school.name }}{% endblock %}
 
 {% block content %}
 
@@ -75,19 +75,19 @@
                                 <div style="font-size:0.75rem; color:#999;">{{ invoice.student.admission_number }}</div>
                             </td>
                             <td style="padding:0.9rem 1rem; font-size:0.85rem;">
-                                {{ invoice.student.current_stream.full_name|default:"â€”" }}
+                                {{ invoice.student.current_stream.full_name|default:"-" }}
                             </td>
                             <td style="padding:0.9rem 1rem; font-size:0.85rem;">
                                 Term {{ invoice.term }} / {{ invoice.academic_year }}
                             </td>
                             <td style="padding:0.9rem 1rem; font-weight:600;">
-                                KES {{ invoice.total_expected|floatformat:0 }}
+                                KES {{ invoice.total_expected|intcomma }}
                             </td>
                             <td style="padding:0.9rem 1rem; font-weight:600; color:#2ecc71;">
-                                KES {{ invoice.total_paid|floatformat:0 }}
+                                KES {{ invoice.total_paid|intcomma }}
                             </td>
                             <td style="padding:0.9rem 1rem; font-weight:700; color:#C0392B;">
-                                KES {{ invoice.balance|floatformat:0 }}
+                                KES {{ invoice.balance|intcomma }}
                             </td>
                             <td style="padding:0.9rem 1rem;">
                                 {% if invoice.status == 'paid' %}
@@ -108,8 +108,8 @@
                                     <a href="{% url 'record_payment' invoice.id %}" class="btn btn-sm" style="background:#f0fff5; color:#2ecc71; border-radius:8px;">
                                         <i class="bi bi-cash"></i>
                                     </a>
-                                    <a href="{% url 'mpesa_stk_push' invoice.id %}" class="btn btn-sm" style="background:#fff0f0; color:#C0392B; border-radius:8px;">
-                                        <i class="bi bi-phone-fill"></i>
+                                    <a href="{% url 'mpesa_stk_push' invoice.id %}" class="btn btn-sm" style="background:#fff0f0; color:#C0392B; border-radius:8px;" title="STK PUSH">
+                                        <i class="bi bi-phone-fill"></i><br><small>STK</small>
                                     </a>
                                 </div>
                             </td>

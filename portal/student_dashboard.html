@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Student Dashboard — {{ student.get_full_name }}{% endblock %}
+{% block title %}Student Dashboard - {{ student.get_full_name }}{% endblock %}
 {% block content %}
 
 <section style="background:linear-gradient(135deg,#3498db,#2980b9);padding:2rem 0;color:white;">
@@ -8,7 +8,7 @@
         <div class="row align-items-center">
             <div class="col">
                 <h4 style="font-weight:800;margin:0;"><i class="bi bi-mortarboard-fill me-2"></i>Student Portal</h4>
-                <p style="opacity:0.75;margin:0;">Welcome back, <strong>{{ student.first_name }}</strong> — {{ student.current_stream.full_name|default:"—" }}</p>
+                <p style="opacity:0.75;margin:0;">Welcome back, <strong>{{ student.first_name }}</strong> - {{ student.current_stream.full_name|default:"-" }}</p>
             </div>
             <div class="col-auto">
                 <span style="background:rgba(255,255,255,0.2);padding:0.4rem 1rem;border-radius:20px;font-size:0.85rem;">
@@ -26,7 +26,7 @@
         <div class="row g-3 mb-4">
             <div class="col-6 col-md-3">
                 <div style="background:white;border-radius:15px;padding:1.2rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);border-left:4px solid #3498db;text-align:center;">
-                    <div style="font-size:1.8rem;font-weight:800;color:#3498db;">{{ student.current_stream.full_name|default:"—" }}</div>
+                    <div style="font-size:1.8rem;font-weight:800;color:#3498db;">{{ student.current_stream.full_name|default:"-" }}</div>
                     <div style="font-size:0.8rem;color:#999;">Current Class</div>
                 </div>
             </div>
@@ -44,7 +44,7 @@
             </div>
             <div class="col-6 col-md-3">
                 <div style="background:white;border-radius:15px;padding:1.2rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);border-left:4px solid #e67e22;text-align:center;">
-                    <div style="font-size:1.8rem;font-weight:800;color:#e67e22;">{{ student.kcpe_marks|default:"—" }}</div>
+                    <div style="font-size:1.8rem;font-weight:800;color:#e67e22;">{{ student.kcpe_marks|default:"-" }}</div>
                     <div style="font-size:0.8rem;color:#999;">KCPE Marks</div>
                 </div>
             </div>
@@ -105,7 +105,7 @@
                         </div>
                         <div style="padding:0.5rem 0;border-bottom:1px solid #f5f5f5;display:flex;justify-content:space-between;">
                             <span style="color:#999;">Stream</span>
-                            <span style="font-weight:600;">{{ student.current_stream.full_name|default:"—" }}</span>
+                            <span style="font-weight:600;">{{ student.current_stream.full_name|default:"-" }}</span>
                         </div>
                         <div style="padding:0.5rem 0;border-bottom:1px solid #f5f5f5;display:flex;justify-content:space-between;">
                             <span style="color:#999;">Admitted</span>

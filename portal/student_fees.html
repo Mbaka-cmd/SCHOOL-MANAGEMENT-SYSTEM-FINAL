@@ -17,7 +17,7 @@
         <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);margin-bottom:1rem;">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div>
-                    <h6 style="font-weight:700;margin:0;">{{ invoice.academic_year.year }} — Term {{ invoice.term.term_number }}</h6>
+                    <h6 style="font-weight:700;margin:0;">{{ invoice.academic_year.year }} - Term {{ invoice.term.term_number }}</h6>
                     <small style="color:#999;">Invoice #{{ invoice.invoice_number }}</small>
                 </div>
                 <span style="background:{% if invoice.status == 'paid' %}#f0fff5;color:#2ecc71;{% elif invoice.status == 'pending' %}#fff8f0;color:#e67e22;{% else %}#fff0f0;color:#e74c3c;{% endif %};padding:4px 12px;border-radius:20px;font-weight:600;font-size:0.8rem;">

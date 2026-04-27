@@ -10,6 +10,7 @@ from students.models import Student
 from academics.models import Stream
 from schools.models import AcademicYear, Term
 from schools.views import admin_required
+from exams.models import Exam, ExamResult
 
 
 @admin_required
@@ -18,6 +19,30 @@ def fee_dashboard(request):
     invoices = FeeInvoice.objects.filter(school=school)
     total_expected = sum(i.total_expected for i in invoices)
     total_collected = sum(i.total_paid for i in invoices)
+    outstanding = total_expected - total_collected
+    
+    # Grade distribution data for bar chart
+    from exams.models import ExamResult
+    grade_counts = {}
+    for grade in ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E']:
+        grade_counts[grade] = 0
+    
+    # Get latest exam results for grade distribution
+    latest_exam = Exam.objects.filter(school=school, is_published=True).order_by('-created_at').first()
+    if latest_exam:
+        results = ExamResult.objects.filter(exam=latest_exam).exclude(grade__in=['X', 'Y'])
+        for result in results:
+            if result.grade in grade_counts:
+                grade_counts[result.grade] += 1
+    
+    # Convert to list for easier template access
+    grade_data = [
+        grade_counts['A'], grade_counts['A-'], grade_counts['B+'],
+        grade_counts['B'], grade_counts['B-'], grade_counts['C+'],
+        grade_counts['C'], grade_counts['C-'], grade_counts['D+'],
+        grade_counts['D'], grade_counts['D-'], grade_counts['E']
+    ]
+    
     context = {
         "school": school,
         "total_invoices": invoices.count(),
@@ -26,7 +51,12 @@ def fee_dashboard(request):
         "total_partial": invoices.filter(status="partial").count(),
         "total_expected": total_expected,
         "total_collected": total_collected,
+        "outstanding": outstanding,
         "recent_payments": Payment.objects.filter(school=school).order_by("-payment_date")[:10],
+        "grade_counts": grade_counts,
+        "grade_data": grade_data,
+        "paid_percentage": (total_collected / total_expected * 100) if total_expected > 0 else 0,
+        "outstanding_percentage": (outstanding / total_expected * 100) if total_expected > 0 else 0,
     }
     return render(request, "fees/fee_dashboard.html", context)
 

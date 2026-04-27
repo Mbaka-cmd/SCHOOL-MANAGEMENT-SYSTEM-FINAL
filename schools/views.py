@@ -1,13 +1,17 @@
 ﻿from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
 from django.db.models import Sum, Q
 from students.models import Student
 from exams.models import Exam, ExamResult, ReportCard, score_to_grade
 from fees.models import FeeInvoice, Payment
 from academics.models import Stream, Subject
 from accounts.models import User
+from django.core.management import call_command
+from django.http import HttpResponse
 import json
+import os
+from django.conf import settings
 
 
 # â”€â”€ DECORATORS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -97,6 +101,11 @@ def admin_dashboard(request):
     total_balance = total_expected - total_collected
     collection_rate = round((total_collected / total_expected * 100), 1) if total_expected > 0 else 0
 
+    # Convert Decimal objects to float for JSON serialization
+    total_expected = float(total_expected) if total_expected else 0.0
+    total_collected = float(total_collected) if total_collected else 0.0
+    total_balance = float(total_balance) if total_balance else 0.0
+
     streams = Stream.objects.filter(school=school).order_by('class_level__level_order', 'name')
     stream_labels = [s.full_name for s in streams]
     stream_counts = [s.students.filter(is_active=True).count() for s in streams]
@@ -105,6 +114,11 @@ def admin_dashboard(request):
     pending_count = all_invoices.filter(status='pending').count()
     partial_count = all_invoices.filter(status='partial').count()
     overdue_count = all_invoices.filter(status='overdue').count()
+
+    # Fee analytics data for chart - showing amounts with color coding
+    fee_labels = ['Expected Fees', 'Collected Fees', 'Outstanding Balance']
+    fee_data = [total_expected, total_collected, total_balance]
+    fee_colors = ['#2ecc71', '#f1c40f', '#e74c3c']  # Green, Yellow, Red
 
     grade_labels = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E']
     grade_counts = [ExamResult.objects.filter(exam__school=school, grade=g).count() for g in grade_labels]
@@ -127,6 +141,9 @@ def admin_dashboard(request):
         "pending_count": pending_count,
         "partial_count": partial_count,
         "overdue_count": overdue_count,
+        "fee_labels_json": json.dumps(fee_labels),
+        "fee_data_json": json.dumps(fee_data),
+        "fee_colors_json": json.dumps(fee_colors),
         "stream_labels_json": json.dumps(stream_labels),
         "stream_counts_json": json.dumps(stream_counts),
         "grade_labels_json": json.dumps(grade_labels),
@@ -313,6 +330,170 @@ def super_admin_dashboard(request):
     }
     return render(request, "schools/admin_dashboard.html", context)
 
+# â”€â”€ DATA MANAGEMENT VIEWS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+@login_required
+def clear_data(request):
+    if not request.user.is_platform_admin:
+        return JsonResponse({'success': False, 'error': 'Permission denied'})
+
+    if request.method == 'POST':
+        try:
+            # First create a backup
+            backup_dir = os.path.join(settings.BASE_DIR, 'backups')
+            os.makedirs(backup_dir, exist_ok=True)
+
+            from datetime import datetime
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            backup_filename = f'backup_before_clear_{timestamp}.json'
+
+            # Get all data to backup
+            from django.core import serializers
+            data_to_backup = []
+            models_to_backup = [
+                'accounts.User',
+                'schools.School',
+                'students.Student',
+                'academics.Stream',
+                'academics.Subject',
+                'exams.Exam',
+                'exams.ExamResult',
+                'fees.FeeInvoice',
+                'fees.Payment',
+                'attendance.Attendance',
+                'library.Book',
+                'notices.Notice',
+                'timetable.TimetableEntry',
+            ]
+
+            for model_name in models_to_backup:
+                try:
+                    app_label, model_label = model_name.split('.')
+                    from django.apps import apps
+                    model = apps.get_model(app_label, model_label)
+                    data_to_backup.extend(serializers.serialize('json', model.objects.all()))
+                except:
+                    pass  # Skip if model doesn't exist
+
+            # Save backup
+            backup_path = os.path.join(backup_dir, backup_filename)
+            with open(backup_path, 'w') as f:
+                f.write('[' + ','.join(data_to_backup) + ']')
+
+            # Now clear the data
+            call_command('clear_data')
+            return JsonResponse({'success': True, 'backup_created': backup_filename})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Invalid method'})
+
+
+@login_required
+def clear_drafts(request):
+    if not (request.user.is_platform_admin or request.user.is_school_admin):
+        return JsonResponse({'success': False, 'error': 'Permission denied'})
+
+    if request.method == 'POST':
+        try:
+            # Delete all draft exams (unpublished exams) for the user's school
+            from exams.models import Exam
+            if request.user.is_platform_admin:
+                draft_exams = Exam.objects.filter(is_published=False)
+            else:
+                draft_exams = Exam.objects.filter(school=request.user.school, is_published=False)
+            count = draft_exams.count()
+            draft_exams.delete()
+            return JsonResponse({'success': True, 'message': f'Deleted {count} draft exams'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Invalid method'})
+
+
+@login_required
+def clear_old_attendance(request):
+    if not (request.user.is_platform_admin or request.user.is_school_admin):
+        return JsonResponse({'success': False, 'error': 'Permission denied'})
+
+    if request.method == 'POST':
+        try:
+            from datetime import timedelta
+            from django.utils import timezone
+            from attendance.models import AttendanceSession, AttendanceRecord
+
+            # Delete attendance records older than 30 days for the user's school
+            cutoff_date = timezone.now().date() - timedelta(days=30)
+            if request.user.is_platform_admin:
+                old_sessions = AttendanceSession.objects.filter(date__lt=cutoff_date)
+            else:
+                old_sessions = AttendanceSession.objects.filter(stream__school=request.user.school, date__lt=cutoff_date)
+            count = old_sessions.count()
+            old_sessions.delete()  # This will cascade delete AttendanceRecord objects
+
+            return JsonResponse({'success': True, 'message': f'Deleted {count} attendance sessions older than 30 days'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Invalid method'})
+
+
+@login_required
+def attendance_history(request):
+    if not (request.user.is_platform_admin or request.user.is_school_admin):
+        return JsonResponse({'success': False, 'error': 'Permission denied'})
+
+    try:
+        from attendance.models import AttendanceSession
+        from django.core.paginator import Paginator
+
+        # Get all attendance sessions with pagination for the user's school
+        if request.user.is_platform_admin:
+            sessions = AttendanceSession.objects.select_related('stream', 'taken_by').order_by('-date')
+        else:
+            sessions = AttendanceSession.objects.filter(stream__school=request.user.school).select_related('stream', 'taken_by').order_by('-date')
+        paginator = Paginator(sessions, 50)  # 50 sessions per page
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        return render(request, 'schools/attendance_history.html', {
+            'page_obj': page_obj,
+            'total_sessions': sessions.count(),
+        })
+    except Exception as e:
+        messages.error(request, f'Error loading attendance history: {str(e)}')
+        return redirect('admin_dashboard')
+
+
+@login_required
+def backup_data(request):
+    if not request.user.is_platform_admin:
+        return JsonResponse({'success': False, 'error': 'Permission denied'})
+
+    if request.method == 'POST':
+        try:
+            # Create backup directory if it doesn't exist
+            backup_dir = os.path.join(settings.BASE_DIR, 'backups')
+            os.makedirs(backup_dir, exist_ok=True)
+
+            # Generate backup filename
+            from datetime import datetime
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            backup_file = f'backup_{timestamp}.db'
+            backup_path = os.path.join(backup_dir, backup_file)
+
+            # Copy database file
+            import shutil
+            db_path = settings.DATABASES['default']['NAME']
+            shutil.copy2(db_path, backup_path)
+
+            # Return download URL
+            backup_url = f'/media/backups/{backup_file}'
+            return JsonResponse({
+                'success': True,
+                'backup_url': backup_url,
+                'filename': backup_file
+            })
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Invalid method'})
 
 # â”€â”€ GLOBAL SEARCH â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 

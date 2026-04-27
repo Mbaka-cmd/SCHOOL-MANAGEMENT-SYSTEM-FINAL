@@ -7,6 +7,7 @@ urlpatterns = [
     path('books/add/', views.add_book, name='add_book'),
     path('borrow/', views.borrow_book, name='borrow_book'),
     path('return/<uuid:record_id>/', views.return_book, name='return_book'),
+    path('returns/', views.manage_returns, name='manage_returns'),
     path('overdue/', views.overdue_list, name='overdue_list'),
     path('student/<uuid:student_id>/history/', views.student_borrow_history, name='student_borrow_history'),
 ]

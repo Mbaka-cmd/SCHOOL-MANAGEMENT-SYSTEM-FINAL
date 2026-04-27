@@ -82,3 +82,25 @@ class BorrowRecord(models.Model):
 
     class Meta:
         ordering = ['-borrowed_at']
+        # ADD THESE TWO PROPERTIES to the BookBorrowing model in library/models.py
+# Find the BookBorrowing class and add these inside it:
+
+from datetime import date
+from decimal import Decimal
+
+@property
+def days_overdue(self):
+    if self.returned_at:
+        return 0
+    today = date.today()
+    if today <= self.due_date:
+        return 0
+    return (today - self.due_date).days
+
+@property
+def calculate_fine(self):
+    days = self.days_overdue
+    if days <= 0:
+        return Decimal('0.00')
+    daily_rate = Decimal('5.00')  # KES 5 per day
+    return days * daily_rate

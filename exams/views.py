@@ -19,6 +19,25 @@ def exam_list(request):
 
 
 @admin_required
+def exam_detail(request, pk):
+    school = request.user.school
+    exam = get_object_or_404(Exam, pk=pk, school=school)
+
+    # Get exam statistics
+    total_students = exam.streams.count() * 40  # Rough estimate
+    submitted_results = ExamResult.objects.filter(exam=exam).values('student').distinct().count()
+    total_subjects = exam.subjects.count()
+
+    context = {
+        "exam": exam,
+        "total_students": total_students,
+        "submitted_results": submitted_results,
+        "total_subjects": total_subjects,
+    }
+    return render(request, "exams/exam_detail.html", context)
+
+
+@admin_required
 def exam_create(request):
     school = request.user.school
     if request.method == "POST":
@@ -29,17 +48,33 @@ def exam_create(request):
         start_date = request.POST.get("start_date") or None
         end_date = request.POST.get("end_date") or None
         stream_ids = request.POST.getlist("streams")
+        exam_paper = request.FILES.get("exam_paper")
+        action = request.POST.get("action", "create")  # 'create', 'draft', or 'clear'
+
+        if action == "clear":
+            # Clear the form - just redirect back to empty form
+            return redirect("exam_create")
+
         try:
             academic_year = AcademicYear.objects.get(id=year_id, school=school)
             term = Term.objects.get(id=term_id) if term_id else None
+
+            status = "draft" if action == "draft" else "active"
+
             exam = Exam.objects.create(
                 school=school, name=name, exam_type=exam_type,
                 academic_year=academic_year, term=term,
                 start_date=start_date, end_date=end_date,
+                exam_paper=exam_paper, status=status,
             )
             if stream_ids:
                 exam.streams.set(Stream.objects.filter(id__in=stream_ids, school=school))
-            messages.success(request, f"Exam '{name}' created successfully!")
+
+            if action == "draft":
+                messages.info(request, f"Exam '{name}' saved as draft!")
+            else:
+                messages.success(request, f"Exam '{name}' created successfully!")
+
             return redirect("exam_detail", pk=exam.id)
         except Exception as e:
             messages.error(request, f"Error creating exam: {e}")
@@ -51,13 +86,22 @@ def exam_create(request):
 
 
 @admin_required
-def exam_detail(request, pk):
+def exam_publish(request, pk):
     school = request.user.school
     exam = get_object_or_404(Exam, id=pk, school=school)
-    streams = exam.streams.all()
-    results_count = ExamResult.objects.filter(exam=exam).count()
-    context = {"exam": exam, "streams": streams, "results_count": results_count}
-    return render(request, "exams/exam_detail.html", context)
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+        if action == "publish":
+            exam.is_published = True
+            exam.save()
+            messages.success(request, f"Exam '{exam.name}' published successfully!")
+        elif action == "unpublish":
+            exam.is_published = False
+            exam.save()
+            messages.success(request, f"Exam '{exam.name}' unpublished!")
+
+    return redirect("exam_detail", pk=exam.id)
 
 
 @admin_required
@@ -205,14 +249,28 @@ def generate_report_cards(request, pk):
         generated = 0
         for student in students:
             results = ExamResult.objects.filter(exam=exam, student=student)
-            total_score = sum(float(r.raw_score or 0) for r in results)
-            total_points = sum(r.points or 0 for r in results)
+            total_score = sum(float(r.raw_score or 0) for r in results if not r.is_absent)
+            total_points = sum(r.points or 0 for r in results if not r.is_absent)
             subjects_sat = results.filter(is_absent=False).count()
             mean_score = total_score / subjects_sat if subjects_sat > 0 else 0
-            mean_grade = score_to_grade(mean_score) if subjects_sat > 0 else "E"
+            mean_grade = score_to_grade(mean_score) if subjects_sat > 0 else "X"
 
             fee_invoices = FeeInvoice.objects.filter(student=student, school=school)
             fee_balance = sum(float(inv.total_expected - inv.total_paid) for inv in fee_invoices)
+
+            # Generate remarks based on performance
+            if mean_grade in ['A', 'A-']:
+                principal_remarks = "Excellent performance. Keep it up!"
+                class_teacher_remarks = "Outstanding academic achievement."
+            elif mean_grade in ['B+', 'B', 'B-']:
+                principal_remarks = "Good performance. Room for improvement."
+                class_teacher_remarks = "Satisfactory progress. Focus on weak areas."
+            elif mean_grade in ['C+', 'C', 'C-']:
+                principal_remarks = "Average performance. Needs significant improvement."
+                class_teacher_remarks = "Below average. Extra effort required."
+            else:
+                principal_remarks = "Poor performance. Urgent attention needed."
+                class_teacher_remarks = "Very poor results. Immediate intervention required."
 
             ReportCard.objects.update_or_create(
                 student=student, exam=exam,
@@ -221,6 +279,8 @@ def generate_report_cards(request, pk):
                     "total_points": total_points, "mean_score": mean_score,
                     "mean_grade": mean_grade, "subjects_sat": subjects_sat,
                     "stream_size": students.count(), "fee_balance": fee_balance,
+                    "principal_remarks": principal_remarks,
+                    "class_teacher_remarks": class_teacher_remarks,
                 },
             )
             generated += 1
@@ -243,5 +303,29 @@ def report_card_view(request, pk):
     results = ExamResult.objects.filter(
         exam=report.exam, student=report.student
     ).select_related("subject").order_by("subject__name")
-    context = {"report": report, "school": school, "results": results}
+    
+    # Grade distribution for this student
+    grade_counts = {}
+    for grade in ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E']:
+        grade_counts[grade] = 0
+    
+    for result in results:
+        if result.grade in grade_counts and not result.is_absent:
+            grade_counts[result.grade] += 1
+    
+    # Convert to list for easier template access
+    grade_data = [
+        grade_counts['A'], grade_counts['A-'], grade_counts['B+'],
+        grade_counts['B'], grade_counts['B-'], grade_counts['C+'],
+        grade_counts['C'], grade_counts['C-'], grade_counts['D+'],
+        grade_counts['D'], grade_counts['D-'], grade_counts['E']
+    ]
+    
+    context = {
+        "report": report, 
+        "school": school, 
+        "results": results,
+        "grade_counts": grade_counts,
+        "grade_data": grade_data
+    }
     return render(request, "exams/report_card_view.html", context)

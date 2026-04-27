@@ -10,7 +10,7 @@ def login_view(request):
         return redirect(request.user.get_dashboard_url())
 
     if request.method == "POST":
-        identifier = request.POST.get("email", "").strip()
+        identifier = request.POST.get("identifier", "").strip()
         password = request.POST.get("password", "").strip()
 
         user = None
@@ -26,8 +26,24 @@ def login_view(request):
             ).select_related('user').first()
 
             if student and student.user:
-                # Password = admission number by default
                 user = authenticate(request, email=student.user.email, password=password)
+
+                if not user:
+                    default_passwords = [
+                        student.admission_number,
+                        f"{student.first_name}{student.admission_number}",
+                        f"{student.first_name}_{student.admission_number}",
+                    ]
+                    entered = password.strip()
+
+                    if any(
+                        entered.lower() == default_password.lower()
+                        for default_password in default_passwords
+                    ) and any(
+                        student.user.check_password(default_password)
+                        for default_password in default_passwords
+                    ):
+                        user = student.user
 
         # ── Try firstname_admissionnumber format ──
         # e.g. "Adalyn_CGS02/2026"
@@ -76,7 +92,7 @@ def login_view(request):
             return redirect(user.get_dashboard_url())
 
         else:
-            messages.error(request, "Invalid credentials. Try your email, admission number, or Firstname_AdmNumber.")
+            messages.error(request, "Invalid credentials. Try your email, admission number, or first name + admission number.")
 
     return render(request, "accounts/login.html")
 

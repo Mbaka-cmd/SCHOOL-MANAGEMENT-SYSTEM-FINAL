@@ -4,6 +4,38 @@ from .models import Student
 from academics.models import Stream, ClassLevel
 from schools.models import AcademicYear
 from schools.views import admin_required
+from exams.models import ReportCard, Exam
+
+
+@admin_required
+def students_by_stream(request):
+    """View students organized by streams with option to generate report cards"""
+    school = request.user.school
+    streams = Stream.objects.filter(school=school).order_by("class_level__level_order", "name")
+    
+    # Get selected stream from query parameters
+    stream_id = request.GET.get("stream")
+    selected_stream = None
+    students_in_stream = []
+    exams = []
+    
+    if stream_id:
+        selected_stream = get_object_or_404(Stream, id=stream_id, school=school)
+        students_in_stream = Student.objects.filter(
+            school=school, 
+            current_stream=selected_stream, 
+            is_active=True
+        ).order_by("last_name", "first_name").prefetch_related('parents')
+        # Get available exams for report card generation
+        exams = Exam.objects.filter(school=school, is_published=True).order_by("-created_at")
+    
+    context = {
+        "streams": streams,
+        "selected_stream": selected_stream,
+        "students_in_stream": students_in_stream,
+        "exams": exams,
+    }
+    return render(request, "students/students_by_stream.html", context)
 
 
 @admin_required

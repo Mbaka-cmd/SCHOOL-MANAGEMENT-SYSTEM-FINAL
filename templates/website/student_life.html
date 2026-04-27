@@ -1,0 +1,542 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+html {
+    scroll-behavior: smooth;
+}
+{% endblock %}
+{% block content %}
+
+<!-- PAGE HEADER -->
+<section style="background: linear-gradient(135deg, #C0392B, #922B21); padding: 4rem 0; color: white;">
+    <div class="container">
+        <h1 style="font-weight:800;">Student Life</h1>
+        <p style="opacity:0.85;">Life beyond the classroom at {{ school.name }}</p>
+    </div>
+</section>
+
+<!-- INTRO SECTION -->
+<section style="padding: 5rem 0; background: #f8f9fa;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h2 class="section-title mb-4">{{ school.name }}</h2>
+                <p class="lead mb-4" style="font-size: 1.1rem; line-height: 1.6;">
+                    At {{ school.name }}, life goes beyond the classroom. Our school is alive with creativity,
+                    collaboration, and opportunities to explore your passions, grow your skills, and make lasting connections.
+                    Discover a place where learning meets innovation, fun, and unforgettable experiences.
+                </p>
+            </div>
+            <div class="col-lg-4">
+                <img src="{% static 'images/school-life.jpg' %}" alt="School Life" class="img-fluid rounded shadow"
+                     style="width: 100%; max-height: 300px; object-fit: cover;" onerror="this.style.display='none'">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- DEAN'S MESSAGE -->
+<section style="padding: 5rem 0; background: white;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="section-title mb-5">Message from the Dean of Students</h2>
+                <div style="background: #f8f9fa; padding: 3rem; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08);">
+                    <blockquote class="blockquote" style="font-size: 1.1rem; line-height: 1.6; color: #333;">
+                        <p class="mb-4">
+                            Dear Students,<br><br>
+                            Welcome to {{ school.name }}. It gives me great joy to see our community grow each year
+                            with vibrant, ambitious, and talented individuals who choose our school as their home for
+                            learning and personal development.
+                        </p>
+                        <p class="mb-4">
+                            Beyond academic excellence, we are here to nurture your leadership, well-being, and creativity
+                            through a variety of student-centered programmes, clubs, and activities. Our commitment is to
+                            provide an environment where every student feels supported, inspired, and empowered to reach
+                            their full potential.
+                        </p>
+                        <p class="mb-4">
+                            I encourage you to actively engage in the opportunities available—whether in student leadership,
+                            sports, cultural events, mentorship, or community initiatives. These experiences will enrich
+                            your journey and prepare you for life beyond the classroom.
+                        </p>
+                        <p class="mb-0">
+                            My door remains open to all students. Together with my team, I look forward to walking with you
+                            as you shape your future and contribute meaningfully to society.
+                        </p>
+                    </blockquote>
+                    <footer class="blockquote-footer mt-4" style="font-size: 0.9rem; color: #C0392B;">
+                        <strong>Dean of Students, {{ school.name }}</strong>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SERVICES GRID -->
+<section style="padding: 5rem 0; background: #f8f9fa;">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Student Services</h2>
+        <div class="row g-4">
+
+            <!-- Clubs and Societies -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">
+                    <div class="card-body text-center p-4">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #C0392B, #922B21); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white;">
+                            <i class="bi bi-people-fill" style="font-size: 2rem;"></i>
+                        </div>
+                        <h5 class="card-title" style="color: #C0392B; font-weight: 700;">Clubs and Societies</h5>
+                        <p class="card-text text-muted">
+                            Join our vibrant clubs and societies to explore your interests, develop leadership skills,
+                            and make lasting connections with like-minded peers.
+                        </p>
+                        <a href="#clubs" class="btn btn-outline-primary" style="border-color: #C0392B; color: #C0392B;">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health and Counselling -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">
+                    <div class="card-body text-center p-4">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #27ae60, #2ecc71); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white;">
+                            <i class="bi bi-heart-pulse-fill" style="font-size: 2rem;"></i>
+                        </div>
+                        <h5 class="card-title" style="color: #27ae60; font-weight: 700;">Health & Counselling</h5>
+                        <p class="card-text text-muted">
+                            Access professional medical care and counseling services to support your physical and
+                            mental well-being throughout your academic journey.
+                        </p>
+                        <a href="#health" class="btn btn-outline-success">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accommodation -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">
+                    <div class="card-body text-center p-4">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #3498db, #2980b9); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white;">
+                            <i class="bi bi-house-fill" style="font-size: 2rem;"></i>
+                        </div>
+                        <h5 class="card-title" style="color: #3498db; font-weight: 700;">Student Accommodation</h5>
+                        <p class="card-text text-muted">
+                            Safe, comfortable, and well-equipped hostel facilities designed to provide a home-like
+                            environment for focused study and rest.
+                        </p>
+                        <a href="#accommodation" class="btn btn-outline-primary">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Aid -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">
+                    <div class="card-body text-center p-4">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #f39c12, #e67e22); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white;">
+                            <i class="bi bi-cash-stack" style="font-size: 2rem;"></i>
+                        </div>
+                        <h5 class="card-title" style="color: #f39c12; font-weight: 700;">Financial Aid</h5>
+                        <p class="card-text text-muted">
+                            Access scholarships, bursaries, and flexible payment plans to ensure quality education
+                            is accessible to all deserving students.
+                        </p>
+                        <a href="#financial-aid" class="btn btn-outline-warning">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Career Services -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">
+                    <div class="card-body text-center p-4">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #9b59b6, #8e44ad); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white;">
+                            <i class="bi bi-briefcase-fill" style="font-size: 2rem;"></i>
+                        </div>
+                        <h5 class="card-title" style="color: #9b59b6; font-weight: 700;">Career Services</h5>
+                        <p class="card-text text-muted">
+                            Get guidance on career planning, internships, job placements, and skill development
+                            to prepare for successful professional careers.
+                        </p>
+                        <a href="#career" class="btn btn-outline-primary" style="border-color: #9b59b6; color: #9b59b6;">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fee Structure -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px; overflow: hidden;">
+                    <div class="card-body text-center p-4">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #e74c3c, #c0392b); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white;">
+                            <i class="bi bi-receipt" style="font-size: 2rem;"></i>
+                        </div>
+                        <h5 class="card-title" style="color: #e74c3c; font-weight: 700;">Fee Structure</h5>
+                        <p class="card-text text-muted">
+                            Transparent and flexible fee structures with multiple payment options to accommodate
+                            different financial situations.
+                        </p>
+                        <a href="#fees" class="btn btn-outline-danger">View Fees</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- CLUBS AND SOCIETIES SECTION -->
+<section id="clubs" style="padding: 5rem 0; background: white;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <h2 class="section-title mb-4">Clubs and Societies</h2>
+                <p class="lead mb-4">
+                    {{ school.name }} is committed to equipping students holistically by providing opportunities
+                    to explore their interests and make connections with like-minded individuals through clubs and societies.
+                </p>
+                <p class="mb-4">
+                    Our clubs and societies equip students with life skills such as leadership, community engagement,
+                    and networking. We have various active clubs covering different interests including academic,
+                    cultural, sports, and religious activities.
+                </p>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #C0392B;">
+                            <h6 style="color: #C0392B; font-weight: 700; margin-bottom: 0.5rem;">Academic Clubs</h6>
+                            <p class="small text-muted mb-0">Science, Mathematics, Literature, and other academic interest groups.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #27ae60;">
+                            <h6 style="color: #27ae60; font-weight: 700; margin-bottom: 0.5rem;">Cultural Societies</h6>
+                            <p class="small text-muted mb-0">Music, Drama, Dance, and traditional cultural activities.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #3498db;">
+                            <h6 style="color: #3498db; font-weight: 700; margin-bottom: 0.5rem;">Sports Clubs</h6>
+                            <p class="small text-muted mb-0">Football, Basketball, Volleyball, Athletics, and other sports.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 10px; border-left: 4px solid #9b59b6;">
+                            <h6 style="color: #9b59b6; font-weight: 700; margin-bottom: 0.5rem;">Community Service</h6>
+                            <p class="small text-muted mb-0">Environmental conservation, charity work, and social initiatives.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div style="background: linear-gradient(135deg, #C0392B, #922B21); padding: 2rem; border-radius: 15px; color: white;">
+                    <h5 style="font-weight: 700; margin-bottom: 1rem;">Join a Club Today!</h5>
+                    <p class="mb-3" style="opacity: 0.9;">
+                        Clubs and societies are a great way to develop new skills, make friends, and enhance your resume.
+                    </p>
+                    <a href="{% url 'contact' %}" class="btn btn-light" style="border-radius: 25px; font-weight: 600;">
+                        <i class="bi bi-envelope me-1"></i>Contact Us
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FINANCIAL AID SECTION -->
+<section id="financial-aid" style="padding: 5rem 0; background: #f8f9fa;">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Scholarships & Financial Aid</h2>
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <p class="lead text-center mb-5">
+                    {{ school.name }} offers scholarships to needy students, flexible fee payment plans, and access
+                    to financial aid opportunities. Qualified students can apply through the school's financial aid office.
+                </p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px;">
+                    <div class="card-body text-center p-4">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #f39c12, #e67e22); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white;">
+                            <i class="bi bi-trophy-fill" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <h6 class="card-title" style="color: #e67e22; font-weight: 700;">Sports Scholarship</h6>
+                        <p class="card-text small text-muted">
+                            Excel both on the field and in academics with our sports scholarships available to talented students.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px;">
+                    <div class="card-body text-center p-4">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #9b59b6, #8e44ad); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white;">
+                            <i class="bi bi-mortarboard-fill" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <h6 class="card-title" style="color: #8e44ad; font-weight: 700;">Academic Excellence</h6>
+                        <p class="card-text small text-muted">
+                            Merit-based scholarships for outstanding academic performance and leadership potential.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card h-100 border-0 shadow-sm" style="border-radius: 15px;">
+                    <div class="card-body text-center p-4">
+                        <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #3498db, #2980b9); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white;">
+                            <i class="bi bi-cash-stack" style="font-size: 1.5rem;"></i>
+                        </div>
+                        <h6 class="card-title" style="color: #2980b9; font-weight: 700;">Need-Based Aid</h6>
+                        <p class="card-text small text-muted">
+                            Financial assistance for students from economically disadvantaged backgrounds.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-5">
+            <a href="{% url 'contact' %}" class="btn btn-primary btn-lg" style="border-radius: 25px; padding: 0.8rem 2rem; font-weight: 600;">
+                <i class="bi bi-envelope me-2"></i>Apply for Financial Aid
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- HEALTH AND COUNSELLING -->
+<section id="health" style="padding: 5rem 0; background: white;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h2 class="section-title mb-4">Health and Counselling Services</h2>
+                <p class="mb-4">
+                    The holistic development of students is important for building a strong nation. At {{ school.name }},
+                    we have established comprehensive health and counseling centers to provide students with the services
+                    they need for a healthy stay.
+                </p>
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="d-flex align-items-start">
+                            <div style="width: 40px; height: 40px; background: #27ae60; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-right: 1rem; flex-shrink: 0;">
+                                <i class="bi bi-hospital-fill"></i>
+                            </div>
+                            <div>
+                                <h6 style="color: #27ae60; font-weight: 700; margin-bottom: 0.25rem;">School Health Clinic</h6>
+                                <p class="small text-muted mb-0">Professional medical care available during school hours for all students.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex align-items-start">
+                            <div style="width: 40px; height: 40px; background: #3498db; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-right: 1rem; flex-shrink: 0;">
+                                <i class="bi bi-chat-heart-fill"></i>
+                            </div>
+                            <div>
+                                <h6 style="color: #3498db; font-weight: 700; margin-bottom: 0.25rem;">Counseling Services</h6>
+                                <p class="small text-muted mb-0">Confidential counseling for academic, personal, and emotional support.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex align-items-start">
+                            <div style="width: 40px; height: 40px; background: #e74c3c; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-right: 1rem; flex-shrink: 0;">
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+                            <div>
+                                <h6 style="color: #e74c3c; font-weight: 700; margin-bottom: 0.25rem;">Emergency Response</h6>
+                                <p class="small text-muted mb-0">24/7 emergency medical response and referral services.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <img src="{% static 'images/health-clinic.jpg' %}" alt="Health Clinic" class="img-fluid rounded shadow"
+                     style="width: 100%;" onerror="this.style.display='none'">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- STUDENT ACCOMMODATION -->
+<section id="accommodation" style="padding: 5rem 0; background: #f8f9fa;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 order-lg-2">
+                <h2 class="section-title mb-4">Boarding Facilities</h2>
+                <p class="mb-4">
+                    Our boarding houses provide a safe, nurturing environment where students can focus on their studies
+                    while developing important life skills and forming lasting friendships.
+                </p>
+                <ul class="list-unstyled">
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
+                        <span>Safe and secure boarding houses with 24/7 supervision</span>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
+                        <span>Well-maintained dormitories with modern amenities</span>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
+                        <span>Study areas and quiet spaces for academic work</span>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
+                        <span>Proximity to classrooms and school facilities</span>
+                    </li>
+                    <li class="mb-3 d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill text-success me-3 mt-1"></i>
+                        <span>Housekeeping and maintenance services</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-6 order-lg-1">
+                <img src="{% static 'images/boarding-house.jpg' %}" alt="Boarding House" class="img-fluid rounded shadow"
+                     style="width: 100%;" onerror="this.style.display='none'">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEE STRUCTURE -->
+<section id="fees" style="padding: 5rem 0; background: white;">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Fee Structure</h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover" style="border-radius: 10px; overflow: hidden; box-shadow: 0 3px 15px rgba(0,0,0,0.08);">
+                        <thead style="background: linear-gradient(135deg, #C0392B, #922B21); color: white;">
+                            <tr>
+                                <th style="border: none; padding: 1rem;">Grade</th>
+                                <th style="border: none; padding: 1rem;">Annual Tuition (KES)</th>
+                                <th style="border: none; padding: 1rem;">Boarding Fee (KES)</th>
+                                <th style="border: none; padding: 1rem;">Total (KES)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 1rem; font-weight: 600;">Form 1</td>
+                                <td style="padding: 1rem;">45,000</td>
+                                <td style="padding: 1rem;">35,000</td>
+                                <td style="padding: 1rem; font-weight: 700; color: #C0392B;">80,000</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; font-weight: 600;">Form 2</td>
+                                <td style="padding: 1rem;">48,000</td>
+                                <td style="padding: 1rem;">35,000</td>
+                                <td style="padding: 1rem; font-weight: 700; color: #C0392B;">83,000</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; font-weight: 600;">Form 3</td>
+                                <td style="padding: 1rem;">52,000</td>
+                                <td style="padding: 1rem;">35,000</td>
+                                <td style="padding: 1rem; font-weight: 700; color: #C0392B;">87,000</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; font-weight: 600;">Form 4</td>
+                                <td style="padding: 1rem;">55,000</td>
+                                <td style="padding: 1rem;">35,000</td>
+                                <td style="padding: 1rem; font-weight: 700; color: #C0392B;">90,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-center mt-4">
+                    <p class="text-muted mb-3">
+                        <strong>Payment Plans Available:</strong> 40% - 40% - 20% installment plan
+                    </p>
+                    <a href="{% url 'contact' %}" class="btn btn-primary" style="border-radius: 25px; padding: 0.8rem 2rem; font-weight: 600;">
+                        <i class="bi bi-envelope me-2"></i>Contact Admissions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- STUDENT COUNCIL -->
+<section style="padding: 5rem 0; background: #f8f9fa;">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Students Council</h2>
+        <p class="lead text-center mb-5">
+            Our student leadership plays a vital role in representing student interests and organizing
+            various activities that enrich school life.
+        </p>
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-3 col-md-6">
+                <div class="card text-center border-0 shadow-sm" style="border-radius: 15px;">
+                    <div class="card-body p-4">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #C0392B, #922B21); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 1.5rem; font-weight: 700;">
+                            C
+                        </div>
+                        <h6 class="card-title mb-1" style="font-weight: 700;">Chairperson</h6>
+                        <p class="card-text small text-muted">Student Name</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card text-center border-0 shadow-sm" style="border-radius: 15px;">
+                    <div class="card-body p-4">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #27ae60, #2ecc71); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 1.5rem; font-weight: 700;">
+                            V
+                        </div>
+                        <h6 class="card-title mb-1" style="font-weight: 700;">Vice Chairperson</h6>
+                        <p class="card-text small text-muted">Student Name</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card text-center border-0 shadow-sm" style="border-radius: 15px;">
+                    <div class="card-body p-4">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #3498db, #2980b9); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 1.5rem; font-weight: 700;">
+                            S
+                        </div>
+                        <h6 class="card-title mb-1" style="font-weight: 700;">Secretary General</h6>
+                        <p class="card-text small text-muted">Student Name</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card text-center border-0 shadow-sm" style="border-radius: 15px;">
+                    <div class="card-body p-4">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #9b59b6, #8e44ad); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 1.5rem; font-weight: 700;">
+                            T
+                        </div>
+                        <h6 class="card-title mb-1" style="font-weight: 700;">Treasurer</h6>
+                        <p class="card-text small text-muted">Student Name</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- GALLERY PREVIEW -->
+<section style="padding: 5rem 0; background: white;">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Student Life in Photos</h2>
+        <div class="row g-3">
+            {% for i in "123456" %}
+            <div class="col-lg-4 col-md-6">
+                <div style="background: #f8f9fa; border-radius: 15px; overflow: hidden; height: 250px; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 15px rgba(0,0,0,0.08);">
+                    <div style="text-align: center; color: #C0392B;">
+                        <i class="bi bi-images" style="font-size: 3rem; opacity: 0.5;"></i>
+                        <p class="mt-3 mb-0" style="font-weight: 600;">School Activities</p>
+                        <p class="small text-muted">Coming Soon</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'gallery' %}" class="btn btn-primary btn-lg" style="border-radius: 25px; padding: 0.8rem 2rem; font-weight: 600;">
+                <i class="bi bi-images me-2"></i>View Full Gallery
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

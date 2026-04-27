@@ -70,6 +70,7 @@
                 <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'about' %}"><i class="bi bi-info-circle-fill me-1"></i>About</a></li>
                 <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'academics' %}active{% endif %}" href="{% url 'academics' %}"><i class="bi bi-book-fill me-1"></i>Academics</a></li>
                 <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'co_curricular' %}active{% endif %}" href="{% url 'co_curricular' %}"><i class="bi bi-trophy-fill me-1"></i>Co-curricular</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'student_life' %}active{% endif %}" href="{% url 'student_life' %}"><i class="bi bi-people-fill me-1"></i>Student Life</a></li>
                 <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'gallery' %}active{% endif %}" href="{% url 'gallery' %}"><i class="bi bi-images me-1"></i>Gallery</a></li>
                 <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'news_list' %}active{% endif %}" href="{% url 'news_list' %}"><i class="bi bi-newspaper me-1"></i>News</a></li>
                 <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'kcse_results' %}active{% endif %}" href="{% url 'kcse_results' %}"><i class="bi bi-award-fill me-1"></i>KCSE Results</a></li>
@@ -98,6 +99,7 @@
                             {% if request.user.is_school_admin or request.user.is_teacher %}
                             <li><a class="dropdown-item" href="{% url 'admin_dashboard' %}" style="padding:0.7rem 1rem;font-size:0.9rem;"><i class="bi bi-speedometer2 me-2" style="color:#C0392B;"></i>Dashboard</a></li>
                             <li><a class="dropdown-item" href="{% url 'student_list' %}" style="padding:0.7rem 1rem;font-size:0.9rem;"><i class="bi bi-people-fill me-2" style="color:#C0392B;"></i>Students</a></li>
+                            <li><a class="dropdown-item" href="{% url 'students_by_stream' %}" style="padding:0.7rem 1rem;font-size:0.9rem;"><i class="bi bi-diagram-3 me-2" style="color:#C0392B;"></i>Students by Stream</a></li>
                             <li><a class="dropdown-item" href="{% url 'global_search' %}" style="padding:0.7rem 1rem;font-size:0.9rem;"><i class="bi bi-search me-2" style="color:#C0392B;"></i>Search</a></li>
                             {% elif request.user.is_student %}
                             <li><a class="dropdown-item" href="{% url 'student_dashboard' %}" style="padding:0.7rem 1rem;font-size:0.9rem;"><i class="bi bi-mortarboard-fill me-2" style="color:#C0392B;"></i>My Portal</a></li>
@@ -141,8 +143,11 @@
             <div class="col-lg-3 col-6">
                 <h6 style="color:#C0392B;font-size:0.8rem;font-weight:700;margin-bottom:0.5rem;">Contact</h6>
                 <ul class="list-unstyled mb-0" style="font-size:0.78rem;color:rgba(255,255,255,0.7);">
-                    <li><i class="bi bi-geo-alt-fill me-1" style="color:#C0392B;"></i>Karingari, Chuka</li>
+                    <li><i class="bi bi-telephone-fill me-1" style="color:#C0392B;"></i>0112581460</li>
                     <li><i class="bi bi-envelope-fill me-1" style="color:#C0392B;"></i>chukagirls@gmail.com</li>
+                    <li><i class="bi bi-geo-alt-fill me-1" style="color:#C0392B;"></i>Kiagondu Forest Road, Karingari, Chuka</li>
+                    <li><i class="bi bi-clock-fill me-1" style="color:#C0392B;"></i>Mon-Fri: 8AM-5PM</li>
+                    <li><i class="bi bi-clock-history me-1" style="color:#C0392B;"></i><span id="kenya-time">Loading...</span></li>
                 </ul>
             </div>
             <div class="col-lg-3 col-6">
@@ -159,7 +164,27 @@
     </div>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-{% block extra_js %}{% endblock %}
+{% block extra_js %}
+<script>
+function updateKenyaTime() {
+    const now = new Date();
+    // Kenya is UTC+3 (East Africa Time)
+    const kenyaTime = new Date(now.getTime() + (3 * 60 * 60 * 1000));
+    const options = {
+        timeZone: 'Africa/Nairobi',
+        hour12: true,
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit'
+    };
+    document.getElementById('kenya-time').textContent = kenyaTime.toLocaleTimeString('en-US', options);
+}
+
+// Update time immediately and then every second
+updateKenyaTime();
+setInterval(updateKenyaTime, 1000);
+</script>
+{% endblock %}
 </body>
 </html>
 

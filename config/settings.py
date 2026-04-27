@@ -1,4 +1,5 @@
 ﻿from pathlib import Path
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -86,6 +87,12 @@ TIME_ZONE = 'Africa/Nairobi'
 USE_I18N = True
 USE_TZ = True
 
+# Date format settings - using dd/mm/yyyy format
+DATE_FORMAT = 'd/m/Y'
+DATETIME_FORMAT = 'd/m/Y H:i'
+SHORT_DATE_FORMAT = 'd/m/Y'
+SHORT_DATETIME_FORMAT = 'd/m/Y H:i'
+
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
@@ -111,11 +118,8 @@ EMAIL_HOST_USER = 'mercykathomi428@gmail.com'
 EMAIL_HOST_PASSWORD = 'mmdz zdvz flvu xsnx'
 DEFAULT_FROM_EMAIL = 'Chuka Girls School <mercykathomi428@gmail.com>'
 # Africa's Talking
-import os as _os
-# AT_USERNAME env
-# AT_API_KEY env
-AT_USERNAME = 'chukagirls2026'
-AT_API_KEY = 'atsk_2a150f67801936b8f18ac47d0848677b9084609aa562597290844d728d764342fb649ee8'
+AT_USERNAME = os.environ.get('AT_USERNAME', 'sandbox')
+AT_API_KEY = os.environ.get('AT_API_KEY', 'atsk_your_key_here')
 
 
 
