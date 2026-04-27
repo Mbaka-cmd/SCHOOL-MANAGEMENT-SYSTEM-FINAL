@@ -3,6 +3,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.utils import timezone
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def login_view(request):
@@ -87,7 +90,7 @@ def login_view(request):
                             fail_silently=True,
                         )
                 except Exception as e:
-                    print(f"Email error: {e}")
+                    logger.error(f"Email error: {e}")
 
             return redirect(user.get_dashboard_url())
 
@@ -168,7 +171,7 @@ def parent_register(request):
                     fail_silently=True,
                 )
             except Exception as e:
-                print(f"Welcome email error: {e}")
+                logger.error(f"Welcome email error: {e}")
 
             messages.success(
                 request,
