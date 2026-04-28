@@ -1,11 +1,15 @@
 ﻿from pathlib import Path
 import os
 
+SECRET_KEY = os.environ.get("SECRET_KEY", "dev-only")
+
+ALLOWED_HOSTS = ["school-management-system-final.onrender.com", ".onrender.com"]
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-chuka-girls-school-management-system-2026-secret-key'
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'school-management-system-final.onrender.com', '.onrender.com']
 CSRF_TRUSTED_ORIGINS = ['https://school-management-system-final.onrender.com']
