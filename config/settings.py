@@ -63,6 +63,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+
+    # ✅ WHITE NOISE (REQUIRED FOR RENDER)
     'whitenoise.middleware.WhiteNoiseMiddleware',
 
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -98,7 +100,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # ─────────────────────────────────────────────
-# DATABASE (LOCAL DEFAULT - RENDER OVERRIDE EXPECTED)
+# DATABASE (LOCAL DEFAULT)
 # ─────────────────────────────────────────────
 
 DATABASES = {
@@ -141,8 +143,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# SAFE STATIC STORAGE (avoids manifest crash issues)
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+# ✅ FIXED WHITE NOISE STORAGE (IMPORTANT)
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ─────────────────────────────────────────────
 # MEDIA FILES
