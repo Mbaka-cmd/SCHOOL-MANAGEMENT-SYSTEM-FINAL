@@ -1,20 +1,20 @@
-﻿{% extends 'base.html' %}
+{% extends 'base.html' %}
 {% block title %}Borrow Book{% endblock %}
 {% block content %}
 <div style="background:linear-gradient(135deg,#8B1A1A,#c0392b);padding:2rem;color:white;margin-bottom:2rem;">
   <div style="max-width:600px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;">
-    <h1 style="margin:0;font-size:1.8rem;">📖 Borrow Book</h1>
-    <a href="{% url 'library_dashboard' %}" style="background:rgba(255,255,255,0.2);color:white;padding:0.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:600;">← Back</a>
+    <h1 style="margin:0;font-size:1.8rem;">?? Borrow Book</h1>
+    <a href="{% url 'library_dashboard' %}" style="background:rgba(255,255,255,0.2);color:white;padding:0.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:600;">? Back</a>
   </div>
 </div>
 <div style="max-width:600px;margin:0 auto;padding:0 1rem;">
   {% if messages %}{% for message in messages %}<div style="padding:1rem;border-radius:8px;margin-bottom:1rem;background:#fff0f0;border:1px solid #e74c3c;color:#c0392b;">{{ message }}</div>{% endfor %}{% endif %}
-  <div style="background:#fff8e1;border:1px solid #f39c12;border-radius:8px;padding:1rem;margin-bottom:1.5rem;color:#e67e22;font-size:0.9rem;">⏱️ Borrowing limit: <strong>72 hours</strong>. Fine: <strong>KES 50/day</strong> after due time.</div>
+  <div style="background:#fff8e1;border:1px solid #f39c12;border-radius:8px;padding:1rem;margin-bottom:1.5rem;color:#e67e22;font-size:0.9rem;">?? Borrowing limit: <strong>72 hours</strong>. Fine: <strong>KES 50/day</strong> after due time.</div>
   <div style="background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);padding:2rem;">
     <form method="post">
       {% csrf_token %}
       <div style="margin-bottom:1.25rem;"><label style="display:block;font-weight:600;margin-bottom:0.4rem;">Select Student *</label><select name="student_id" required style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:8px;font-size:0.95rem;"><option value="">-- Select Student --</option>{% for student in students %}<option value="{{ student.id }}">{{ student.first_name }} {{ student.last_name }} ({{ student.admission_number }})</option>{% endfor %}</select></div>
-      <div style="margin-bottom:1.5rem;"><label style="display:block;font-weight:600;margin-bottom:0.4rem;">Select Book *</label><select name="book_id" required style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:8px;font-size:0.95rem;"><option value="">-- Select Book --</option>{% for book in books %}<option value="{{ book.id }}">{{ book.title }} — {{ book.author }} ({{ book.available_copies }} available)</option>{% endfor %}</select></div>
+      <div style="margin-bottom:1.5rem;"><label style="display:block;font-weight:600;margin-bottom:0.4rem;">Select Book *</label><select name="book_id" required style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:8px;font-size:0.95rem;"><option value="">-- Select Book --</option>{% for book in books %}<option value="{{ book.id }}">{{ book.title }} � {{ book.author }} ({{ book.available_copies }} available)</option>{% endfor %}</select></div>
       <button type="submit" style="width:100%;background:#8B1A1A;color:white;padding:0.875rem;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;">Issue Book</button>
     </form>
   </div>

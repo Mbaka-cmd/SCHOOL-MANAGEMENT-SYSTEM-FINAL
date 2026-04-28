@@ -1,5 +1,5 @@
-ï»¿{% extends "base.html" %}
-{% block title %}Attendance Report â€” {{ student.get_full_name }}{% endblock %}
+{% extends "base.html" %}
+{% block title %}Attendance Report — {{ student.get_full_name }}{% endblock %}
 {% block content %}
 
 <section style="background:linear-gradient(135deg,#2ecc71,#27ae60);padding:2rem 0;color:white;">
@@ -7,7 +7,7 @@
         <div class="row align-items-center">
             <div class="col">
                 <h4 style="font-weight:800;margin:0;"><i class="bi bi-person-lines-fill me-2"></i>{{ student.get_full_name }}</h4>
-                <p style="opacity:0.75;margin:0;font-size:0.9rem;">Attendance Report Â· {{ student.admission_number }}</p>
+                <p style="opacity:0.75;margin:0;font-size:0.9rem;">Attendance Report · {{ student.admission_number }}</p>
             </div>
             <div class="col-auto">
                 <a href="{% url 'attendance_dashboard' %}" class="btn" style="background:rgba(255,255,255,0.15);color:white;border-radius:20px;"><i class="bi bi-arrow-left me-1"></i>Back</a>
@@ -63,7 +63,7 @@
                                 {% elif record.status == 'late' %}<span style="background:#fffbf0;color:#e67e22;padding:3px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;">Late</span>
                                 {% else %}<span style="background:#f0f4ff;color:#3498db;padding:3px 12px;border-radius:20px;font-size:0.8rem;font-weight:600;">Excused</span>{% endif %}
                             </td>
-                            <td style="color:#888;">{{ record.remarks|default:"â€”" }}</td>
+                            <td style="color:#888;">{{ record.remarks|default:"—" }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

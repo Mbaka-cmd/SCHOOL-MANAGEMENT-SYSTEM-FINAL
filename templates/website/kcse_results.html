@@ -1,6 +1,6 @@
-ï»¿{% extends 'base.html' %}
+{% extends 'base.html' %}
 {% load static %}
-{% block title %}KCSE Results â€” {{ school.name|default:"Chuka Girls Secondary School" }}{% endblock %}
+{% block title %}KCSE Results — {{ school.name|default:"Chuka Girls Secondary School" }}{% endblock %}
 
 {% block content %}
 
@@ -8,7 +8,7 @@
 <section style="background:linear-gradient(135deg,#C0392B,#922B21);padding:2.5rem 0;color:white;">
     <div class="container text-center">
         <h1 style="font-weight:800;font-size:1.8rem;margin-bottom:0.3rem;">KCSE Examination Results</h1>
-        <p style="opacity:0.8;font-size:0.95rem;margin:0;">St. Bakhita Chuka Girls High School Â· KNEC Code: 19308304</p>
+        <p style="opacity:0.8;font-size:0.95rem;margin:0;">St. Bakhita Chuka Girls High School · KNEC Code: 19308304</p>
     </div>
 </section>
 
@@ -24,7 +24,7 @@
 
             <!-- YEAR HEADER -->
             <div style="background:#1a1a1a;padding:0.8rem 1.5rem;display:flex;justify-content:space-between;align-items:center;">
-                <h2 style="color:white;font-size:1.1rem;font-weight:700;margin:0;">KCSE {{ result.year }} â€” Performance Report</h2>
+                <h2 style="color:white;font-size:1.1rem;font-weight:700;margin:0;">KCSE {{ result.year }} — Performance Report</h2>
                 <span style="background:#C0392B;color:white;padding:4px 14px;border-radius:3px;font-size:0.88rem;font-weight:700;">Mean Grade: {{ result.mean_grade }}</span>
             </div>
 
@@ -81,18 +81,18 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_a_plain %}700{% else %}400{% endif %};color:{% if result.count_a_plain %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_a_plain|default:"â€”" }}</td>
-                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_a_minus %}700{% else %}400{% endif %};color:{% if result.count_a_minus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_a_minus|default:"â€”" }}</td>
-                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_b_plus %}700{% else %}400{% endif %};color:{% if result.count_b_plus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_b_plus|default:"â€”" }}</td>
-                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_b_plain %}700{% else %}400{% endif %};color:{% if result.count_b_plain %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_b_plain|default:"â€”" }}</td>
-                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_b_minus %}700{% else %}400{% endif %};color:{% if result.count_b_minus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_b_minus|default:"â€”" }}</td>
-                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_c_plus %}700{% else %}400{% endif %};color:{% if result.count_c_plus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_c_plus|default:"â€”" }}</td>
-                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_c_plain %}700{% else %}400{% endif %};color:{% if result.count_c_plain %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_c_plain|default:"â€”" }}</td>
-                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_c_minus %}700{% else %}400{% endif %};color:{% if result.count_c_minus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_c_minus|default:"â€”" }}</td>
-                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_d_plus %}700{% else %}400{% endif %};color:{% if result.count_d_plus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_d_plus|default:"â€”" }}</td>
-                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_d_plain %}700{% else %}400{% endif %};color:{% if result.count_d_plain %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_d_plain|default:"â€”" }}</td>
-                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_d_minus %}700{% else %}400{% endif %};color:{% if result.count_d_minus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_d_minus|default:"â€”" }}</td>
-                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_e %}700{% else %}400{% endif %};color:{% if result.count_e %}#C0392B{% else %}#bbb{% endif %};">{{ result.count_e|default:"â€”" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_a_plain %}700{% else %}400{% endif %};color:{% if result.count_a_plain %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_a_plain|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_a_minus %}700{% else %}400{% endif %};color:{% if result.count_a_minus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_a_minus|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_b_plus %}700{% else %}400{% endif %};color:{% if result.count_b_plus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_b_plus|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_b_plain %}700{% else %}400{% endif %};color:{% if result.count_b_plain %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_b_plain|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_b_minus %}700{% else %}400{% endif %};color:{% if result.count_b_minus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_b_minus|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_c_plus %}700{% else %}400{% endif %};color:{% if result.count_c_plus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_c_plus|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_c_plain %}700{% else %}400{% endif %};color:{% if result.count_c_plain %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_c_plain|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_c_minus %}700{% else %}400{% endif %};color:{% if result.count_c_minus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_c_minus|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_d_plus %}700{% else %}400{% endif %};color:{% if result.count_d_plus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_d_plus|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_d_plain %}700{% else %}400{% endif %};color:{% if result.count_d_plain %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_d_plain|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_d_minus %}700{% else %}400{% endif %};color:{% if result.count_d_minus %}#1a1a1a{% else %}#bbb{% endif %};">{{ result.count_d_minus|default:"—" }}</td>
+                            <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:{% if result.count_e %}700{% else %}400{% endif %};color:{% if result.count_e %}#C0392B{% else %}#bbb{% endif %};">{{ result.count_e|default:"—" }}</td>
                             <td style="padding:9px 10px;text-align:center;border:1px solid #e0e0e0;font-weight:700;color:#1a1a1a;background:#f0f0f0;">{{ result.candidates_sat }}</td>
                         </tr>
                     </tbody>
@@ -101,8 +101,8 @@
                 <!-- TOP STUDENT -->
                 {% if result.top_student_name %}
                 <div style="margin-top:1rem;padding:0.7rem 1rem;background:#fffbf0;border:1px solid #f0e0a0;border-radius:3px;font-size:0.85rem;display:flex;justify-content:space-between;align-items:center;">
-                    <span style="color:#666;">ğŸ† Top Student</span>
-                    <strong style="color:#1a1a1a;">{{ result.top_student_name }}{% if result.top_student_grade %} â€” Grade {{ result.top_student_grade }}{% endif %}{% if result.top_student_points %} ({{ result.top_student_points }} pts){% endif %}</strong>
+                    <span style="color:#666;">?? Top Student</span>
+                    <strong style="color:#1a1a1a;">{{ result.top_student_name }}{% if result.top_student_grade %} — Grade {{ result.top_student_grade }}{% endif %}{% if result.top_student_points %} ({{ result.top_student_points }} pts){% endif %}</strong>
                 </div>
                 {% endif %}
 

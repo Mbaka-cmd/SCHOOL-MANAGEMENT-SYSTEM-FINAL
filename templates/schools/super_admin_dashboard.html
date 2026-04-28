@@ -1,6 +1,6 @@
-ï»¿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
-{% block title %}Super Admin Dashboard â€” Platform Overview{% endblock %}
+{% block title %}Super Admin Dashboard — Platform Overview{% endblock %}
 {% block content %}
 
 <!-- HEADER -->
@@ -9,11 +9,11 @@
         <div class="row align-items-center">
             <div class="col">
                 <h4 style="font-weight:800;margin:0;"><i class="bi bi-shield-lock-fill me-2"></i>Super Admin Dashboard</h4>
-                <p style="opacity:0.75;margin:0;font-size:0.9rem;">Platform Overview â€” All Schools Management</p>
+                <p style="opacity:0.75;margin:0;font-size:0.9rem;">Platform Overview — All Schools Management</p>
             </div>
             <div class="col-auto">
                 <span style="background:rgba(255,255,255,0.1);padding:6px 16px;border-radius:20px;font-size:0.82rem;border:1px solid rgba(255,255,255,0.2);">
-                    <i class="bi bi-person-check-fill me-1"></i>Platform Admin â€” {{ request.user.get_full_name }}
+                    <i class="bi bi-person-check-fill me-1"></i>Platform Admin — {{ request.user.get_full_name }}
                 </span>
             </div>
         </div>
@@ -87,7 +87,7 @@
                                             </div>
                                             <div>
                                                 <div style="font-weight:600;">{{ data.school.name }}</div>
-                                                <div style="font-size:0.75rem;color:#999;">{{ data.school.code|default:"â€”" }}</div>
+                                                <div style="font-size:0.75rem;color:#999;">{{ data.school.code|default:"—" }}</div>
                                             </div>
                                         </div>
                                     </td>

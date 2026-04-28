@@ -1,4 +1,4 @@
-ï»¿{% extends "base.html" %}
+{% extends "base.html" %}
 {% block title %}Search: {{ query }}{% endblock %}
 {% block content %}
 
@@ -50,7 +50,7 @@
                     </div>
                     <div class="flex-grow-1">
                         <div style="font-weight:600;color:#1a1a1a;">{{ student.get_full_name }}</div>
-                        <div style="font-size:0.8rem;color:#999;">{{ student.admission_number }} Â· {{ student.current_stream.full_name|default:"No Stream" }}</div>
+                        <div style="font-size:0.8rem;color:#999;">{{ student.admission_number }} · {{ student.current_stream.full_name|default:"No Stream" }}</div>
                     </div>
                     <i class="bi bi-chevron-right" style="color:#ccc;"></i>
                 </div>
@@ -86,7 +86,7 @@
                 <div style="display:flex;align-items:center;justify-content:space-between;padding:0.7rem;border-radius:10px;margin-bottom:0.3rem;" onmouseover="this.style.background='#f5f0ff'" onmouseout="this.style.background='transparent'">
                     <div>
                         <div style="font-weight:600;color:#1a1a1a;">{{ exam.name }}</div>
-                        <div style="font-size:0.8rem;color:#999;">{{ exam.get_exam_type_display }} Â· {{ exam.academic_year.year }}</div>
+                        <div style="font-size:0.8rem;color:#999;">{{ exam.get_exam_type_display }} · {{ exam.academic_year.year }}</div>
                     </div>
                     <i class="bi bi-chevron-right" style="color:#ccc;"></i>
                 </div>
@@ -103,7 +103,7 @@
             <div style="display:flex;align-items:center;justify-content:space-between;padding:0.7rem;border-radius:10px;margin-bottom:0.3rem;background:#f8f9fa;">
                 <div>
                     <div style="font-weight:600;color:#1a1a1a;">{{ invoice.student.get_full_name }}</div>
-                    <div style="font-size:0.8rem;color:#999;">{{ invoice.invoice_number }} Â· KES {{ invoice.total_expected|intcomma }}</div>
+                    <div style="font-size:0.8rem;color:#999;">{{ invoice.invoice_number }} · KES {{ invoice.total_expected|intcomma }}</div>
                 </div>
                 <span style="background:{% if invoice.status == 'paid' %}#f0fff5;color:#2ecc71;{% else %}#fff0f0;color:#e74c3c;{% endif %};padding:3px 10px;border-radius:20px;font-size:0.8rem;font-weight:600;">
                     {{ invoice.get_status_display }}

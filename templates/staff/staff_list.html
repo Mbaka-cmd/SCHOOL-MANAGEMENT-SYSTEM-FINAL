@@ -1,5 +1,5 @@
-ï»¿{% extends "base.html" %}
-{% block title %}Staff â€” {{ request.user.school.name }}{% endblock %}
+{% extends "base.html" %}
+{% block title %}Staff — {{ request.user.school.name }}{% endblock %}
 {% block content %}
 <section style="background:linear-gradient(135deg,#C0392B,#922B21);padding:2rem 0;color:white;">
     <div class="container">
@@ -95,7 +95,7 @@
                             </div>
                         </td>
                         <td style="padding:0.9rem 1rem;">{{ teacher.email }}</td>
-                        <td style="padding:0.9rem 1rem;">{{ teacher.phone|default:"â€”" }}</td>
+                        <td style="padding:0.9rem 1rem;">{{ teacher.phone|default:"—" }}</td>
                         <td style="padding:0.9rem 1rem;">
                             {% if teacher.class_teacher_streams.exists %}
                                 {% for stream in teacher.class_teacher_streams.all %}

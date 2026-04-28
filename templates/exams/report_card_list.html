@@ -1,5 +1,5 @@
-ï»¿{% extends "base.html" %}
-{% block title %}Report Cards â€” {{ exam.name }}{% endblock %}
+{% extends "base.html" %}
+{% block title %}Report Cards — {{ exam.name }}{% endblock %}
 {% block content %}
 <section style="background:linear-gradient(135deg,#C0392B,#922B21);padding:2rem 0;color:white;">
     <div class="container">
@@ -75,7 +75,7 @@
         {% if report_cards %}
         <div style="background:white;border-radius:15px;padding:2rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);">
             <h5 style="font-weight:700;color:#1a1a1a;margin-bottom:1.5rem;">
-                {{ selected_stream.full_name }} â€” {{ report_cards|length }} Report Cards
+                {{ selected_stream.full_name }} — {{ report_cards|length }} Report Cards
             </h5>
             <div style="overflow-x:auto;">
                 <table class="table table-hover mb-0">

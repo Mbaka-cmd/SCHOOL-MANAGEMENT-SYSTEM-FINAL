@@ -1,6 +1,6 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
-{% block title %}Home — {{ school.name|default:"Chuka Girls Secondary School" }}{% endblock %}
+{% block title %}Home � {{ school.name|default:"Chuka Girls Secondary School" }}{% endblock %}
 
 {% block content %}
 
@@ -13,7 +13,7 @@
                 <div class="mb-3">
                     <span style="background:rgba(255,255,255,0.15);padding:6px 16px;border-radius:25px;font-size:0.85rem;border:1px solid rgba(255,255,255,0.3);">
                         <i class="bi bi-star-fill me-1" style="color:gold;"></i>
-                        Extra County Girls Boarding School · Tharaka-Nithi County
+                        Extra County Girls Boarding School � Tharaka-Nithi County
                     </span>
                 </div>
                 <h1 style="font-size:clamp(2rem,5vw,3.5rem);font-weight:800;line-height:1.2;margin-bottom:1rem;">
@@ -206,7 +206,7 @@
                     <p style="font-size:0.9rem;color:#444;font-style:italic;">{{ comment.comment }}</p>
                     <div style="margin-top:0.8rem;padding-top:0.8rem;border-top:1px solid #f0f0f0;">
                         <strong style="color:#1a1a1a;font-size:0.9rem;">{{ comment.author_name }}</strong>
-                        <div style="color:gold;font-size:0.82rem;">{% for i in "12345" %}{% if forloop.counter <= comment.rating %}★{% endif %}{% endfor %}</div>
+                        <div style="color:gold;font-size:0.82rem;">{% for i in "12345" %}{% if forloop.counter <= comment.rating %}?{% endif %}{% endfor %}</div>
                     </div>
                 </div>
             </div>

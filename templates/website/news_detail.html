@@ -1,5 +1,5 @@
-ï»¿{% extends "base.html" %}
-{% block title %}{{ post.title }} â€” {{ school.name }}{% endblock %}
+{% extends "base.html" %}
+{% block title %}{{ post.title }} — {{ school.name }}{% endblock %}
 {% block content %}
 
 <!-- PAGE HEADER -->
@@ -17,9 +17,9 @@
         <h1 style="font-weight:800;margin-top:0.5rem;">{{ post.title }}</h1>
         <p style="opacity:0.75;margin:0;">
             <i class="bi bi-calendar3 me-1"></i>{{ post.created_at|date:"F d, Y" }}
-            {% if post.author %} Â· <i class="bi bi-person me-1"></i>{{ post.author.get_full_name }}{% endif %}
-            {% if post.event_date %} Â· <i class="bi bi-calendar-event me-1"></i>Event: {{ post.event_date|date:"M d, Y" }}{% endif %}
-            {% if post.event_location %} Â· <i class="bi bi-geo-alt me-1"></i>{{ post.event_location }}{% endif %}
+            {% if post.author %} · <i class="bi bi-person me-1"></i>{{ post.author.get_full_name }}{% endif %}
+            {% if post.event_date %} · <i class="bi bi-calendar-event me-1"></i>Event: {{ post.event_date|date:"M d, Y" }}{% endif %}
+            {% if post.event_location %} · <i class="bi bi-geo-alt me-1"></i>{{ post.event_location }}{% endif %}
         </p>
     </div>
 </section>

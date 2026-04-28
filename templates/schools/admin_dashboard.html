@@ -1,7 +1,7 @@
-ï»¿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
 {% load humanize %}
-{% block title %}Dashboard â€” {{ school.name }}{% endblock %}
+{% block title %}Dashboard — {{ school.name }}{% endblock %}
 {% block content %}
 
 <section style="background:linear-gradient(135deg,#C0392B,#922B21);padding:2rem 0;color:white;">
@@ -9,7 +9,7 @@
         <div class="row align-items-center">
             <div class="col">
                 <h4 style="font-weight:800;margin:0;"><i class="bi bi-speedometer2 me-2"></i>Admin Dashboard</h4>
-                <p style="opacity:0.75;margin:0;font-size:0.9rem;">{{ school.name }} â€” Overview & Analytics</p>
+                <p style="opacity:0.75;margin:0;font-size:0.9rem;">{{ school.name }} — Overview & Analytics</p>
             </div>
             <div class="col-auto d-flex gap-2 flex-wrap">
                 <a href="{% url 'student_list' %}" class="btn" style="background:rgba(255,255,255,0.15);color:white;border-radius:20px;"><i class="bi bi-people-fill me-1"></i>Students</a>
@@ -148,7 +148,7 @@
                         <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#C0392B,#922B21);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.85rem;flex-shrink:0;">{{ student.first_name|first }}{{ student.last_name|first }}</div>
                         <div style="flex:1;">
                             <div style="font-weight:600;font-size:0.9rem;">{{ student.get_full_name }}</div>
-                            <div style="font-size:0.75rem;color:#999;">{{ student.current_stream.full_name|default:"â€”" }} Â· {{ student.admission_number }}</div>
+                            <div style="font-size:0.75rem;color:#999;">{{ student.current_stream.full_name|default:"—" }} · {{ student.admission_number }}</div>
                         </div>
                     </div>
                     {% empty %}<p style="color:#aaa;text-align:center;padding:1rem;">No students yet</p>{% endfor %}
@@ -164,7 +164,7 @@
                     <div style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid #f5f5f5;">
                         <div>
                             <div style="font-weight:600;font-size:0.9rem;">{{ exam.name }}</div>
-                            <div style="font-size:0.75rem;color:#999;">{{ exam.get_exam_type_display }} Â· {{ exam.academic_year.year }}</div>
+                            <div style="font-size:0.75rem;color:#999;">{{ exam.get_exam_type_display }} · {{ exam.academic_year.year }}</div>
                         </div>
                         <span style="background:{% if exam.is_published %}#f0fff5;color:#2ecc71;{% else %}#fff8f0;color:#e67e22;{% endif %};padding:3px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">{% if exam.is_published %}Published{% else %}Draft{% endif %}</span>
                     </div>

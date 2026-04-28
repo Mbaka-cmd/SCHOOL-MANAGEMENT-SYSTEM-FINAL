@@ -1,6 +1,6 @@
-ï»¿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
-{% block title %}Take Attendance â€” {{ school.name }}{% endblock %}
+{% block title %}Take Attendance — {{ school.name }}{% endblock %}
 {% block content %}
 
 <section style="background:linear-gradient(135deg,#2ecc71,#27ae60);padding:2rem 0;color:white;">
@@ -38,7 +38,7 @@
         {% else %}
         <div style="background:white;border-radius:15px;padding:2rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 style="font-weight:700;margin:0;color:#1a1a1a;"><i class="bi bi-people-fill me-2" style="color:#2ecc71;"></i>{{ selected_stream.full_name }} â€” {{ students.count }} Students</h6>
+                <h6 style="font-weight:700;margin:0;color:#1a1a1a;"><i class="bi bi-people-fill me-2" style="color:#2ecc71;"></i>{{ selected_stream.full_name }} — {{ students.count }} Students</h6>
                 <div>
                     <button onclick="markAll('present')" class="btn btn-sm" style="background:#f0fff5;color:#27ae60;border-radius:8px;font-weight:600;">All Present</button>
                     <button onclick="markAll('absent')" class="btn btn-sm" style="background:#fff0f0;color:#e74c3c;border-radius:8px;font-weight:600;">All Absent</button>
