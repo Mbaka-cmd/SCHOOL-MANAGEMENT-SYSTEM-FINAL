@@ -18,24 +18,26 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_platform_admin", True)
+        extra_fields.setdefault("is_active", True)
+
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("Superuser must have is_staff=True")
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("Superuser must have is_superuser=True")
 
         return self.create_user(email, password, **extra_fields)
 
-    # ✅ FIX: SAFE STAFF CREATION (THIS WAS MISSING AND CAUSING YOUR SHELL ERRORS)
     def create_staff_user(self, email, password=None, role=None, **extra_fields):
         if not email:
             raise ValueError("Email is required")
 
         email = self.normalize_email(email)
-
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
 
-        # base access
         user.is_staff = True
         user.is_active = True
 
-        # role mapping
         if role:
             role = role.lower()
             user.school_role = role
@@ -62,11 +64,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
+
     profile_photo = models.ImageField(upload_to="users/photos/", null=True, blank=True)
 
     gender = models.CharField(
         max_length=10,
-        choices=[("male", "Male"), ("female", "Female"), ("other", "Other")],
+        choices=[
+            ("male", "Male"),
+            ("female", "Female"),
+            ("other", "Other"),
+        ],
         blank=True,
     )
 
@@ -88,7 +95,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_parent = models.BooleanField(default=False)
     is_student = models.BooleanField(default=False)
 
-    # role system
     ROLE_CHOICES = [
         ("super_admin", "Super Admin"),
         ("principal", "Principal"),
@@ -120,9 +126,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         ordering = ["last_name", "first_name"]
 
-   def __str__(self):
-    name = self.get_full_name()
-    return name if name.strip() else self.email
+    def __str__(self):
+        return self.get_full_name() or self.email
 
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}".strip()
@@ -136,14 +141,14 @@ class User(AbstractBaseUser, PermissionsMixin):
             return "Platform Admin"
 
         if self.is_school_admin:
-            return {
+            role_map = {
                 "bursar": "Bursar",
                 "principal": "Principal",
                 "dean": "Dean of Studies",
                 "secretary": "Secretary",
                 "super_admin": "Super Admin",
-                "admin": "School Admin",
-            }.get(self.school_role, "School Admin")
+            }
+            return role_map.get(self.school_role, "School Admin")
 
         if self.is_teacher:
             return "Teacher"
@@ -163,13 +168,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
             if role == "bursar":
                 return "/school-admin/dashboard/bursar/"
-            elif role == "principal":
+            if role == "principal":
                 return "/school-admin/dashboard/principal/"
-            elif role == "dean":
+            if role == "dean":
                 return "/school-admin/dashboard/dean/"
-            elif role == "secretary":
+            if role == "secretary":
                 return "/school-admin/dashboard/secretary/"
-            elif role == "super_admin":
+            if role == "super_admin":
                 return "/school-admin/dashboard/super/"
 
             return "/school-admin/dashboard/"
@@ -182,4 +187,3 @@ class User(AbstractBaseUser, PermissionsMixin):
             return "/portal/student/"
 
         return "/"
-

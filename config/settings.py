@@ -1,19 +1,37 @@
 ﻿from pathlib import Path
 import os
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "dev-only")
-
-ALLOWED_HOSTS = ["school-management-system-final.onrender.com", ".onrender.com"]
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-chuka-girls-school-management-system-2026-secret-key'
+# ─────────────────────────────────────────────
+# SECURITY (PRODUCTION SAFE)
+# ─────────────────────────────────────────────
 
-DEBUG = False
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'school-management-system-final.onrender.com', '.onrender.com']
-CSRF_TRUSTED_ORIGINS = ['https://school-management-system-final.onrender.com']
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+if not SECRET_KEY:
+    raise Exception("SECRET_KEY is missing in environment variables")
+
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
+
+ALLOWED_HOSTS = os.environ.get(
+    "ALLOWED_HOSTS",
+    "localhost,127.0.0.1,school-management-system-final.onrender.com,.onrender.com"
+).split(",")
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://school-management-system-final.onrender.com"
+]
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+SECURE_SSL_REDIRECT = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+
+# ─────────────────────────────────────────────
+# INSTALLED APPS
+# ─────────────────────────────────────────────
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -23,8 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+
     'crispy_forms',
     'crispy_bootstrap5',
+
     'accounts',
     'schools',
     'academics',
@@ -40,9 +60,14 @@ INSTALLED_APPS = [
     'notices',
 ]
 
+# ─────────────────────────────────────────────
+# MIDDLEWARE
+# ─────────────────────────────────────────────
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -52,6 +77,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
+
+# ─────────────────────────────────────────────
+# TEMPLATES
+# ─────────────────────────────────────────────
 
 TEMPLATES = [
     {
@@ -71,12 +100,22 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# ─────────────────────────────────────────────
+# DATABASE (LOCAL DEV DEFAULT)
+# ─────────────────────────────────────────────
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# ─────────────────────────────────────────────
+# AUTH
+# ─────────────────────────────────────────────
+
+AUTH_USER_MODEL = 'accounts.User'
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -85,22 +124,28 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-AUTH_USER_MODEL = 'accounts.User'
+# ─────────────────────────────────────────────
+# INTERNATIONALIZATION
+# ─────────────────────────────────────────────
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Africa/Nairobi'
 USE_I18N = True
 USE_TZ = True
 
-# Date format settings - using dd/mm/yyyy format
 DATE_FORMAT = 'd/m/Y'
 DATETIME_FORMAT = 'd/m/Y H:i'
 SHORT_DATE_FORMAT = 'd/m/Y'
 SHORT_DATETIME_FORMAT = 'd/m/Y H:i'
 
+# ─────────────────────────────────────────────
+# STATIC / MEDIA
+# ─────────────────────────────────────────────
+
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
@@ -108,29 +153,41 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# ─────────────────────────────────────────────
+# AUTH REDIRECTS
+# ─────────────────────────────────────────────
+
 LOGIN_REDIRECT_URL = '/school-admin/dashboard/'
 LOGIN_URL = '/accounts/login/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
+# ─────────────────────────────────────────────
+# CRISPY FORMS
+# ─────────────────────────────────────────────
+
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+# ─────────────────────────────────────────────
+# EMAIL (PRODUCTION SAFE)
+# ─────────────────────────────────────────────
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'mercykathomi428@gmail.com'
-EMAIL_HOST_PASSWORD = 'mmdz zdvz flvu xsnx'
-DEFAULT_FROM_EMAIL = 'Chuka Girls School <mercykathomi428@gmail.com>'
-# Africa's Talking
+
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+
+DEFAULT_FROM_EMAIL = os.environ.get(
+    "DEFAULT_FROM_EMAIL",
+    "School System <no-reply@system.local>"
+)
+
+# ─────────────────────────────────────────────
+# AFRICA'S TALKING
+# ─────────────────────────────────────────────
+
 AT_USERNAME = os.environ.get('AT_USERNAME', 'sandbox')
-AT_API_KEY = os.environ.get('AT_API_KEY', 'atsk_your_key_here')
-
-
-
-
-
-
-
-# Temporary superuser creation - remove after first deploy
-from django.contrib.auth import get_user_model
+AT_API_KEY = os.environ.get('AT_API_KEY', '')
