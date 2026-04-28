@@ -41,7 +41,7 @@
             </div>
             <div class="col-12 col-md-4">
                 <div style="background:linear-gradient(135deg,#1a6b3a,#145c30);border-radius:15px;padding:1.5rem;color:white;box-shadow:0 5px 20px rgba(26,107,58,0.3);">
-                    <div style="font-size:2rem;font-weight:800;">KES {{ total_revenue|floatformat:0 }}</div>
+                    <div style="font-size:2rem;font-weight:800;">KES {{ total_revenue|intcomma }}</div>
                     <div style="opacity:0.85;font-size:0.85rem;">Total Revenue Collected</div>
                     <i class="bi bi-cash-stack" style="font-size:2rem;opacity:0.3;float:right;margin-top:-3rem;"></i>
                 </div>
@@ -96,8 +96,8 @@
                                             {{ data.students }}
                                         </span>
                                     </td>
-                                    <td>KES {{ data.expected|floatformat:0 }}</td>
-                                    <td><strong style="color:#1a6b3a;">KES {{ data.collected|floatformat:0 }}</strong></td>
+                                    <td>KES {{ data.expected|intcomma }}</td>
+                                    <td><strong style="color:#1a6b3a;">KES {{ data.collected|intcomma }}</strong></td>
                                     <td>
                                         <div style="display:flex;align-items:center;gap:0.5rem;">
                                             <div style="background:#f0f0f0;border-radius:10px;height:6px;flex:1;min-width:60px;">

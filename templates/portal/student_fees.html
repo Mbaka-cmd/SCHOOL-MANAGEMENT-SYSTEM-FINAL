@@ -20,15 +20,15 @@
             </div>
             <div class="row g-3">
                 <div class="col-4 text-center">
-                    <div style="font-size:1.1rem;font-weight:800;">KES {{ invoice.total_expected|floatformat:0 }}</div>
+                    <div style="font-size:1.1rem;font-weight:800;">KES {{ invoice.total_expected|intcomma }}</div>
                     <div style="font-size:0.75rem;color:#999;">Expected</div>
                 </div>
                 <div class="col-4 text-center">
-                    <div style="font-size:1.1rem;font-weight:800;color:#2ecc71;">KES {{ invoice.total_paid|floatformat:0 }}</div>
+                    <div style="font-size:1.1rem;font-weight:800;color:#2ecc71;">KES {{ invoice.total_paid|intcomma }}</div>
                     <div style="font-size:0.75rem;color:#999;">Paid</div>
                 </div>
                 <div class="col-4 text-center">
-                    <div style="font-size:1.1rem;font-weight:800;color:#e74c3c;">KES {{ invoice.balance|floatformat:0 }}</div>
+                    <div style="font-size:1.1rem;font-weight:800;color:#e74c3c;">KES {{ invoice.balance|intcomma }}</div>
                     <div style="font-size:0.75rem;color:#999;">Balance</div>
                 </div>
             </div>

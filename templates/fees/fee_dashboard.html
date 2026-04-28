@@ -107,7 +107,7 @@
                     {% endif %}
                     <div class="d-flex justify-content-between mt-2">
                         <span style="color:#C0392B; font-weight:600;">Outstanding</span>
-                        <span style="font-weight:700; color:#C0392B;">KES {{ total_expected|add:"-"|add:total_collected|floatformat:0 }}</span>
+                        <span style="font-weight:700; color:#C0392B;">KES {{ total_expected|add:"-"|add:total_collected|intcomma }}</span>
                     </div>
                 </div>
             </div>
@@ -127,7 +127,7 @@
                                     {{ payment.get_method_display }} · {{ payment.paid_at|date:"M d, Y" }}
                                 </div>
                             </div>
-                            <span style="font-weight:700; color:#2ecc71;">KES {{ payment.amount|floatformat:0 }}</span>
+                            <span style="font-weight:700; color:#2ecc71;">KES {{ payment.amount|intcomma }}</span>
                         </div>
                         {% endfor %}
                     {% else %}

@@ -81,13 +81,13 @@
                                 Term {{ invoice.term }} / {{ invoice.academic_year }}
                             </td>
                             <td style="padding:0.9rem 1rem; font-weight:600;">
-                                KES {{ invoice.amount_due|floatformat:0 }}
+                                KES {{ invoice.amount_due|intcomma }}
                             </td>
                             <td style="padding:0.9rem 1rem; font-weight:600; color:#2ecc71;">
-                                KES {{ invoice.amount_paid|floatformat:0 }}
+                                KES {{ invoice.amount_paid|intcomma }}
                             </td>
                             <td style="padding:0.9rem 1rem; font-weight:700; color:#C0392B;">
-                                KES {{ invoice.balance|floatformat:0 }}
+                                KES {{ invoice.balance|intcomma }}
                             </td>
                             <td style="padding:0.9rem 1rem;">
                                 {% if invoice.status == 'paid' %}

@@ -24,6 +24,14 @@
                     </button>
                     {% endif %}
                 </form>
+                {% if not exam.is_published %}
+                <form method="post" action="{% url 'exam_delete' exam.id %}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this exam? This action cannot be undone.')">
+                    {% csrf_token %}
+                    <button type="submit" class="btn" style="background:#fff0f0;color:#C0392B;border-radius:20px;font-weight:600;">
+                        <i class="bi bi-trash-fill me-1"></i>Delete
+                    </button>
+                </form>
+                {% endif %}
                 <a href="{% url 'enter_marks' exam.id %}" class="btn" style="background:white;color:#C0392B;border-radius:20px;font-weight:600;">
                     <i class="bi bi-pencil-fill me-1"></i>Enter Marks
                 </a>

@@ -1,5 +1,6 @@
 ﻿{% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 {% block title %}Dashboard — {{ school.name }}{% endblock %}
 {% block content %}
 
@@ -63,19 +64,19 @@
             <div class="col-md-3">
                 <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);border-left:4px solid #C0392B;">
                     <div style="font-size:0.8rem;color:#999;font-weight:600;text-transform:uppercase;">Expected Fees</div>
-                    <div style="font-size:1.5rem;font-weight:800;color:#1a1a1a;">KES {{ total_expected|floatformat:0 }}</div>
+                    <div style="font-size:1.5rem;font-weight:800;color:#1a1a1a;">KES {{ total_expected|intcomma }}</div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);border-left:4px solid #2ecc71;">
                     <div style="font-size:0.8rem;color:#999;font-weight:600;text-transform:uppercase;">Collected</div>
-                    <div style="font-size:1.5rem;font-weight:800;color:#2ecc71;">KES {{ total_collected|floatformat:0 }}</div>
+                    <div style="font-size:1.5rem;font-weight:800;color:#2ecc71;">KES {{ total_collected|intcomma }}</div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);border-left:4px solid #e74c3c;">
                     <div style="font-size:0.8rem;color:#999;font-weight:600;text-transform:uppercase;">Balance</div>
-                    <div style="font-size:1.5rem;font-weight:800;color:#e74c3c;">KES {{ total_balance|floatformat:0 }}</div>
+                    <div style="font-size:1.5rem;font-weight:800;color:#e74c3c;">KES {{ total_balance|intcomma }}</div>
                 </div>
             </div>
             <div class="col-md-3">

@@ -52,11 +52,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     # ── SCHOOL ROLE (for school_admin users) ──────────────────
     ROLE_CHOICES = [
-        ("super_admin", "Super Admin"),   # Mercy — sees everything secretly
+        ("super_admin", "Super Admin"),   # Mercy — sees everything
         ("principal", "Principal"),        # Read-only school overview
         ("bursar", "Bursar"),              # Fees, payments, M-Pesa only
         ("dean", "Dean of Studies"),       # Students, exams, streams only
-        ("secretary", "Secretary"),        # Can view school overview and help with communications
+        ("secretary", "Secretary"),        # Overview + communications
         ("admin", "General Admin"),        # Default — full school access
     ]
     school_role = models.CharField(
@@ -128,7 +128,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 return "/school-admin/dashboard/super/"
             return "/school-admin/dashboard/"
         if self.is_teacher:
-            return "/school-admin/dashboard/"
+            return "/school-admin/dashboard/teacher/"
         if self.is_parent:
             return "/portal/parent/"
         if self.is_student:

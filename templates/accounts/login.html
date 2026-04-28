@@ -67,40 +67,50 @@
                         <form method="post">
                             {% csrf_token %}
                             <div class="mb-3">
+                                <label style="font-size:0.88rem;font-weight:600;color:#333;margin-bottom:0.5rem;display:block;">Staff portal code</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" style="background:#fdf2f2;border-color:#e8d5d5;border-right:none;"><i class="bi bi-key-fill" style="color:#C0392B;"></i></span>
+                                    <input type="text" name="staff_code" value="{{ staff_code }}" class="form-control" placeholder="Enter staff portal code" required style="border-left:none;border-color:#e8d5d5;">
+                                </div>
+                                <small style="color:#aaa;font-size:0.75rem;">
+                                    Enter the staff portal code before selecting your role.
+                                </small>
+                            </div>
+                            <div class="mb-3">
                                 <label style="font-size:0.88rem;font-weight:600;color:#333;margin-bottom:0.5rem;display:block;">I am a...</label>
                                 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem;">
                                     <label style="cursor:pointer;text-align:center;">
-                                        <input type="radio" name="staff_role" value="principal" style="display:none;" onchange="selectRole(this)">
+                                        <input type="radio" name="staff_role" value="principal" style="display:none;" onchange="selectRole(this)" {% if staff_role == "principal" %}checked{% endif %}>
                                         <div class="role-btn" style="border:2px solid #e0e0e0;border-radius:10px;padding:0.7rem 0.3rem;font-size:0.78rem;font-weight:600;color:#555;">
                                             <i class="bi bi-building" style="display:block;font-size:1.3rem;margin-bottom:3px;"></i>Principal
                                         </div>
                                     </label>
                                     <label style="cursor:pointer;text-align:center;">
-                                        <input type="radio" name="staff_role" value="bursar" style="display:none;" onchange="selectRole(this)">
+                                        <input type="radio" name="staff_role" value="bursar" style="display:none;" onchange="selectRole(this)" {% if staff_role == "bursar" %}checked{% endif %}>
                                         <div class="role-btn" style="border:2px solid #e0e0e0;border-radius:10px;padding:0.7rem 0.3rem;font-size:0.78rem;font-weight:600;color:#555;">
                                             <i class="bi bi-cash-stack" style="display:block;font-size:1.3rem;margin-bottom:3px;"></i>Bursar
                                         </div>
                                     </label>
                                     <label style="cursor:pointer;text-align:center;">
-                                        <input type="radio" name="staff_role" value="dean" style="display:none;" onchange="selectRole(this)">
+                                        <input type="radio" name="staff_role" value="dean" style="display:none;" onchange="selectRole(this)" {% if staff_role == "dean" %}checked{% endif %}>
                                         <div class="role-btn" style="border:2px solid #e0e0e0;border-radius:10px;padding:0.7rem 0.3rem;font-size:0.78rem;font-weight:600;color:#555;">
                                             <i class="bi bi-people-fill" style="display:block;font-size:1.3rem;margin-bottom:3px;"></i>Dean
                                         </div>
                                     </label>
                                     <label style="cursor:pointer;text-align:center;">
-                                        <input type="radio" name="staff_role" value="secretary" style="display:none;" onchange="selectRole(this)">
+                                        <input type="radio" name="staff_role" value="secretary" style="display:none;" onchange="selectRole(this)" {% if staff_role == "secretary" %}checked{% endif %}>
                                         <div class="role-btn" style="border:2px solid #e0e0e0;border-radius:10px;padding:0.7rem 0.3rem;font-size:0.78rem;font-weight:600;color:#555;">
                                             <i class="bi bi-envelope-fill" style="display:block;font-size:1.3rem;margin-bottom:3px;"></i>Secretary
                                         </div>
                                     </label>
                                     <label style="cursor:pointer;text-align:center;">
-                                        <input type="radio" name="staff_role" value="teacher" style="display:none;" onchange="selectRole(this)">
+                                        <input type="radio" name="staff_role" value="teacher" style="display:none;" onchange="selectRole(this)" {% if staff_role == "teacher" %}checked{% endif %}>
                                         <div class="role-btn" style="border:2px solid #e0e0e0;border-radius:10px;padding:0.7rem 0.3rem;font-size:0.78rem;font-weight:600;color:#555;">
                                             <i class="bi bi-person-badge-fill" style="display:block;font-size:1.3rem;margin-bottom:3px;"></i>Teacher
                                         </div>
                                     </label>
                                     <label style="cursor:pointer;text-align:center;">
-                                        <input type="radio" name="staff_role" value="school_admin" style="display:none;" onchange="selectRole(this)">
+                                        <input type="radio" name="staff_role" value="admin" style="display:none;" onchange="selectRole(this)" {% if staff_role == "admin" %}checked{% endif %}>
                                         <div class="role-btn" style="border:2px solid #e0e0e0;border-radius:10px;padding:0.7rem 0.3rem;font-size:0.78rem;font-weight:600;color:#555;">
                                             <i class="bi bi-speedometer2" style="display:block;font-size:1.3rem;margin-bottom:3px;"></i>Admin
                                         </div>
@@ -153,6 +163,10 @@ function togglePwd(inputId,iconId){
     if(input.type==='password'){input.type='text';icon.className='bi bi-eye-slash-fill';icon.style.color='#C0392B';}
     else{input.type='password';icon.className='bi bi-eye-fill';icon.style.color='#999';}
 }
+
+document.addEventListener('DOMContentLoaded', function(){
+    switchTab('{{ active_tab|default:"student" }}');
+});
 </script>
 {% endblock %}
 

@@ -15,14 +15,14 @@
                 <div style="background:white;border-radius:15px;padding:1.5rem;box-shadow:0 3px 15px rgba(0,0,0,0.07);">
                     <h6 style="font-weight:700;margin-bottom:1rem;"><i class="bi bi-cash-stack me-2" style="color:#2ecc71;"></i>Fee Summary</h6>
                     <div style="text-align:center;padding:1rem 0;">
-                        <div style="font-size:2rem;font-weight:800;color:#e74c3c;">KES {{ fee_balance|floatformat:0 }}</div>
+                        <div style="font-size:2rem;font-weight:800;color:#e74c3c;">KES {{ fee_balance|intcomma }}</div>
                         <div style="color:#999;font-size:0.85rem;">Outstanding Balance</div>
                     </div>
                     <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-top:1px solid #f5f5f5;">
-                        <span style="color:#999;">Expected</span><span style="font-weight:600;">KES {{ total_expected|floatformat:0 }}</span>
+                        <span style="color:#999;">Expected</span><span style="font-weight:600;">KES {{ total_expected|intcomma }}</span>
                     </div>
                     <div style="display:flex;justify-content:space-between;padding:0.5rem 0;">
-                        <span style="color:#999;">Paid</span><span style="font-weight:600;color:#2ecc71;">KES {{ total_paid|floatformat:0 }}</span>
+                        <span style="color:#999;">Paid</span><span style="font-weight:600;color:#2ecc71;">KES {{ total_paid|intcomma }}</span>
                     </div>
                 </div>
             </div>

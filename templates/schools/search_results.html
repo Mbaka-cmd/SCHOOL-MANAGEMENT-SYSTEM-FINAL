@@ -103,7 +103,7 @@
             <div style="display:flex;align-items:center;justify-content:space-between;padding:0.7rem;border-radius:10px;margin-bottom:0.3rem;background:#f8f9fa;">
                 <div>
                     <div style="font-weight:600;color:#1a1a1a;">{{ invoice.student.get_full_name }}</div>
-                    <div style="font-size:0.8rem;color:#999;">{{ invoice.invoice_number }} · KES {{ invoice.total_expected|floatformat:0 }}</div>
+                    <div style="font-size:0.8rem;color:#999;">{{ invoice.invoice_number }} · KES {{ invoice.total_expected|intcomma }}</div>
                 </div>
                 <span style="background:{% if invoice.status == 'paid' %}#f0fff5;color:#2ecc71;{% else %}#fff0f0;color:#e74c3c;{% endif %};padding:3px 10px;border-radius:20px;font-size:0.8rem;font-weight:600;">
                     {{ invoice.get_status_display }}

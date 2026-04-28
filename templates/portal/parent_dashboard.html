@@ -34,13 +34,13 @@
             <div class="row g-3">
                 <div class="col-md-4">
                     <div style="background:#f8f9fa;border-radius:10px;padding:1rem;text-align:center;">
-                        <div style="font-size:1.3rem;font-weight:800;color:#e74c3c;">KES {{ data.fee_balance|floatformat:0 }}</div>
+                        <div style="font-size:1.3rem;font-weight:800;color:#e74c3c;">KES {{ data.fee_balance|intcomma }}</div>
                         <div style="font-size:0.8rem;color:#999;">Fee Balance</div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div style="background:#f8f9fa;border-radius:10px;padding:1rem;text-align:center;">
-                        <div style="font-size:1.3rem;font-weight:800;color:#3498db;">KES {{ data.total_paid|floatformat:0 }}</div>
+                        <div style="font-size:1.3rem;font-weight:800;color:#3498db;">KES {{ data.total_paid|intcomma }}</div>
                         <div style="font-size:0.8rem;color:#999;">Total Paid</div>
                     </div>
                 </div>

@@ -9,9 +9,42 @@ def login_view(request):
     if request.user.is_authenticated:
         return redirect(request.user.get_dashboard_url())
 
+    active_tab = "student"
+    staff_code = ""
+    staff_role = ""
+
     if request.method == "POST":
         identifier = request.POST.get("identifier", "").strip()
         password = request.POST.get("password", "").strip()
+        staff_code = request.POST.get("staff_code", "").strip()
+        staff_role = request.POST.get("staff_role", "").strip()
+
+        if staff_role or staff_code:
+            active_tab = "staff"
+
+        if active_tab == "staff" and not staff_code:
+            messages.error(request, "Please enter your staff portal access code.")
+            return render(request, "accounts/login.html", {
+                "active_tab": active_tab,
+                "staff_code": staff_code,
+                "staff_role": staff_role,
+            })
+
+        if active_tab == "staff" and not staff_role:
+            messages.error(request, "Please select your staff role.")
+            return render(request, "accounts/login.html", {
+                "active_tab": active_tab,
+                "staff_code": staff_code,
+                "staff_role": staff_role,
+            })
+
+        if staff_code and staff_code != "BHAKITA2026":
+            messages.error(request, "Invalid staff portal code. Please use the correct code.")
+            return render(request, "accounts/login.html", {
+                "active_tab": active_tab,
+                "staff_code": staff_code,
+                "staff_role": staff_role,
+            })
 
         user = None
 
@@ -37,16 +70,15 @@ def login_view(request):
                     entered = password.strip()
 
                     if any(
-                        entered.lower() == default_password.lower()
-                        for default_password in default_passwords
+                        entered.lower() == dp.lower()
+                        for dp in default_passwords
                     ) and any(
-                        student.user.check_password(default_password)
-                        for default_password in default_passwords
+                        student.user.check_password(dp)
+                        for dp in default_passwords
                     ):
                         user = student.user
 
-        # ── Try firstname_admissionnumber format ──
-        # e.g. "Adalyn_CGS02/2026"
+        # ── Try firstname_admissionnumber format e.g. "Adalyn_CGS02/2026" ──
         if not user and "_" in identifier:
             parts = identifier.split("_", 1)
             if len(parts) == 2:
@@ -60,7 +92,32 @@ def login_view(request):
                 if student and student.user:
                     user = authenticate(request, email=student.user.email, password=password)
 
+        # ── Role validation helper (defined inside so it's in scope) ──
+        def staff_role_matches_account(u, selected_role):
+            if selected_role == "teacher":
+                return getattr(u, 'is_teacher', False)
+            if selected_role == "admin":
+                return getattr(u, 'is_school_admin', False)
+            if selected_role in ("principal", "bursar", "dean", "secretary"):
+                return (
+                    getattr(u, 'is_school_admin', False)
+                    and getattr(u, 'school_role', '') == selected_role
+                )
+            return False
+
         if user:
+            if active_tab == "staff" and not staff_role_matches_account(user, staff_role):
+                messages.error(
+                    request,
+                    "Selected role does not match this account. "
+                    "Please choose the role assigned to your email."
+                )
+                return render(request, "accounts/login.html", {
+                    "active_tab": active_tab,
+                    "staff_code": staff_code,
+                    "staff_role": staff_role,
+                })
+
             login(request, user)
 
             # ── Notify parent when student logs in ──
@@ -80,7 +137,8 @@ def login_view(request):
                                 f"the Chuka Girls School Portal.\n\n"
                                 f"Login Time: {timezone.now().strftime('%d %b %Y at %I:%M %p')}\n\n"
                                 f"If this was not your child, please contact the school immediately.\n\n"
-                                f"Regards,\nChuka Girls Secondary School\nTel: 064-630001 / 0115388019"
+                                f"Regards,\nChuka Girls Secondary School\n"
+                                f"Tel: 064-630001 / 0115388019"
                             ),
                             from_email='mercykathomi428@gmail.com',
                             recipient_list=[parent.email],
@@ -92,9 +150,17 @@ def login_view(request):
             return redirect(user.get_dashboard_url())
 
         else:
-            messages.error(request, "Invalid credentials. Try your email, admission number, or first name + admission number.")
+            messages.error(
+                request,
+                "Invalid credentials. Try your email, admission number, "
+                "or first name + admission number."
+            )
 
-    return render(request, "accounts/login.html")
+    return render(request, "accounts/login.html", {
+        "active_tab": active_tab,
+        "staff_code": staff_code,
+        "staff_role": staff_role,
+    })
 
 
 def logout_view(request):
@@ -133,7 +199,10 @@ def parent_register(request):
             return render(request, "accounts/parent_register.html")
 
         if User.objects.filter(email=email).exists():
-            messages.error(request, "An account with this email already exists. Please login instead.")
+            messages.error(
+                request,
+                "An account with this email already exists. Please login instead."
+            )
             return render(request, "accounts/parent_register.html")
 
         try:
@@ -145,22 +214,29 @@ def parent_register(request):
             parent, created = ParentGuardian.objects.get_or_create(
                 email=email,
                 defaults={
-                    "school": student.school, "first_name": first_name,
-                    "last_name": last_name, "phone_primary": phone,
-                    "relationship": relationship, "user": user,
+                    "school": student.school,
+                    "first_name": first_name,
+                    "last_name": last_name,
+                    "phone_primary": phone,
+                    "relationship": relationship,
+                    "user": user,
                 }
             )
             if not created:
                 parent.user = user
                 parent.save()
             parent.students.add(student)
+
             try:
                 send_mail(
                     subject="Welcome to Chuka Girls School Parent Portal",
                     message=(
-                        f"Dear {first_name},\n\nYour parent portal account has been created!\n\n"
-                        f"Linked to: {student.get_full_name()} (Adm: {student.admission_number})\n\n"
-                        f"Login at: https://school-management-system-final.onrender.com/accounts/login/\n\n"
+                        f"Dear {first_name},\n\n"
+                        f"Your parent portal account has been created!\n\n"
+                        f"Linked to: {student.get_full_name()} "
+                        f"(Adm: {student.admission_number})\n\n"
+                        f"Login at: https://school-management-system-final.onrender.com"
+                        f"/accounts/login/\n\n"
                         f"Regards,\nChuka Girls Secondary School"
                     ),
                     from_email='mercykathomi428@gmail.com',

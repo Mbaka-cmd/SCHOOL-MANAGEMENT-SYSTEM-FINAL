@@ -58,15 +58,15 @@
                     <div class="d-flex flex-column gap-2">
                         <div class="d-flex justify-content-between">
                             <span class="text-muted">Total Expected</span>
-                            <strong>KES {{ total_expected|floatformat:0 }}</strong>
+                            <strong>KES {{ total_expected|intcomma }}</strong>
                         </div>
                         <div class="d-flex justify-content-between">
                             <span class="text-muted">Collected</span>
-                            <strong style="color:#1a6b3a;">KES {{ total_collected|floatformat:0 }}</strong>
+                            <strong style="color:#1a6b3a;">KES {{ total_collected|intcomma }}</strong>
                         </div>
                         <div class="d-flex justify-content-between">
                             <span class="text-muted">Outstanding</span>
-                            <strong style="color:#e74c3c;">KES {{ total_balance|floatformat:0 }}</strong>
+                            <strong style="color:#e74c3c;">KES {{ total_balance|intcomma }}</strong>
                         </div>
                         <div class="progress mt-2" style="height:10px;border-radius:10px;">
                             <div class="progress-bar" style="width:{{ collection_rate }}%;background:#1a6b3a;border-radius:10px;"></div>

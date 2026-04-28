@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Teacher Dashboard — {{ school.name }}{% endblock %}
+{% block content %}
+<div class="container-fluid py-4">
+
+  <!-- Header -->
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h4 style="font-weight:800;color:#1a1a1a;margin:0;">Teacher Dashboard</h4>
+      <p style="color:#888;margin:0;font-size:0.88rem;">{{ school.name }} &mdash; Welcome, {{ request.user.first_name }}</p>
+    </div>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div style="background:white;border-radius:16px;padding:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+        <div style="font-size:0.8rem;color:#888;font-weight:600;text-transform:uppercase;">Total Students</div>
+        <div style="font-size:2rem;font-weight:800;color:#1a1a1a;">{{ total_students }}</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div style="background:white;border-radius:16px;padding:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+        <div style="font-size:0.8rem;color:#888;font-weight:600;text-transform:uppercase;">Streams</div>
+        <div style="font-size:2rem;font-weight:800;color:#1a1a1a;">{{ total_streams }}</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div style="background:white;border-radius:16px;padding:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+        <div style="font-size:0.8rem;color:#888;font-weight:600;text-transform:uppercase;">Exams Created</div>
+        <div style="font-size:2rem;font-weight:800;color:#1a1a1a;">{{ total_exams }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <!-- Recent Students -->
+    <div class="col-lg-6">
+      <div style="background:white;border-radius:16px;padding:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+        <h6 style="font-weight:700;margin-bottom:1rem;">Recent Students</h6>
+        {% for student in recent_students %}
+        <div style="display:flex;align-items:center;gap:0.8rem;padding:0.6rem 0;border-bottom:1px solid #f5f5f5;">
+          <div style="width:36px;height:36px;background:linear-gradient(135deg,#C0392B,#922B21);border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:0.8rem;flex-shrink:0;">
+            {{ student.first_name|first }}{{ student.last_name|first }}
+          </div>
+          <div>
+            <div style="font-weight:600;font-size:0.88rem;">{{ student.get_full_name }}</div>
+            <div style="font-size:0.78rem;color:#888;">{{ student.current_stream }} &middot; {{ student.admission_number }}</div>
+          </div>
+        </div>
+        {% empty %}
+        <p style="color:#aaa;font-size:0.85rem;">No students yet.</p>
+        {% endfor %}
+        <a href="/students/" class="btn btn-sm mt-3" style="background:#C0392B;color:white;border-radius:20px;font-size:0.82rem;">View All Students</a>
+      </div>
+    </div>
+
+    <!-- Recent Exams -->
+    <div class="col-lg-6">
+      <div style="background:white;border-radius:16px;padding:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+        <h6 style="font-weight:700;margin-bottom:1rem;">Recent Exams</h6>
+        {% for exam in recent_exams %}
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0;border-bottom:1px solid #f5f5f5;">
+          <div>
+            <div style="font-weight:600;font-size:0.88rem;">{{ exam.name }}</div>
+            <div style="font-size:0.78rem;color:#888;">{{ exam.exam_type }} &middot; {{ exam.academic_year }}</div>
+          </div>
+          <span style="background:{% if exam.is_published %}#d4edda{% else %}#fff3cd{% endif %};color:{% if exam.is_published %}#155724{% else %}#856404{% endif %};padding:0.2rem 0.7rem;border-radius:20px;font-size:0.75rem;font-weight:600;">
+            {% if exam.is_published %}Published{% else %}Draft{% endif %}
+          </span>
+        </div>
+        {% empty %}
+        <p style="color:#aaa;font-size:0.85rem;">No exams yet.</p>
+        {% endfor %}
+        <a href="/exams/" class="btn btn-sm mt-3" style="background:#1a1a1a;color:white;border-radius:20px;font-size:0.82rem;">View All Exams</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

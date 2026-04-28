@@ -16,6 +16,7 @@ urlpatterns = [
     path("backup-data/", views.backup_data, name="backup_data"),
     path("kcse/upload/", kcse_views.kcse_upload, name="kcse_upload"),
     path("kcse/toggle/<int:year>/", kcse_views.kcse_toggle_publish, name="kcse_toggle_publish"),
+path("dashboard/teacher/", views.teacher_dashboard, name="teacher_dashboard"),
 ]
 
 

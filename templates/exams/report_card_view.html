@@ -1,4 +1,5 @@
 ﻿{% extends "base.html" %}
+{% load static %}
 {% block title %}Report Card - {{ report.student.get_full_name }}{% endblock %}
 
 {% block extra_head %}
@@ -28,10 +29,11 @@
             <div style="margin-bottom:1rem;">
                 <img src="{% static 'images/school-logo.svg' %}" alt="School Logo" style="max-height:80px;max-width:200px;" onerror="this.style.display='none';">
             </div>
-            <h3 style="font-weight:900;color:#C0392B;margin:0;">{{ school.name|upper }}</h3>
+            <h3 style="font-weight:900;color:#C0392B;margin:0;">CHUKA GIRLS</h3>
+            <h5 style="font-weight:700;margin:0.5rem 0;color:#1a1a1a;">STUDENTS REPORTS AND ANALYTIC CHARTS</h5>
             <p style="color:#666;margin:0.3rem 0;font-size:0.9rem;">{{ school.address }}</p>
             <p style="color:#666;margin:0;font-size:0.9rem;">Tel: {{ school.phone }} | Email: {{ school.email }}</p>
-            <h5 style="font-weight:700;margin-top:1rem;color:#1a1a1a;">STUDENT PROGRESS REPORT</h5>
+            <h6 style="font-weight:600;margin-top:1rem;color:#666;">STUDENT PROGRESS REPORT</h6>
             <p style="color:#666;margin:0;">{{ report.exam.name }} - {{ report.exam.academic_year.year }} {{ report.exam.term.name }}</p>
         </div>
 
@@ -134,7 +136,7 @@
         <!-- FEE BALANCE -->
         <div style="background:{% if report.fee_balance > 0 %}#fff0f0{% else %}#f0fff5{% endif %};border-radius:10px;padding:1rem;text-align:center;margin-bottom:1.5rem;">
             <span style="font-weight:700;color:{% if report.fee_balance > 0 %}#C0392B{% else %}#2ecc71{% endif %};">
-                Fee Balance: KES {{ report.fee_balance|floatformat:0 }}
+                Fee Balance: KES {{ report.fee_balance|intcomma }}
                 {% if report.fee_balance > 0 %}— Please clear fees before next term{% else %}— Fully Paid âœ“{% endif %}
             </span>
         </div>

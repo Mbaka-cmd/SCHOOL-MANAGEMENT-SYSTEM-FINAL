@@ -42,6 +42,22 @@ def bursar_required(view_func):
     return wrapper
 
 
+def teacher_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        allowed = (
+            request.user.is_platform_admin or
+            request.user.is_school_admin or
+            request.user.is_teacher
+        )
+        if not allowed:
+            return HttpResponseForbidden(_access_denied_html())
+        return view_func(request, *args, **kwargs)
+    wrapper.__name__ = view_func.__name__
+    return wrapper
+
+
 def _access_denied_html():
     return """<!DOCTYPE html><html><head><title>Access Denied</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
@@ -53,7 +69,6 @@ def _access_denied_html():
     <a href="/">Go Home</a></div></body></html>"""
 
 
-# â”€â”€ SMART DASHBOARD ROUTER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 @login_required
 def smart_dashboard(request):
@@ -77,13 +92,11 @@ def smart_dashboard(request):
             return redirect('main_dashboard')
 
     if user.is_teacher:
-        # âœ… FIX: redirect to main_dashboard not admin_dashboard
-        return redirect('main_dashboard')
+        return redirect('teacher_dashboard')
 
     return redirect('home')
 
 
-# â”€â”€ ADMIN DASHBOARD (General) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 @admin_required
 def admin_dashboard(request):
@@ -154,7 +167,6 @@ def admin_dashboard(request):
     return render(request, "schools/admin_dashboard.html", context)
 
 
-# â”€â”€ BURSAR DASHBOARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 @admin_required
 def bursar_dashboard(request):
@@ -500,18 +512,110 @@ def backup_data(request):
 @admin_required
 def global_search(request):
     school = request.user.school
-    q = request.GET.get("q", "").strip()
-    students = []
-    if q and len(q) >= 2:
+    query = request.GET.get("q", "").strip()
+
+    results = {
+        "students": [],
+        "staff": [],
+        "exams": [],
+        "invoices": []
+    }
+    total = 0
+
+    if query and len(query) >= 2:
+        # Search students
         students = Student.objects.filter(
             school=school, is_active=True
         ).filter(
-            Q(first_name__icontains=q) |
-            Q(last_name__icontains=q) |
-            Q(admission_number__icontains=q)
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query) |
+            Q(admission_number__icontains=query)
         )[:20]
-    context = {"q": q, "students": students}
+        results["students"] = students
+        total += students.count()
+
+        # Search staff (teachers and admins)
+        staff = User.objects.filter(
+            school=school, is_active=True
+        ).filter(
+            Q(is_teacher=True) | Q(is_school_admin=True)
+        ).filter(
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query) |
+            Q(email__icontains=query)
+        )[:20]
+        results["staff"] = staff
+        total += staff.count()
+
+        # Search exams
+        exams = Exam.objects.filter(school=school).filter(
+            Q(name__icontains=query) |
+            Q(academic_year__year__icontains=query)
+        )[:20]
+        results["exams"] = exams
+        total += exams.count()
+
+        # Search invoices
+        invoices = FeeInvoice.objects.filter(school=school).filter(
+            Q(invoice_number__icontains=query) |
+            Q(student__first_name__icontains=query) |
+            Q(student__last_name__icontains=query) |
+            Q(student__admission_number__icontains=query)
+        )[:20]
+        results["invoices"] = invoices
+        total += invoices.count()
+
+    context = {
+        "query": query,
+        "results": results,
+        "total": total
+    }
     return render(request, "schools/search_results.html", context)
+
+# ── TEACHER DASHBOARD ──────────────────────────────────────────────────────
+
+@teacher_required
+def teacher_dashboard(request):
+    school = request.user.school
+
+    total_students = Student.objects.filter(school=school, is_active=True).count()
+    total_streams = Stream.objects.filter(school=school).count()
+    total_exams = Exam.objects.filter(school=school).count()
+
+    streams = Stream.objects.filter(school=school).order_by(
+        'class_level__level_order', 'name'
+    ).prefetch_related('students')
+
+    stream_data = []
+    for s in streams:
+        count = s.students.filter(is_active=True).count()
+        stream_data.append({'stream': s, 'count': count})
+
+    recent_students = Student.objects.filter(
+        school=school, is_active=True
+    ).order_by('-created_at')[:10]
+
+    recent_exams = Exam.objects.filter(school=school).order_by('-created_at')[:5]
+
+    grade_labels = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'E']
+    grade_counts = [
+        ExamResult.objects.filter(exam__school=school, grade=g).count()
+        for g in grade_labels
+    ]
+
+    context = {
+        "school": school,
+        "total_students": total_students,
+        "total_streams": total_streams,
+        "total_exams": total_exams,
+        "stream_data": stream_data,
+        "recent_students": recent_students,
+        "recent_exams": recent_exams,
+        "grade_labels_json": json.dumps(grade_labels),
+        "grade_counts_json": json.dumps(grade_counts),
+        # No fee data — teachers never see money
+    }
+    return render(request, "schools/teacher_dashboard.html", context)
 
 
 # â”€â”€ KCSE UPLOAD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€

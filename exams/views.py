@@ -26,7 +26,7 @@ def exam_detail(request, pk):
     # Get exam statistics
     total_students = exam.streams.count() * 40  # Rough estimate
     submitted_results = ExamResult.objects.filter(exam=exam).values('student').distinct().count()
-    total_subjects = exam.subjects.count()
+    total_subjects = ExamResult.objects.filter(exam=exam).values('subject').distinct().count()
 
     context = {
         "exam": exam,
@@ -100,6 +100,23 @@ def exam_publish(request, pk):
             exam.is_published = False
             exam.save()
             messages.success(request, f"Exam '{exam.name}' unpublished!")
+
+    return redirect("exam_detail", pk=exam.id)
+
+
+@admin_required
+def exam_delete(request, pk):
+    school = request.user.school
+    exam = get_object_or_404(Exam, id=pk, school=school)
+
+    if request.method == "POST":
+        if not exam.is_published:
+            exam_name = exam.name
+            exam.delete()
+            messages.success(request, f"Exam '{exam_name}' deleted successfully!")
+            return redirect("exam_list")
+        else:
+            messages.error(request, "Cannot delete a published exam. Unpublish it first.")
 
     return redirect("exam_detail", pk=exam.id)
 

@@ -109,7 +109,7 @@
                             </td>
                             <td style="padding:0.8rem 1rem;">{{ report.subjects_sat }}</td>
                             <td style="padding:0.8rem 1rem;color:{% if report.fee_balance > 0 %}#e74c3c{% else %}#2ecc71{% endif %};font-weight:600;">
-                                KES {{ report.fee_balance|floatformat:0 }}
+                                KES {{ report.fee_balance|intcomma }}
                             </td>
                             <td style="padding:0.8rem 1rem;">
                                 <a href="{% url 'report_card_view' report.id %}" class="btn btn-sm" style="background:#f0f8ff;color:#3498db;border-radius:8px;" target="_blank">
