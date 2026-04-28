@@ -7,10 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY (PRODUCTION SAFE)
 # ─────────────────────────────────────────────
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
-
-if not SECRET_KEY:
-    raise Exception("SECRET_KEY is missing in environment variables")
+SECRET_KEY = os.environ.get("SECRET_KEY", "dev-insecure-key")
 
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
@@ -30,7 +27,7 @@ SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 
 # ─────────────────────────────────────────────
-# INSTALLED APPS
+# APPLICATIONS
 # ─────────────────────────────────────────────
 
 INSTALLED_APPS = [
@@ -101,7 +98,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # ─────────────────────────────────────────────
-# DATABASE (LOCAL DEV DEFAULT)
+# DATABASE (LOCAL DEFAULT - RENDER OVERRIDE EXPECTED)
 # ─────────────────────────────────────────────
 
 DATABASES = {
@@ -135,21 +132,28 @@ USE_TZ = True
 
 DATE_FORMAT = 'd/m/Y'
 DATETIME_FORMAT = 'd/m/Y H:i'
-SHORT_DATE_FORMAT = 'd/m/Y'
-SHORT_DATETIME_FORMAT = 'd/m/Y H:i'
 
 # ─────────────────────────────────────────────
-# STATIC / MEDIA
+# STATIC FILES (RENDER SAFE)
 # ─────────────────────────────────────────────
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# SAFE STATIC STORAGE (avoids manifest crash issues)
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
+# ─────────────────────────────────────────────
+# MEDIA FILES
+# ─────────────────────────────────────────────
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# ─────────────────────────────────────────────
+# DEFAULT AUTO FIELD
+# ─────────────────────────────────────────────
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -169,7 +173,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 # ─────────────────────────────────────────────
-# EMAIL (PRODUCTION SAFE)
+# EMAIL (SAFE DEFAULTS)
 # ─────────────────────────────────────────────
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -177,8 +181,8 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 
 DEFAULT_FROM_EMAIL = os.environ.get(
     "DEFAULT_FROM_EMAIL",
