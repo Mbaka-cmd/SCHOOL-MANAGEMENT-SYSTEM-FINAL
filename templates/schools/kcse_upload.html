@@ -1,5 +1,5 @@
-{% extends "base.html" %}
-{% block title %}KCSE Results Manager — {{ school.name }}{% endblock %}
+ï»¿{% extends "base.html" %}
+{% block title %}KCSE Results Manager â€” {{ school.name }}{% endblock %}
 {% block content %}
 
 <section style="background:linear-gradient(135deg,#C0392B,#922B21);padding:2rem 0;color:white;">
@@ -7,7 +7,7 @@
         <div class="row align-items-center">
             <div class="col">
                 <h4 style="font-weight:800;margin:0;"><i class="bi bi-award-fill me-2"></i>KCSE Results Manager</h4>
-                <p style="opacity:0.75;margin:0;font-size:0.9rem;">{{ school.name }} — Upload & Manage Results</p>
+                <p style="opacity:0.75;margin:0;font-size:0.9rem;">{{ school.name }} â€” Upload & Manage Results</p>
             </div>
             <div class="col-auto">
                 <a href="{% url 'admin_dashboard' %}" class="btn" style="background:rgba(255,255,255,0.15);color:white;border-radius:20px;"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
@@ -104,10 +104,10 @@
                             <td><strong>{{ r.year }}</strong></td>
                             <td>{{ r.candidates_sat }}</td>
                             <td><strong style="color:#C0392B;">{{ r.mean_grade }}</strong></td>
-                            <td>{{ r.mean_points|default:"—" }}</td>
+                            <td>{{ r.mean_points|default:"â€”" }}</td>
                             <td>{{ r.university_qualifiers }}</td>
                             <td>{{ r.pass_rate }}%</td>
-                            <td style="font-size:0.8rem;">{{ r.top_student_name|default:"—" }}</td>
+                            <td style="font-size:0.8rem;">{{ r.top_student_name|default:"â€”" }}</td>
                             <td>
                                 {% if r.is_published %}
                                 <span style="background:#f0fff5;color:#27ae60;padding:2px 10px;border-radius:20px;font-size:0.8rem;font-weight:600;">Published</span>
@@ -130,6 +130,7 @@
     </div>
 </section>
 {% endblock %}
+
 
 
 

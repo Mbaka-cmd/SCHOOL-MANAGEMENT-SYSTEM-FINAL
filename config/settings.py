@@ -197,3 +197,6 @@ DEFAULT_FROM_EMAIL = os.environ.get(
 
 AT_USERNAME = os.environ.get('AT_USERNAME', 'sandbox')
 AT_API_KEY = os.environ.get('AT_API_KEY', '')
+
+FILE_CHARSET = "utf-8"
+DEFAULT_CHARSET = "utf-8"

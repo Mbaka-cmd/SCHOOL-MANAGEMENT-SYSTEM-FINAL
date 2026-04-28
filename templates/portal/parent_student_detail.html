@@ -1,11 +1,11 @@
-{% extends "base.html" %}
+ï»¿{% extends "base.html" %}
 {% block title %}Student Details{% endblock %}
 {% block content %}
 <section style="background:linear-gradient(135deg,#2ecc71,#27ae60);padding:2rem 0;color:white;">
     <div class="container">
         <a href="{% url 'parent_dashboard' %}" style="color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.85rem;"><i class="bi bi-arrow-left me-1"></i>Back to Dashboard</a>
         <h4 style="font-weight:800;margin:0.3rem 0 0;">{{ student.get_full_name }}</h4>
-        <p style="opacity:0.75;margin:0;">{{ student.current_stream.full_name|default:"—" }} · Adm: {{ student.admission_number }}</p>
+        <p style="opacity:0.75;margin:0;">{{ student.current_stream.full_name|default:"â€”" }}  Adm: {{ student.admission_number }}</p>
     </div>
 </section>
 <section style="padding:2rem 0 4rem;background:#f8f9fa;">
@@ -49,5 +49,6 @@
     </div>
 </section>
 {% endblock %}
+
 
 

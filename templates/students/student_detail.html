@@ -1,5 +1,5 @@
-{% extends "base.html" %}
-{% block title %}{{ student.get_full_name }} — {{ request.user.school.name }}{% endblock %}
+ï»¿{% extends "base.html" %}
+{% block title %}{{ student.get_full_name }} â€” {{ request.user.school.name }}{% endblock %}
 
 {% block content %}
 
@@ -45,7 +45,7 @@
                         <tr><td style="color:#666; width:40%;">Full Name</td><td style="font-weight:600;">{{ student.get_full_name }}</td></tr>
                         <tr><td style="color:#666;">Date of Birth</td><td style="font-weight:600;">{{ student.date_of_birth }}</td></tr>
                         <tr><td style="color:#666;">Gender</td><td style="font-weight:600;">{{ student.get_gender_display }}</td></tr>
-                        <tr><td style="color:#666;">NEMIS No.</td><td style="font-weight:600;">{{ student.nemis_number|default:"—" }}</td></tr>
+                        <tr><td style="color:#666;">NEMIS No.</td><td style="font-weight:600;">{{ student.nemis_number|default:"â€”" }}</td></tr>
                     </table>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                         <tr><td style="color:#666; width:40%;">Admission No.</td><td style="font-weight:600;">{{ student.admission_number }}</td></tr>
                         <tr><td style="color:#666;">Admission Date</td><td style="font-weight:600;">{{ student.admission_date }}</td></tr>
                         <tr><td style="color:#666;">Current Stream</td><td style="font-weight:600;">{{ student.current_stream.full_name|default:"Not assigned" }}</td></tr>
-                        <tr><td style="color:#666;">KCPE Marks</td><td style="font-weight:600;">{{ student.kcpe_marks|default:"—" }}</td></tr>
+                        <tr><td style="color:#666;">KCPE Marks</td><td style="font-weight:600;">{{ student.kcpe_marks|default:"â€”" }}</td></tr>
                         <tr><td style="color:#666;">Status</td>
                             <td><span style="background:#f0fff5; color:#2ecc71; padding:3px 10px; border-radius:20px; font-size:0.8rem; font-weight:600;">{{ student.get_status_display }}</span></td>
                         </tr>
@@ -84,7 +84,7 @@
                                 {% endif %}
                             </td>
                         </tr>
-                        <tr><td style="color:#666;">Dormitory</td><td style="font-weight:600;">{{ student.dormitory|default:"—" }}</td></tr>
+                        <tr><td style="color:#666;">Dormitory</td><td style="font-weight:600;">{{ student.dormitory|default:"â€”" }}</td></tr>
                     </table>
                 </div>
             </div>
@@ -93,4 +93,5 @@
 </section>
 
 {% endblock %}
+
 

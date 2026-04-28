@@ -1,5 +1,5 @@
-{% extends "base.html" %}
-{% block title %}{{ post.title }} — {{ school.name }}{% endblock %}
+﻿{% extends "base.html" %}
+{% block title %}{{ post.title }} €” {{ school.name }}{% endblock %}
 {% block content %}
 
 <!-- PAGE HEADER -->
@@ -17,8 +17,8 @@
         <h1 style="font-weight:800;margin-top:0.5rem;">{{ post.title }}</h1>
         <p style="opacity:0.75;margin:0;">
             <i class="bi bi-calendar3 me-1"></i>{{ post.created_at|date:"F d, Y" }}
-            {% if post.posted_by %} · <i class="bi bi-person me-1"></i>{{ post.posted_by.get_full_name }}{% endif %}
-            {% if post.expires_at %} · <i class="bi bi-clock me-1"></i>Expires: {{ post.expires_at|date:"M d, Y" }}{% endif %}
+            {% if post.posted_by %}  <i class="bi bi-person me-1"></i>{{ post.posted_by.get_full_name }}{% endif %}
+            {% if post.expires_at %}  <i class="bi bi-clock me-1"></i>Expires: {{ post.expires_at|date:"M d, Y" }}{% endif %}
         </p>
     </div>
 </section>
@@ -95,3 +95,4 @@
 </section>
 
 {% endblock %}
+

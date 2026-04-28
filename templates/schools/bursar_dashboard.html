@@ -1,6 +1,6 @@
-{% extends "base.html" %}
+ï»¿{% extends "base.html" %}
 {% load static %}
-{% block title %}Bursar Dashboard — {{ school.name }}{% endblock %}
+{% block title %}Bursar Dashboard â€” {{ school.name }}{% endblock %}
 {% block content %}
 
 <!-- HEADER -->
@@ -9,7 +9,7 @@
         <div class="row align-items-center">
             <div class="col">
                 <h4 style="font-weight:800;margin:0;"><i class="bi bi-cash-stack me-2"></i>Bursar Dashboard</h4>
-                <p style="opacity:0.75;margin:0;font-size:0.9rem;">{{ school.name }} — Fee Management & Collections</p>
+                <p style="opacity:0.75;margin:0;font-size:0.9rem;">{{ school.name }} â€” Fee Management & Collections</p>
             </div>
             <div class="col-auto d-flex gap-2 flex-wrap">
                 <a href="{% url 'invoice_list' %}" class="btn" style="background:rgba(255,255,255,0.15);color:white;border-radius:20px;"><i class="bi bi-receipt me-1"></i>Invoices</a>
@@ -143,7 +143,7 @@
                                 <tr>
                                     <td><strong>{{ inv.student.get_full_name }}</strong></td>
                                     <td><span style="background:#f0f0f0;padding:2px 8px;border-radius:10px;font-size:0.8rem;">{{ inv.student.admission_number }}</span></td>
-                                    <td>{{ inv.student.current_stream.full_name|default:"—" }}</td>
+                                    <td>{{ inv.student.current_stream.full_name|default:"â€”" }}</td>
                                     <td>KES {{ inv.total_expected|intcomma }}</td>
                                     <td>KES {{ inv.total_paid|intcomma }}</td>
                                     <td><strong style="color:#e74c3c;">KES {{ inv.balance|intcomma }}</strong></td>
@@ -206,4 +206,5 @@
     </div>
 </section>
 {% endblock %}
+
 

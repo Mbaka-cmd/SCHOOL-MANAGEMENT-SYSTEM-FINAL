@@ -1,5 +1,5 @@
-{% extends "base.html" %}
-{% block title %}Students — {{ request.user.school.name }}{% endblock %}
+ï»¿{% extends "base.html" %}
+{% block title %}Students â€” {{ request.user.school.name }}{% endblock %}
 
 {% block content %}
 
@@ -134,7 +134,7 @@
                                 {% endif %}
                             </td>
                             <td style="padding:0.9rem 1rem; font-size:0.9rem;">
-                                {{ student.kcpe_marks|default:"—" }}
+                                {{ student.kcpe_marks|default:"â€”" }}
                             </td>
                             <td style="padding:0.9rem 1rem;">
                                 <span style="background:{% if student.status == 'active' %}#f0fff5; color:#2ecc71;{% else %}#fff8f0; color:#e67e22;{% endif %} padding:3px 10px; border-radius:20px; font-size:0.8rem; font-weight:600;">
@@ -175,5 +175,6 @@
 </section>
 
 {% endblock %}
+
 
 

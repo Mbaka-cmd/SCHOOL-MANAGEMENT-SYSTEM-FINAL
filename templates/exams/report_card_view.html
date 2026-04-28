@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+ï»¿{% extends "base.html" %}
 {% load static %}
 {% block title %}Report Card - {{ report.student.get_full_name }}{% endblock %}
 
@@ -95,14 +95,14 @@
             <div class="col-md-6">
                 <div style="background:#f8f9fa;border-radius:10px;padding:1rem;">
                     <p style="font-weight:700;margin-bottom:0.5rem;font-size:0.9rem;">Class Teacher's Remarks:</p>
-                    <p style="color:#666;font-size:0.9rem;min-height:40px;">{{ report.class_teacher_remarks|default:"——" }}</p>
+                    <p style="color:#666;font-size:0.9rem;min-height:40px;">{{ report.class_teacher_remarks|default:"â€”â€”" }}</p>
                     <p style="font-weight:600;font-size:0.85rem;border-top:1px solid #ddd;padding-top:0.5rem;margin:0;">Signature: _______________</p>
                 </div>
             </div>
             <div class="col-md-6">
                 <div style="background:#f8f9fa;border-radius:10px;padding:1rem;">
                     <p style="font-weight:700;margin-bottom:0.5rem;font-size:0.9rem;">Principal's Remarks:</p>
-                    <p style="color:#666;font-size:0.9rem;min-height:40px;">{{ report.principal_remarks|default:"——" }}</p>
+                    <p style="color:#666;font-size:0.9rem;min-height:40px;">{{ report.principal_remarks|default:"â€”â€”" }}</p>
                     <p style="font-weight:600;font-size:0.85rem;border-top:1px solid #ddd;padding-top:0.5rem;margin:0;">Signature: _______________</p>
                 </div>
             </div>
@@ -137,7 +137,7 @@
         <div style="background:{% if report.fee_balance > 0 %}#fff0f0{% else %}#f0fff5{% endif %};border-radius:10px;padding:1rem;text-align:center;margin-bottom:1.5rem;">
             <span style="font-weight:700;color:{% if report.fee_balance > 0 %}#C0392B{% else %}#2ecc71{% endif %};">
                 Fee Balance: KES {{ report.fee_balance|intcomma }}
-                {% if report.fee_balance > 0 %}— Please clear fees before next term{% else %}— Fully Paid âœ“{% endif %}
+                {% if report.fee_balance > 0 %}â€” Please clear fees before next term{% else %}â€” Fully Paid Å“â€œ{% endif %}
             </span>
         </div>
 
@@ -205,6 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 {% endblock %}
+
 
 
 

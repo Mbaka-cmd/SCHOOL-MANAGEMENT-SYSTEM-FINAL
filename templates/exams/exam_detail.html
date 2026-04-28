@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+ï»¿{% extends "base.html" %}
 {% block title %}{{ exam.name }}{% endblock %}
 {% block content %}
 <section style="background:linear-gradient(135deg,#C0392B,#922B21);padding:2rem 0;color:white;">
@@ -7,8 +7,8 @@
             <div class="col">
                 <h4 style="font-weight:800;margin:0;">{{ exam.name }}</h4>
                 <p style="opacity:0.75;margin:0;font-size:0.9rem;">
-                    {{ exam.get_exam_type_display }} &nbsp;·&nbsp; {{ exam.academic_year.year }}
-                    {% if exam.term %} &nbsp;·&nbsp; {{ exam.term.name }}{% endif %}
+                    {{ exam.get_exam_type_display }} &nbsp;&nbsp; {{ exam.academic_year.year }}
+                    {% if exam.term %} &nbsp;&nbsp; {{ exam.term.name }}{% endif %}
                 </p>
             </div>
             <div class="col-auto d-flex gap-2">
@@ -112,4 +112,5 @@
     </div>
 </section>
 {% endblock %}
+
 

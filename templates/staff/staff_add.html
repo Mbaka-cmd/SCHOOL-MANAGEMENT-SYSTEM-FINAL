@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+ï»¿{% extends "base.html" %}
 {% block title %}Add Teacher{% endblock %}
 {% block content %}
 <section style="background:linear-gradient(135deg,#C0392B,#922B21);padding:2rem 0;color:white;">
@@ -44,7 +44,7 @@
                             <div class="col-12">
                                 <label class="form-label fw-semibold">Class Teacher Assignment</label>
                                 <select name="class_teacher_stream" class="form-control">
-                                    <option value="">— Not a class teacher —</option>
+                                    <option value="">â€” Not a class teacher â€”</option>
                                     {% for stream in streams %}
                                     <option value="{{ stream.id }}">{{ stream.full_name }}</option>
                                     {% endfor %}
@@ -70,3 +70,4 @@
     </div>
 </section>
 {% endblock %}
+

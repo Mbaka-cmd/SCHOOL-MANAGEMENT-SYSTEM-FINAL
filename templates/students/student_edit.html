@@ -1,5 +1,5 @@
-{% extends "base.html" %}
-{% block title %}Edit {{ student.get_full_name }} — {{ request.user.school.name }}{% endblock %}
+ï»¿{% extends "base.html" %}
+{% block title %}Edit {{ student.get_full_name }} â€” {{ request.user.school.name }}{% endblock %}
 
 {% block content %}
 
@@ -11,7 +11,7 @@
                 <h4 style="font-weight:800; margin:0;">
                     <i class="bi bi-pencil-fill me-2"></i>Edit Student
                 </h4>
-                <p style="opacity:0.75; margin:0; font-size:0.9rem;">{{ student.get_full_name }} — {{ student.admission_number }}</p>
+                <p style="opacity:0.75; margin:0; font-size:0.9rem;">{{ student.get_full_name }} â€” {{ student.admission_number }}</p>
             </div>
             <div class="col-auto">
                 <a href="{% url 'student_detail' student.id %}" class="btn" style="background:rgba(255,255,255,0.15); color:white; border-radius:20px;">
@@ -118,4 +118,5 @@
 </section>
 
 {% endblock %}
+
 

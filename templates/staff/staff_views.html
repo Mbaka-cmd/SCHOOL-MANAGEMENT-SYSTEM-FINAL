@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+ï»¿from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.mail import send_mail
 from accounts.models import User
@@ -133,11 +133,11 @@ def send_timetable(request, pk):
                 timetable_text += f"{day.upper()}:\n"
                 for entry in day_entries:
                     teacher_name = entry.teacher.get_full_name() if entry.teacher else "TBA"
-                    timetable_text += f"  Period {entry.period}: {entry.subject.name} — {teacher_name}\n"
+                    timetable_text += f"  Period {entry.period}: {entry.subject.name} â€” {teacher_name}\n"
                 timetable_text += "\n"
 
         send_mail(
-            subject=f"Class Timetable — {stream.full_name} — {school.name}",
+            subject=f"Class Timetable â€” {stream.full_name} â€” {school.name}",
             message=timetable_text,
             from_email=f"{school.name} <mercykathomi428@gmail.com>",
             recipient_list=[teacher.email],
@@ -148,3 +148,4 @@ def send_timetable(request, pk):
         messages.error(request, f"Error sending timetable: {e}")
 
     return redirect("staff_list")
+
