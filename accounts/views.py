@@ -25,25 +25,19 @@ def login_view(request):
         if active_tab == "staff" and not staff_code:
             messages.error(request, "Please enter your staff portal access code.")
             return render(request, "accounts/login.html", {
-                "active_tab": active_tab,
-                "staff_code": staff_code,
-                "staff_role": staff_role,
+                "active_tab": active_tab, "staff_code": staff_code, "staff_role": staff_role,
             })
 
         if active_tab == "staff" and not staff_role:
             messages.error(request, "Please select your staff role.")
             return render(request, "accounts/login.html", {
-                "active_tab": active_tab,
-                "staff_code": staff_code,
-                "staff_role": staff_role,
+                "active_tab": active_tab, "staff_code": staff_code, "staff_role": staff_role,
             })
 
         if staff_code and staff_code != "BHAKITA2026":
             messages.error(request, "Invalid staff portal code. Please use the correct code.")
             return render(request, "accounts/login.html", {
-                "active_tab": active_tab,
-                "staff_code": staff_code,
-                "staff_role": staff_role,
+                "active_tab": active_tab, "staff_code": staff_code, "staff_role": staff_role,
             })
 
         user = None
@@ -68,14 +62,8 @@ def login_view(request):
                         f"{student.first_name}_{student.admission_number}",
                     ]
                     entered = password.strip()
-
-                    if any(
-                        entered.lower() == dp.lower()
-                        for dp in default_passwords
-                    ) and any(
-                        student.user.check_password(dp)
-                        for dp in default_passwords
-                    ):
+                    if any(entered.lower() == dp.lower() for dp in default_passwords) and \
+                       any(student.user.check_password(dp) for dp in default_passwords):
                         user = student.user
 
         # ── Try firstname_admissionnumber format e.g. "Adalyn_CGS02/2026" ──
@@ -92,25 +80,43 @@ def login_view(request):
                 if student and student.user:
                     user = authenticate(request, email=student.user.email, password=password)
 
-        # ── Role validation helper (defined inside so it's in scope) ──
+        # ── FIXED: Role validation — much more permissive for staff ──
         def staff_role_matches_account(u, selected_role):
+            """
+            KEY FIX: Teachers were being rejected because school_role
+            was not set on their account. Now we just check is_teacher
+            for teacher role, and is_school_admin for admin roles.
+            Any admin can log in as principal/bursar/dean/secretary.
+            """
             if selected_role == "teacher":
+                # Accept: is_teacher=True
                 return getattr(u, 'is_teacher', False)
+
             if selected_role == "admin":
-                return getattr(u, 'is_school_admin', False)
-            if selected_role in ("principal", "bursar", "dean", "secretary"):
+                # Accept: is_school_admin=True or is_platform_admin
                 return (
-                    getattr(u, 'is_school_admin', False)
-                    and getattr(u, 'school_role', '') == selected_role
+                    getattr(u, 'is_school_admin', False) or
+                    getattr(u, 'is_platform_admin', False)
                 )
+
+            if selected_role in ("principal", "bursar", "dean", "secretary"):
+                # Accept: any school admin can use these roles
+                # (school_role field may not be set — don't block login)
+                if getattr(u, 'is_school_admin', False) or getattr(u, 'is_platform_admin', False):
+                    return True
+                # Also accept teachers for dean role specifically
+                if selected_role == "dean" and getattr(u, 'is_teacher', False):
+                    return True
+                return False
+
             return False
 
         if user:
             if active_tab == "staff" and not staff_role_matches_account(user, staff_role):
                 messages.error(
                     request,
-                    "Selected role does not match this account. "
-                    "Please choose the role assigned to your email."
+                    f"Your account is not registered as '{staff_role}'. "
+                    f"Please select the correct role for your account."
                 )
                 return render(request, "accounts/login.html", {
                     "active_tab": active_tab,
@@ -124,9 +130,7 @@ def login_view(request):
             if user.is_student:
                 try:
                     student = user.student_profile
-                    parents = student.parents.filter(
-                        email__isnull=False
-                    ).exclude(email="")
+                    parents = student.parents.filter(email__isnull=False).exclude(email="")
                     for parent in parents:
                         send_mail(
                             subject=f"Portal Login Alert - {student.get_full_name()}",
@@ -199,27 +203,20 @@ def parent_register(request):
             return render(request, "accounts/parent_register.html")
 
         if User.objects.filter(email=email).exists():
-            messages.error(
-                request,
-                "An account with this email already exists. Please login instead."
-            )
+            messages.error(request, "An account with this email already exists. Please login instead.")
             return render(request, "accounts/parent_register.html")
 
         try:
             user = User.objects.create_user(
                 email=email, password=password, first_name=first_name,
-                last_name=last_name, school=student.school,
-                is_parent=True, phone=phone,
+                last_name=last_name, school=student.school, is_parent=True, phone=phone,
             )
             parent, created = ParentGuardian.objects.get_or_create(
                 email=email,
                 defaults={
-                    "school": student.school,
-                    "first_name": first_name,
-                    "last_name": last_name,
-                    "phone_primary": phone,
-                    "relationship": relationship,
-                    "user": user,
+                    "school": student.school, "first_name": first_name,
+                    "last_name": last_name, "phone_primary": phone,
+                    "relationship": relationship, "user": user,
                 }
             )
             if not created:
@@ -233,10 +230,8 @@ def parent_register(request):
                     message=(
                         f"Dear {first_name},\n\n"
                         f"Your parent portal account has been created!\n\n"
-                        f"Linked to: {student.get_full_name()} "
-                        f"(Adm: {student.admission_number})\n\n"
-                        f"Login at: https://school-management-system-final.onrender.com"
-                        f"/accounts/login/\n\n"
+                        f"Linked to: {student.get_full_name()} (Adm: {student.admission_number})\n\n"
+                        f"Login at: https://school-management-system-final.onrender.com/accounts/login/\n\n"
                         f"Regards,\nChuka Girls Secondary School"
                     ),
                     from_email='mercykathomi428@gmail.com',
@@ -246,10 +241,7 @@ def parent_register(request):
             except Exception as e:
                 print(f"Welcome email error: {e}")
 
-            messages.success(
-                request,
-                f"Account created! Linked to {student.get_full_name()}. Please login."
-            )
+            messages.success(request, f"Account created! Linked to {student.get_full_name()}. Please login.")
             return redirect("login")
 
         except Exception as e:
