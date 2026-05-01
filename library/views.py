@@ -75,3 +75,26 @@ def overdue_list(request):
     school = request.user.school
     overdue = BookBorrow.objects.filter(book__school=school, is_returned=False, due_date__lt=timezone.now().date()).select_related("student", "book").order_by("due_date")
     return render(request, "library/overdue_list.html", {"school": school, "overdue_records": overdue})
+
+
+@admin_required
+def add_book(request):
+    school = request.user.school
+    if request.method == "POST":
+        try:
+            copies = int(request.POST.get("copies", 1))
+            Book.objects.create(
+                school=school,
+                title=request.POST.get("title", "").strip(),
+                author=request.POST.get("author", "").strip(),
+                isbn=request.POST.get("isbn", "").strip(),
+                category=request.POST.get("category", "").strip(),
+                location=request.POST.get("location", "").strip(),
+                total_copies=copies,
+                available_copies=copies,
+            )
+            messages.success(request, "Book added successfully!")
+            return redirect("book_list")
+        except Exception as e:
+            messages.error(request, f"Error adding book: {e}")
+    return render(request, "library/add_book.html", {"school": school})
