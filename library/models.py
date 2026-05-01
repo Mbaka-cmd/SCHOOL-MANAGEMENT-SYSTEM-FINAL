@@ -104,3 +104,21 @@ def calculate_fine(self):
         return Decimal('0.00')
     daily_rate = Decimal('5.00')  # KES 5 per day
     return days * daily_rate
+import uuid
+from django.db import models
+
+
+class BookBorrow(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    book = models.ForeignKey("Book", on_delete=models.CASCADE, related_name="borrows")
+    student = models.ForeignKey("students.Student", on_delete=models.CASCADE, related_name="borrows")
+    borrowed_date = models.DateField(auto_now_add=True)
+    due_date = models.DateField()
+    is_returned = models.BooleanField(default=False)
+    returned_date = models.DateField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-borrowed_date"]
+
+    def __str__(self):
+        return f"{self.student} — {self.book.title}"
