@@ -1,7 +1,8 @@
 ﻿from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
-from .models import Book, BookBorrow
+from datetime import timedelta
+from .models import Book, BorrowRecord
 from schools.views import admin_required
 
 
@@ -9,14 +10,22 @@ from schools.views import admin_required
 def library_dashboard(request):
     school = request.user.school
     books = Book.objects.filter(school=school)
-    active_borrows = BookBorrow.objects.filter(book__school=school, is_returned=False).select_related("student", "book")
-    overdue = active_borrows.filter(due_date__lt=timezone.now().date()).count()
+    # Refresh overdue statuses
+    for r in BorrowRecord.objects.filter(school=school, status='borrowed'):
+        if timezone.now() > r.due_at:
+            r.save()
+    active_borrows = BorrowRecord.objects.filter(
+        school=school, status__in=["borrowed", "overdue"]
+    ).select_related("student", "book")
+    overdue_count = BorrowRecord.objects.filter(school=school, status="overdue").count()
+    total_fines = sum(r.fine_amount for r in BorrowRecord.objects.filter(school=school, status="overdue", fine_paid=False))
     return render(request, "library/dashboard.html", {
         "school": school,
         "total_books": books.count(),
         "active_borrows": active_borrows[:20],
         "active_count": active_borrows.count(),
-        "overdue_count": overdue,
+        "overdue_count": overdue_count,
+        "total_fines": total_fines,
     })
 
 
@@ -37,28 +46,36 @@ def borrow_book(request):
         try:
             book = Book.objects.get(id=request.POST.get("book_id"), school=school)
             student = Student.objects.get(id=request.POST.get("student_id"), school=school)
-            due_date = timezone.now().date() + timezone.timedelta(days=int(request.POST.get("due_days", 14)))
-            BookBorrow.objects.create(book=book, student=student, due_date=due_date)
+            due_days = int(request.POST.get("due_days", 3))
+            due_at = timezone.now() + timedelta(days=due_days)
+            BorrowRecord.objects.create(
+                school=school,
+                book=book,
+                student=student,
+                due_at=due_at,
+            )
             book.available_copies = max(0, book.available_copies - 1)
             book.save()
             messages.success(request, f"'{book.title}' borrowed by {student.get_full_name()}!")
             return redirect("library_dashboard")
         except Exception as e:
             messages.error(request, f"Error: {e}")
-    return render(request, "library/borrow_book.html", {"school": school, "books": books, "students": students})
+    return render(request, "library/borrow_book.html", {
+        "school": school, "books": books, "students": students
+    })
 
 
 @admin_required
 def return_book(request, pk):
     school = request.user.school
-    record = get_object_or_404(BookBorrow, id=pk, book__school=school)
+    record = get_object_or_404(BorrowRecord, id=pk, school=school)
     if request.method == "POST":
-        record.is_returned = True
-        record.returned_date = timezone.now().date()
+        record.returned_at = timezone.now()
+        record.status = "returned"
         record.save()
         record.book.available_copies += 1
         record.book.save()
-        messages.success(request, f"'{record.book.title}' returned!")
+        messages.success(request, f"'{record.book.title}' returned successfully!")
         return redirect("library_dashboard")
     return render(request, "library/return_book.html", {"record": record, "school": school})
 
@@ -66,15 +83,27 @@ def return_book(request, pk):
 @admin_required
 def manage_returns(request):
     school = request.user.school
-    active_borrows = BookBorrow.objects.filter(book__school=school, is_returned=False).select_related("student", "book").order_by("due_date")
-    return render(request, "library/manage_returns.html", {"school": school, "active_borrows": active_borrows})
+    active_borrows = BorrowRecord.objects.filter(
+        school=school, status__in=["borrowed", "overdue"]
+    ).select_related("student", "book").order_by("due_at")
+    return render(request, "library/manage_returns.html", {
+        "school": school, "active_borrows": active_borrows
+    })
 
 
 @admin_required
 def overdue_list(request):
     school = request.user.school
-    overdue = BookBorrow.objects.filter(book__school=school, is_returned=False, due_date__lt=timezone.now().date()).select_related("student", "book").order_by("due_date")
-    return render(request, "library/overdue_list.html", {"school": school, "overdue_records": overdue})
+    # Refresh statuses first
+    for r in BorrowRecord.objects.filter(school=school, status='borrowed'):
+        if timezone.now() > r.due_at:
+            r.save()
+    overdue_records = BorrowRecord.objects.filter(
+        school=school, status="overdue"
+    ).select_related("student", "book").order_by("due_at")
+    return render(request, "library/overdue_list.html", {
+        "school": school, "overdue_records": overdue_records
+    })
 
 
 @admin_required
@@ -88,8 +117,8 @@ def add_book(request):
                 title=request.POST.get("title", "").strip(),
                 author=request.POST.get("author", "").strip(),
                 isbn=request.POST.get("isbn", "").strip(),
-                category=request.POST.get("category", "").strip(),
-                location=request.POST.get("location", "").strip(),
+                category=request.POST.get("category", "textbook").strip(),
+                shelf_location=request.POST.get("location", "").strip(),
                 total_copies=copies,
                 available_copies=copies,
             )

@@ -203,19 +203,30 @@ def student_bulk_import(request):
                     continue
 
                 try:
-                    admission_number = str(row[0]).strip() if row[0] else None
-                    first_name = str(row[1]).strip() if row[1] else None
-                    last_name = str(row[2]).strip() if row[2] else None
-                    middle_name = str(row[3]).strip() if row[3] else ''
-                    gender = str(row[4]).strip().lower() if row[4] else 'female'
-                    dob = row[5]
-                    stream_name = str(row[6]).strip() if row[6] else None
-                    kcpe_marks = row[7] if row[7] else None
-                    admission_date = row[8] if row[8] else None
-                    is_boarder = str(row[9]).strip().lower() in ['yes', 'true', '1'] if row[9] else False
+                    # --- SAFE COLUMN ACCESS (handles missing columns) ---
+                    def get_val(index, default=None):
+                        """Safely get value by index, return default if out of range or empty"""
+                        if index >= len(row):
+                            return default
+                        val = row[index]
+                        if val is None or val == '':
+                            return default
+                        return val
+
+                    admission_number = str(get_val(0)).strip() if get_val(0) else None
+                    first_name = str(get_val(1)).strip() if get_val(1) else None
+                    last_name = str(get_val(2)).strip() if get_val(2) else None
+                    middle_name = str(get_val(3, '')).strip()
+                    gender = str(get_val(4, 'female')).strip().lower()
+                    dob = get_val(5)
+                    stream_name = str(get_val(6)).strip() if get_val(6) else None
+                    kcpe_marks = get_val(7)
+                    admission_date = get_val(8)
+                    is_boarder_val = get_val(9)
+                    is_boarder = str(is_boarder_val).strip().lower() in ['yes', 'true', '1'] if is_boarder_val is not None else False
 
                     if not admission_number or not first_name or not last_name:
-                        errors.append(f"Row {row_num}: Missing required fields (admission number, first name, last name)")
+                        errors.append(f"Row {row_num}: Missing required fields")
                         skipped += 1
                         continue
 

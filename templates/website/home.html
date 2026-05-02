@@ -5,7 +5,7 @@
 {% block content %}
 
 <!-- HERO SECTION -->
-<section style="background-image:url('{% static "BACKGROUND BHAKITA.jpeg" %}');background-size:cover;background-position:center;background-repeat:no-repeat;min-height:90vh;display:flex;align-items:center;position:relative;overflow:hidden;">
+<section style="background-image:url('{% static "background_bhakita.jpeg" %}');background-size:cover;background-position:center;background-repeat:no-repeat;min-height:90vh;display:flex;align-items:center;position:relative;overflow:hidden;">
     <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,rgba(192,57,43,0.75) 0%,rgba(26,26,26,0.85) 100%);"></div>
     <div class="container py-3 py-lg-5" style="position:relative;z-index:2;">
         <div class="row align-items-center">
@@ -234,7 +234,7 @@
                     <div class="text-center">
                         <p style="color:rgba(255,255,255,0.7);font-size:0.85rem;margin-bottom:0.8rem;">Logged in as <strong style="color:white;">{{ request.user.get_full_name }}</strong></p>
                         <div class="d-flex gap-2 justify-content-center flex-wrap">
-                            {% if request.user.is_school_admin or request.user.is_teacher %}
+                            {% if request.user.is_school_admin or request.user.is_teacher or request.user.is_superuser %}
                             <a href="{% url 'admin_dashboard' %}" class="btn btn-sm" style="background:#C0392B;color:white;border-radius:20px;padding:0.4rem 1.2rem;"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
                             {% elif request.user.is_student %}
                             <a href="{% url 'student_dashboard' %}" class="btn btn-sm" style="background:#C0392B;color:white;border-radius:20px;padding:0.4rem 1.2rem;"><i class="bi bi-mortarboard-fill me-1"></i>My Portal</a>

@@ -1,38 +1,102 @@
-﻿{% extends 'base.html' %}
-{% block title %}Library - Chuka Girls{% endblock %}
+﻿{% extends "base.html" %}
+{% block title %}Library — {{ school.name }}{% endblock %}
 {% block content %}
+
 <div style="background:linear-gradient(135deg,#8B1A1A,#c0392b);padding:2rem;color:white;margin-bottom:2rem;">
   <div style="max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
     <div>
-      <h1 style="margin:0;font-size:1.8rem;">?? Library Management</h1>
-      <p style="margin:0.3rem 0 0;opacity:0.85;">Track books, borrowing & fines</p>
+      <h1 style="margin:0;font-size:1.8rem;"><i class="bi bi-book-fill me-2"></i>Library Management</h1>
+      <p style="margin:0.3rem 0 0;opacity:0.85;">Track books, borrowing &amp; fines</p>
     </div>
     <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
-      <a href="{% url 'add_book' %}" style="background:white;color:#8B1A1A;padding:0.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:600;">+ Add Book</a>
-      <a href="{% url 'borrow_book' %}" style="background:rgba(255,255,255,0.2);color:white;padding:0.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:600;">?? Borrow</a>
-      <a href="{% url 'manage_returns' %}" style="background:rgba(255,255,255,0.2);color:white;padding:0.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:600;">?? Returns</a>
-      <a href="{% url 'overdue_list' %}" style="background:rgba(255,255,255,0.2);color:white;padding:0.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:600;">?? Overdue</a>
-      <a href="{% url 'book_list' %}" style="background:rgba(255,255,255,0.2);color:white;padding:0.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:600;">?? All Books</a>
+      <a href="{% url 'add_book' %}" style="background:white;color:#8B1A1A;padding:0.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:600;"><i class="bi bi-plus-circle-fill me-1"></i>Add Book</a>
+      <a href="{% url 'borrow_book' %}" style="background:rgba(255,255,255,0.2);color:white;padding:0.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:600;"><i class="bi bi-box-arrow-right me-1"></i>Borrow</a>
+      <a href="{% url 'manage_returns' %}" style="background:rgba(255,255,255,0.2);color:white;padding:0.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:600;"><i class="bi bi-arrow-return-left me-1"></i>Returns</a>
+      <a href="{% url 'overdue_list' %}" style="background:rgba(255,255,255,0.2);color:white;padding:0.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:600;"><i class="bi bi-exclamation-triangle-fill me-1"></i>Overdue</a>
+      <a href="{% url 'book_list' %}" style="background:rgba(255,255,255,0.2);color:white;padding:0.6rem 1.2rem;border-radius:8px;text-decoration:none;font-weight:600;"><i class="bi bi-collection-fill me-1"></i>All Books</a>
     </div>
   </div>
 </div>
+
 <div style="max-width:1200px;margin:0 auto;padding:0 1rem;">
-  {% if messages %}{% for message in messages %}<div style="padding:1rem;border-radius:8px;margin-bottom:1rem;background:{% if message.tags == 'error' %}#fff0f0;border:1px solid #e74c3c;color:#c0392b{% elif message.tags == 'warning' %}#fff8e1;border:1px solid #f39c12;color:#e67e22{% else %}#f0fff5;border:1px solid #2ecc71;color:#27ae60{% endif %};">{{ message }}</div>{% endfor %}{% endif %}
+
+  {% if messages %}
+    {% for message in messages %}
+    <div style="padding:1rem;border-radius:8px;margin-bottom:1rem;background:{% if message.tags == 'error' %}#fff0f0;border:1px solid #e74c3c;color:#c0392b{% elif message.tags == 'warning' %}#fff8e1;border:1px solid #f39c12;color:#e67e22{% else %}#f0fff5;border:1px solid #2ecc71;color:#27ae60{% endif %};">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Stats -->
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem;">
-    <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);text-align:center;"><div style="font-size:2rem;font-weight:700;color:#8B1A1A;">{{ total_books }}</div><div style="color:#666;margin-top:0.3rem;">Total Books</div></div>
-    <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);text-align:center;"><div style="font-size:2rem;font-weight:700;color:#3498db;">{{ active_borrows }}</div><div style="color:#666;margin-top:0.3rem;">Active Borrows</div></div>
-    <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);text-align:center;"><div style="font-size:2rem;font-weight:700;color:#e74c3c;">{{ overdue_count }}</div><div style="color:#666;margin-top:0.3rem;">Overdue</div></div>
-    <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);text-align:center;"><div style="font-size:2rem;font-weight:700;color:#e67e22;">KES {{ total_fines }}</div><div style="color:#666;margin-top:0.3rem;">Pending Fines</div></div>
+    <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);text-align:center;">
+      <div style="font-size:2rem;font-weight:700;color:#8B1A1A;">{{ total_books }}</div>
+      <div style="color:#666;margin-top:0.3rem;">Total Books</div>
+    </div>
+    <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);text-align:center;">
+      <div style="font-size:2rem;font-weight:700;color:#3498db;">{{ active_count }}</div>
+      <div style="color:#666;margin-top:0.3rem;">Active Borrows</div>
+    </div>
+    <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);text-align:center;">
+      <div style="font-size:2rem;font-weight:700;color:#e74c3c;">{{ overdue_count }}</div>
+      <div style="color:#666;margin-top:0.3rem;">Overdue</div>
+    </div>
+    <div style="background:white;border-radius:12px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.06);text-align:center;">
+      <div style="font-size:2rem;font-weight:700;color:#e67e22;">KES {{ total_fines }}</div>
+      <div style="color:#666;margin-top:0.3rem;">Pending Fines</div>
+    </div>
   </div>
+
+  <!-- Recent Activity -->
   <div style="background:white;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);overflow:hidden;">
     <div style="padding:1.25rem 1.5rem;border-bottom:1px solid #f0f0f0;font-weight:600;">Recent Borrowing Activity</div>
-    <div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;">
-      <thead><tr style="background:#f8f9fa;"><th style="padding:0.875rem 1rem;text-align:left;font-size:0.8rem;color:#666;border:none;">Student</th><th style="padding:0.875rem 1rem;text-align:left;font-size:0.8rem;color:#666;border:none;">Book</th><th style="padding:0.875rem 1rem;text-align:left;font-size:0.8rem;color:#666;border:none;">Borrowed</th><th style="padding:0.875rem 1rem;text-align:left;font-size:0.8rem;color:#666;border:none;">Due</th><th style="padding:0.875rem 1rem;text-align:left;font-size:0.8rem;color:#666;border:none;">Status</th><th style="padding:0.875rem 1rem;text-align:left;font-size:0.8rem;color:#666;border:none;">Action</th></tr></thead>
-      <tbody>{% for record in recent_borrows %}<tr style="border-top:1px solid #f0f0f0;"><td style="padding:0.875rem 1rem;"><div style="font-weight:600;font-size:0.9rem;">{{ record.student.first_name }} {{ record.student.last_name }}</div><div style="font-size:0.75rem;color:#999;">{{ record.student.admission_number }}</div></td><td style="padding:0.875rem 1rem;"><div style="font-weight:500;">{{ record.book.title }}</div><div style="font-size:0.75rem;color:#999;">{{ record.book.author }}</div></td><td style="padding:0.875rem 1rem;font-size:0.85rem;">{{ record.borrowed_at|date:"d M Y H:i" }}</td><td style="padding:0.875rem 1rem;font-size:0.85rem;">{{ record.due_at|date:"d M Y H:i" }}</td><td style="padding:0.875rem 1rem;">{% if record.status == 'returned' %}<span style="background:#f0fff5;color:#27ae60;padding:0.3rem 0.7rem;border-radius:20px;font-size:0.75rem;font-weight:600;">Returned</span>{% elif record.status == 'overdue' %}<span style="background:#fff0f0;color:#e74c3c;padding:0.3rem 0.7rem;border-radius:20px;font-size:0.75rem;font-weight:600;">Overdue  KES {{ record.fine_amount }}</span>{% else %}<span style="background:#f0f8ff;color:#3498db;padding:0.3rem 0.7rem;border-radius:20px;font-size:0.75rem;font-weight:600;">Borrowed</span>{% endif %}</td><td style="padding:0.875rem 1rem;">{% if record.status != 'returned' %}<a href="{% url 'return_book' record.id %}" style="background:#f0fff5;color:#27ae60;padding:0.4rem 0.8rem;border-radius:6px;text-decoration:none;font-size:0.8rem;font-weight:600;">Return</a>{% endif %}</td></tr>{% empty %}<tr><td colspan="6" style="padding:2rem;text-align:center;color:#999;">No borrowing activity yet</td></tr>{% endfor %}</tbody>
-    </table></div>
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr style="background:#f8f9fa;">
+            <th style="padding:0.875rem 1rem;text-align:left;font-size:0.8rem;color:#666;">Student</th>
+            <th style="padding:0.875rem 1rem;text-align:left;font-size:0.8rem;color:#666;">Book</th>
+            <th style="padding:0.875rem 1rem;text-align:left;font-size:0.8rem;color:#666;">Borrowed</th>
+            <th style="padding:0.875rem 1rem;text-align:left;font-size:0.8rem;color:#666;">Due</th>
+            <th style="padding:0.875rem 1rem;text-align:left;font-size:0.8rem;color:#666;">Status</th>
+            <th style="padding:0.875rem 1rem;text-align:left;font-size:0.8rem;color:#666;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for record in active_borrows %}
+          <tr style="border-top:1px solid #f0f0f0;">
+            <td style="padding:0.875rem 1rem;">
+              <div style="font-weight:600;font-size:0.9rem;">{{ record.student.get_full_name }}</div>
+              <div style="font-size:0.75rem;color:#999;">{{ record.student.admission_number }}</div>
+            </td>
+            <td style="padding:0.875rem 1rem;">
+              <div style="font-weight:500;">{{ record.book.title }}</div>
+              <div style="font-size:0.75rem;color:#999;">{{ record.book.author }}</div>
+            </td>
+            <td style="padding:0.875rem 1rem;font-size:0.85rem;">{{ record.borrowed_at|date:"d M Y H:i" }}</td>
+            <td style="padding:0.875rem 1rem;font-size:0.85rem;">{{ record.due_at|date:"d M Y H:i" }}</td>
+            <td style="padding:0.875rem 1rem;">
+              {% if record.status == 'returned' %}
+                <span style="background:#f0fff5;color:#27ae60;padding:0.3rem 0.7rem;border-radius:20px;font-size:0.75rem;font-weight:600;">Returned</span>
+              {% elif record.status == 'overdue' %}
+                <span style="background:#fff0f0;color:#e74c3c;padding:0.3rem 0.7rem;border-radius:20px;font-size:0.75rem;font-weight:600;">Overdue — KES {{ record.fine_amount }}</span>
+              {% else %}
+                <span style="background:#f0f8ff;color:#3498db;padding:0.3rem 0.7rem;border-radius:20px;font-size:0.75rem;font-weight:600;">Borrowed</span>
+              {% endif %}
+            </td>
+            <td style="padding:0.875rem 1rem;">
+              <a href="{% url 'return_book' record.id %}" style="background:#f0fff5;color:#27ae60;padding:0.4rem 0.8rem;border-radius:6px;text-decoration:none;font-size:0.8rem;font-weight:600;">
+                <i class="bi bi-check-circle me-1"></i>Return
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" style="padding:2rem;text-align:center;color:#999;">No borrowing activity yet</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 {% endblock %}
-
-
-

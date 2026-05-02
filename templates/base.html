@@ -97,7 +97,7 @@
                                     <div style="font-size:0.75rem;color:#999;">{{ request.user.primary_role }}</div>
                                 </div>
                             </li>
-                            {% if request.user.is_school_admin or request.user.is_teacher %}
+                            {% if request.user.is_school_admin or request.user.is_teacher or request.user.is_superuser %}
                             <li><a class="dropdown-item" href="{% url 'admin_dashboard' %}" style="padding:0.7rem 1rem;font-size:0.9rem;"><i class="bi bi-speedometer2 me-2" style="color:#C0392B;"></i>Dashboard</a></li>
                             <li><a class="dropdown-item" href="{% url 'student_list' %}" style="padding:0.7rem 1rem;font-size:0.9rem;"><i class="bi bi-people-fill me-2" style="color:#C0392B;"></i>Students</a></li>
                             <li><a class="dropdown-item" href="{% url 'students_by_stream' %}" style="padding:0.7rem 1rem;font-size:0.9rem;"><i class="bi bi-diagram-3 me-2" style="color:#C0392B;"></i>Students by Stream</a></li>

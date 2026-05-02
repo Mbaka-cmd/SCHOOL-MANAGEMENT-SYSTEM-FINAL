@@ -1,6 +1,7 @@
-from django.db import models
+﻿from django.db import models
 from django.utils import timezone
 from datetime import timedelta
+from decimal import Decimal
 from schools.models import School
 from students.models import Student
 import uuid
@@ -72,53 +73,20 @@ class BorrowRecord(models.Model):
         return not self.returned_at and timezone.now() > self.due_at
 
     @property
-    def overdue_days(self):
+    def days_overdue(self):
         if self.is_overdue:
             return (timezone.now() - self.due_at).days
         return 0
+
+    @property
+    def calculate_fine(self):
+        days = self.days_overdue
+        if days <= 0:
+            return Decimal('0.00')
+        return days * Decimal('50.00')
 
     def __str__(self):
         return f"{self.student} borrowed {self.book.title}"
 
     class Meta:
         ordering = ['-borrowed_at']
-        # ADD THESE TWO PROPERTIES to the BookBorrowing model in library/models.py
-# Find the BookBorrowing class and add these inside it:
-
-from datetime import date
-from decimal import Decimal
-
-@property
-def days_overdue(self):
-    if self.returned_at:
-        return 0
-    today = date.today()
-    if today <= self.due_date:
-        return 0
-    return (today - self.due_date).days
-
-@property
-def calculate_fine(self):
-    days = self.days_overdue
-    if days <= 0:
-        return Decimal('0.00')
-    daily_rate = Decimal('5.00')  # KES 5 per day
-    return days * daily_rate
-import uuid
-from django.db import models
-
-
-class BookBorrow(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    book = models.ForeignKey("Book", on_delete=models.CASCADE, related_name="borrows")
-    student = models.ForeignKey("students.Student", on_delete=models.CASCADE, related_name="borrows")
-    borrowed_date = models.DateField(auto_now_add=True)
-    due_date = models.DateField()
-    is_returned = models.BooleanField(default=False)
-    returned_date = models.DateField(null=True, blank=True)
-
-    class Meta:
-        ordering = ["-borrowed_date"]
-
-    def __str__(self):
-        return f"{self.student} — {self.book.title}"
