@@ -7,6 +7,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY (PRODUCTION SAFE)
 # ─────────────────────────────────────────────
 
+from dotenv import load_dotenv
+load_dotenv(BASE_DIR / '.env')
+
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-insecure-key")
 
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
@@ -200,3 +203,4 @@ AT_API_KEY = os.environ.get('AT_API_KEY', '')
 
 FILE_CHARSET = "utf-8"
 DEFAULT_CHARSET = "utf-8"
+
